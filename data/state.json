@@ -1,0 +1,41 @@
+{
+  "tickers": {
+    "TQQQ": {
+      "enabled": true,
+      "version": "v2.2",
+      "seed": 4000,
+      "divisions": 40,
+      "active": false,
+      "shares": 0,
+      "total_bought": 0.0,
+      "avg_price": 0.0,
+      "realized_profit": 0.0,
+      "cycle_no": 1,
+      "cycle_start": null,
+      "one_buy_override": null,
+      "last_close": null,
+      "last_date": null,
+      "pending_orders": [],
+      "history": []
+    },
+    "SOXL": {
+      "enabled": true,
+      "version": "v2.2",
+      "seed": 4000,
+      "divisions": 40,
+      "active": false,
+      "shares": 0,
+      "total_bought": 0.0,
+      "avg_price": 0.0,
+      "realized_profit": 0.0,
+      "cycle_no": 1,
+      "cycle_start": null,
+      "one_buy_override": null,
+      "last_close": null,
+      "last_date": null,
+      "pending_orders": [],
+      "history": []
+    }
+  },
+  "last_run": null
+}
