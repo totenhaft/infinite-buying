@@ -3,9 +3,9 @@
     "TQQQ": {
       "enabled": true,
       "version": "v2.2",
-      "seed": 4000,
+      "seed": 3350,
       "divisions": 40,
-      "active": false,
+      "active": true,
       "shares": 0,
       "total_bought": 0.0,
       "avg_price": 0.0,
@@ -21,9 +21,9 @@
     "SOXL": {
       "enabled": true,
       "version": "v2.2",
-      "seed": 4000,
+      "seed": 3350,
       "divisions": 40,
-      "active": false,
+      "active": true,
       "shares": 0,
       "total_bought": 0.0,
       "avg_price": 0.0,
