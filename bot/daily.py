@@ -290,6 +290,19 @@ def format_message(state, report):
                 lines.append(f"     └ {od['memo']}")
         else:
             lines.append("오늘 주문 없음 (비활성 상태)")
+        bt = r.get("backtest")
+        if bt and bt.get("signal") and bt["signal"].get("available"):
+            s = bt["signal"]
+            ma = "200일선 위" if s["above_ma"] else "200일선 아래"
+            lines.append(f"📊 <b>백테스트 신호</b>: 유지 유리 확률 "
+                         f"<b>{s['prob_hold_better']}%</b> "
+                         f"(유사상황 {s['n']}일, {ma})")
+            lines.append(f"   유지 시 평균 {s['avg_extra_pct']:+.1f}%p, "
+                         f"최악권(하위10%) {s['p10_extra_pct']:+.1f}%p")
+        elif bt and bt.get("entry") and bt["entry"].get("available"):
+            e = bt["entry"]
+            lines.append(f"📊 <b>진입 참고</b>: {e['regime']} 시작 사이클 과거 승률 "
+                         f"{e['win_rate']}% (표본 {e['n']}개)")
         lines.append("")
     lines.append("⚠️ 실제 체결 내역을 증권사 앱에서 꼭 확인하세요.")
     lines.append("체결이 다르면 data/state.json을 수정 후 다시 실행하세요.")
@@ -326,9 +339,18 @@ def main():
         orders, T = build_orders(t, ticker)
         t["pending_orders"] = orders
 
+        # 백테스트 + 유지/중단 신호 (실패해도 데일리 가이드는 계속)
+        bt = None
+        try:
+            import backtest
+            bt = backtest.run_for_ticker(ticker, t)
+        except Exception as e:
+            print(f"[warn] {ticker} 백테스트 실패: {e}")
+
         report["date"] = ohlc["date"]
         report["tickers"][ticker] = {
             "close": ohlc["close"], "T": T, "fills": fills, "orders": orders,
+            "backtest": bt,
         }
 
     state["last_run"] = datetime.now(timezone.utc).isoformat(timespec="seconds")

@@ -55,6 +55,8 @@
 
 <div id="dashboard"></div>
 
+<div id="backtest"></div>
+
 <div class="card">
   <details>
     <summary>🧮 수동 계산기 (봇 없이 즉시 계산)</summary>
@@ -123,10 +125,13 @@ async function load() {
       '마지막 봇 실행: ' + (st.last_run ?? '아직 없음 (Actions 실행 대기)');
     const dash = document.getElementById('dashboard');
     dash.innerHTML = '';
+    const enabled = [];
     for (const [ticker, t] of Object.entries(st.tickers)) {
       if (!t.enabled) continue;
+      enabled.push(ticker);
       dash.appendChild(card(ticker, t));
     }
+    loadBacktest(enabled);
   } catch (e) {
     document.getElementById('lastRun').textContent =
       'state.json을 읽지 못했습니다 — 로컬에서 열었거나 아직 봇이 실행되지 않았습니다. 아래 수동 계산기를 사용하세요.';
@@ -163,6 +168,95 @@ function card(ticker, t) {
     </div>
     ${rows ? `<table><tr><th>주문</th><th>수량</th><th>가격</th><th>설명</th></tr>${rows}</table>`
            : '<p class="memo">대기 중인 주문 없음</p>'}`;
+  return div;
+}
+
+// ---------------- 백테스트 결과 표시 ----------------
+async function loadBacktest(tickers) {
+  const wrap = document.getElementById('backtest');
+  for (const ticker of tickers) {
+    try {
+      const res = await fetch(`data/backtest_${ticker}.json?t=` + Date.now());
+      if (!res.ok) continue;
+      wrap.appendChild(btCard(ticker, await res.json()));
+    } catch (e) { /* 파일 없으면 무시 (봇 첫 실행 전) */ }
+  }
+  if (!wrap.children.length) {
+    wrap.innerHTML = `<div class="card"><h2>🧪 백테스트</h2>
+      <p class="memo">백테스트 결과가 아직 없습니다. GitHub Actions가 한 번 실행되면
+      과거 전체 구간(상장~현재) 백테스트와 유지/중단 신호가 여기에 표시됩니다.</p></div>`;
+  }
+}
+
+function btCard(ticker, bt) {
+  const s = bt.summary;
+  const div = document.createElement('div');
+  div.className = 'card';
+
+  // 유지/중단 신호 박스
+  let sigHtml = '';
+  const sig = bt.signal;
+  if (sig && sig.available) {
+    const p = sig.prob_hold_better;
+    const color = p >= 60 ? 'var(--ok)' : (p >= 45 ? 'var(--accent)' : 'var(--sell)');
+    const verdict = p >= 60 ? '유지가 유리했던 구간' :
+                    p >= 45 ? '유지/중단 우열이 뚜렷하지 않은 구간' :
+                              '⚠️ 과거에 중단이 더 나았던 경우가 많은 구간';
+    sigHtml = `
+    <div style="background:var(--bg);border:1px solid ${color};border-radius:10px;
+                padding:12px;margin-bottom:12px">
+      <div style="font-size:.8rem;color:var(--sub)">현재 상태 기준 유지 vs 중단
+        (T=${sig.cur_T}, 평단 대비 ${sig.cur_gap}%, ${sig.above_ma?'200일선 위':'200일선 아래'})</div>
+      <div style="font-size:1.4rem;font-weight:800;color:${color};margin:4px 0">
+        유지 유리 확률 ${p}%</div>
+      <div style="font-size:.8rem">${verdict}</div>
+      <div class="memo" style="margin-top:6px">
+        유사상황 표본 ${sig.n}일 (${sig.criteria}) ·
+        유지 시 시드 대비 평균 ${sig.avg_extra_pct >= 0 ? '+' : ''}${sig.avg_extra_pct}%p ·
+        최악권(하위 10%) ${sig.p10_extra_pct}%p ·
+        최상권(상위 10%) +${sig.p90_extra_pct}%p</div>
+    </div>`;
+  } else if (bt.entry && bt.entry.available) {
+    sigHtml = `
+    <div style="background:var(--bg);border:1px solid var(--line);border-radius:10px;
+                padding:12px;margin-bottom:12px">
+      <div style="font-size:.8rem;color:var(--sub)">신규 진입 참고 (현재 포지션 없음)</div>
+      <div style="font-size:1rem;margin:4px 0"><b>${bt.entry.regime}</b>에서 시작한
+        과거 사이클 승률 <b>${bt.entry.win_rate}%</b>
+        <span class="memo">(표본 ${bt.entry.n}개, 평균 손익 ${bt.entry.avg_pnl_pct}%p)</span></div>
+    </div>`;
+  }
+
+  let cyclesRows = (s.recent_cycles || []).map(c =>
+    `<tr><td>${c.start ?? '-'}</td><td>${c.end}</td><td>${c.days}일</td>
+     <td class="${c.profit >= 0 ? 'buy' : 'sell'}">$${c.profit.toFixed(2)}</td></tr>`
+  ).reverse().join('');
+
+  div.innerHTML = `
+    <h2>🧪 ${ticker} 백테스트 <span class="badge">${s.version} ·
+      ${s.period[0]} ~ ${s.period[1]}</span></h2>
+    ${sigHtml}
+    <div class="grid">
+      <div class="stat"><div class="k">완료 사이클</div>
+        <div class="v">${s.n_cycles}개</div></div>
+      <div class="stat"><div class="k">사이클 승률</div>
+        <div class="v">${s.win_rate}%</div></div>
+      <div class="stat"><div class="k">누적 수익 (시드 대비)</div>
+        <div class="v">${s.total_profit_pct}%</div></div>
+      <div class="stat"><div class="k">최대 낙폭 (MDD)</div>
+        <div class="v" style="color:var(--sell)">${s.mdd_pct}%</div></div>
+      <div class="stat"><div class="k">평균/최장 사이클</div>
+        <div class="v">${s.avg_cycle_days} / ${s.max_cycle_days}일</div></div>
+      <div class="stat"><div class="k">최악 사이클</div>
+        <div class="v" style="color:var(--sell)">$${s.worst_cycle_profit}</div></div>
+    </div>
+    <details><summary>최근 10개 사이클 보기</summary>
+      <table><tr><th>시작</th><th>종료</th><th>기간</th><th>손익</th></tr>${cyclesRows}</table>
+    </details>
+    <p class="memo" style="margin-top:8px">⚠️ 과거 성과는 미래를 보장하지 않습니다.
+      특히 2010년 이후 히스토리는 상승장이 대부분이라 '유지 유리' 쪽으로 편향될 수
+      있습니다. 확률이 높아도 감당 불가능한 손실 구간(MDD)은 반복될 수 있습니다.
+      마지막 계산: ${bt.generated ?? '-'}</p>`;
   return div;
 }
 

@@ -29,6 +29,6 @@ jobs:
         run: |
           git config user.name "infinite-buying-bot"
           git config user.email "bot@users.noreply.github.com"
-          git add data/state.json
+          git add data/
           git diff --cached --quiet || git commit -m "chore: daily state update"
           git push
