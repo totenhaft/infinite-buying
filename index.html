@@ -58,6 +58,46 @@
 <div id="backtest"></div>
 
 <div class="card">
+  <h2>🕹 원격 명령 <span class="badge">Actions 직접 실행</span></h2>
+  <div class="row2">
+    <div><label>작업</label>
+      <select id="cAction" onchange="cmdHint()">
+        <option value="start">start — 투자 시작</option>
+        <option value="stop">stop — 일시정지</option>
+        <option value="resume">resume — 재개</option>
+        <option value="seed">seed — 시드 변경</option>
+        <option value="fix">fix — 잔고 보정</option>
+        <option value="status">status — 상태 확인</option>
+      </select></div>
+    <div><label>종목</label>
+      <select id="cTicker"><option>TQQQ</option><option>SOXL</option></select></div>
+  </div>
+  <div class="row2">
+    <div><label id="cV1Label">시드 ($)</label><input id="cV1" type="number" step="0.01"></div>
+    <div><label id="cV2Label">— </label><input id="cV2" type="number" step="0.01" disabled></div>
+  </div>
+  <div id="cVerRow"><label>버전 (start 전용)</label>
+    <select id="cVer"><option value="v2.2">v2.2 (40분할, 권장)</option>
+    <option value="v3.0">v3.0 (20분할, 고위험)</option></select></div>
+  <button onclick="runCommand()">▶ 실행</button>
+  <span id="cStatus" class="memo" style="margin-left:10px"></span>
+  <details style="margin-top:10px">
+    <summary>🔑 GitHub 토큰 설정 (최초 1회)</summary>
+    <p class="memo" style="margin-top:6px">
+      Fine-grained 토큰 필요: Settings → Developer settings → Fine-grained tokens →
+      이 저장소만 선택 → Permissions에서 <b>Actions: Read and write</b>.
+      토큰은 <b>이 브라우저에만</b> 저장되며 저장소에 올라가지 않습니다.</p>
+    <label>GitHub Personal Access Token</label>
+    <input id="ghToken" type="password" placeholder="github_pat_...">
+    <div class="row2">
+      <div><label>저장소 소유자</label><input id="ghOwner"></div>
+      <div><label>저장소 이름</label><input id="ghRepo"></div>
+    </div>
+    <button onclick="saveGh()">저장</button>
+  </details>
+</div>
+
+<div class="card">
   <details>
     <summary>🧮 수동 계산기 (봇 없이 즉시 계산)</summary>
     <div class="row2">
@@ -313,6 +353,104 @@ function manualCalc() {
     '</table>';
 }
 
+// ---------------- 원격 명령 (GitHub Actions 직접 실행) ----------------
+function ghConf() {
+  // github.io 주소면 소유자/저장소 자동 추론
+  let owner = localStorage.getItem('gh_owner') || '';
+  let repo = localStorage.getItem('gh_repo') || '';
+  if (!owner && location.host.endsWith('.github.io')) {
+    owner = location.host.split('.')[0];
+    repo = location.pathname.split('/').filter(Boolean)[0] || '';
+  }
+  return { token: localStorage.getItem('gh_token') || '', owner, repo };
+}
+
+function initGh() {
+  const c = ghConf();
+  document.getElementById('ghOwner').value = c.owner;
+  document.getElementById('ghRepo').value = c.repo;
+  if (c.token) document.getElementById('ghToken').placeholder = '저장됨 (변경하려면 새로 입력)';
+  cmdHint();
+}
+
+function saveGh() {
+  const tok = document.getElementById('ghToken').value.trim();
+  if (tok) localStorage.setItem('gh_token', tok);
+  localStorage.setItem('gh_owner', document.getElementById('ghOwner').value.trim());
+  localStorage.setItem('gh_repo', document.getElementById('ghRepo').value.trim());
+  document.getElementById('ghToken').value = '';
+  document.getElementById('ghToken').placeholder = '저장됨 (변경하려면 새로 입력)';
+  alert('저장되었습니다 (이 브라우저에만 보관됩니다)');
+}
+
+function cmdHint() {
+  const a = document.getElementById('cAction').value;
+  const v1 = document.getElementById('cV1'), v2 = document.getElementById('cV2');
+  const l1 = document.getElementById('cV1Label'), l2 = document.getElementById('cV2Label');
+  const ver = document.getElementById('cVerRow');
+  const cfg = {
+    start:  ['시드 ($)', true,  '—', false, true],
+    seed:   ['시드 ($)', true,  '—', false, false],
+    fix:    ['보유수량 (주)', true, '평단가 ($)', true, false],
+    stop:   ['—', false, '—', false, false],
+    resume: ['—', false, '—', false, false],
+    status: ['—', false, '—', false, false],
+  }[a];
+  l1.textContent = cfg[0]; v1.disabled = !cfg[1];
+  l2.textContent = cfg[2]; v2.disabled = !cfg[3];
+  ver.style.display = cfg[4] ? '' : 'none';
+  if (!cfg[1]) v1.value = ''; if (!cfg[3]) v2.value = '';
+}
+
+async function runCommand() {
+  const c = ghConf();
+  const el = document.getElementById('cStatus');
+  if (!c.token) { el.textContent = '⚠️ 먼저 아래에서 GitHub 토큰을 설정하세요'; return; }
+  if (!c.owner || !c.repo) { el.textContent = '⚠️ 저장소 소유자/이름을 설정하세요'; return; }
+  const action = document.getElementById('cAction').value;
+  const v1 = document.getElementById('cV1').value;
+  const v2 = document.getElementById('cV2').value;
+  if ((action === 'start' || action === 'seed') && !v1) {
+    el.textContent = '⚠️ 시드 금액을 입력하세요'; return;
+  }
+  if (action === 'fix' && (!v1 || !v2)) {
+    el.textContent = '⚠️ 수량과 평단가를 입력하세요'; return;
+  }
+  if (action === 'start' && !confirm(
+      `${document.getElementById('cTicker').value}를 시드 $${v1}로 시작합니다. 맞습니까?`)) return;
+  el.textContent = '⏳ 실행 요청 중…';
+  try {
+    const res = await fetch(
+      `https://api.github.com/repos/${c.owner}/${c.repo}/actions/workflows/manage.yml/dispatches`,
+      {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${c.token}`,
+          'Accept': 'application/vnd.github+json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          ref: 'main',
+          inputs: {
+            action,
+            ticker: document.getElementById('cTicker').value,
+            value1: v1 || '',
+            value2: v2 || '',
+            version: document.getElementById('cVer').value,
+          },
+        }),
+      });
+    if (res.status === 204) {
+      el.textContent = '✅ 실행됨! 약 1분 후 텔레그램 확인 → 페이지 새로고침';
+    } else {
+      const body = await res.json().catch(() => ({}));
+      el.textContent = `❌ 실패 (${res.status}): ${body.message || '토큰 권한을 확인하세요'}`;
+    }
+  } catch (e) {
+    el.textContent = '❌ 네트워크 오류: ' + e.message;
+  }
+}
+
 // ---------------- state.json 생성기 ----------------
 function genState() {
   const ver = document.getElementById('sVer').value;
@@ -331,6 +469,7 @@ function genState() {
 }
 
 load();
+initGh();
 </script>
 </body>
 </html>
