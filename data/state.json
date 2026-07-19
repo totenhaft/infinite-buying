@@ -3,7 +3,7 @@
     "TQQQ": {
       "enabled": true,
       "version": "v2.2",
-      "seed": 3350,
+      "seed": 4000.0,
       "divisions": 40,
       "active": true,
       "shares": 0,
@@ -13,9 +13,16 @@
       "cycle_no": 1,
       "cycle_start": null,
       "one_buy_override": null,
-      "last_close": null,
-      "last_date": null,
-      "pending_orders": [],
+      "last_close": 67.53,
+      "last_date": "2026-07-17",
+      "pending_orders": [
+        {
+          "type": "LOC_BUY",
+          "price": 77.66,
+          "qty": 1,
+          "memo": "사이클 시작: 1회분 매수"
+        }
+      ],
       "history": []
     },
     "SOXL": {
@@ -31,11 +38,18 @@
       "cycle_no": 1,
       "cycle_start": null,
       "one_buy_override": null,
-      "last_close": null,
-      "last_date": null,
-      "pending_orders": [],
+      "last_close": 135.47,
+      "last_date": "2026-07-17",
+      "pending_orders": [
+        {
+          "type": "LOC_BUY",
+          "price": 155.79,
+          "qty": 1,
+          "memo": "사이클 시작: 1회분 매수"
+        }
+      ],
       "history": []
     }
   },
-  "last_run": null
+  "last_run": "2026-07-19T01:16:13+00:00"
 }
