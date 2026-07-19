@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>무한매수법 가이드</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/libsodium-wrappers/0.7.13/sodium.min.js"></script>
 <style>
   :root {
     --bg:#0f1420; --card:#1a2233; --line:#2a3550; --text:#e8ecf4;
@@ -526,6 +525,27 @@ async function detectChatId() {
   } catch (e) { el.textContent = '❌ 오류: ' + e.message; }
 }
 
+function loadScript(src) {
+  return new Promise((ok, fail) => {
+    const s = document.createElement('script');
+    s.src = src;
+    s.onload = ok;
+    s.onerror = () => fail(new Error('스크립트 로드 실패: ' + src));
+    document.head.appendChild(s);
+  });
+}
+
+async function ensureSodium() {
+  // libsodium은 코어 + 래퍼 2개 파일로 나뉘어 있어 순서대로 로드해야 함
+  if (window.sodium && window.sodium.ready) { await window.sodium.ready; return; }
+  // 코어(libsodium)를 먼저, 그다음 래퍼 — 순서 중요
+  await loadScript('https://cdn.jsdelivr.net/npm/libsodium@0.7.13/dist/modules/libsodium.min.js');
+  await loadScript('https://cdn.jsdelivr.net/npm/libsodium-wrappers@0.7.13/dist/modules/libsodium-wrappers.min.js');
+  if (!(window.sodium && window.sodium.ready))
+    throw new Error('암호화 라이브러리(libsodium) 로드 실패 — 인터넷 연결 또는 광고차단기를 확인하세요');
+  await window.sodium.ready;
+}
+
 async function putSecret(c, name, value) {
   // 저장소 공개키 조회 → libsodium sealed box로 암호화 → Secrets 저장
   const H = { 'Authorization': `Bearer ${c.token}`, 'Accept': 'application/vnd.github+json' };
@@ -533,7 +553,7 @@ async function putSecret(c, name, value) {
     `https://api.github.com/repos/${c.owner}/${c.repo}/actions/secrets/public-key`,
     { headers: H })).json();
   if (!pk.key) throw new Error('공개키 조회 실패 — 토큰에 Secrets 권한이 있는지 확인');
-  await window.sodium.ready;
+  await ensureSodium();
   const s = window.sodium;
   const sealed = s.crypto_box_seal(s.from_string(value),
                                    s.from_base64(pk.key, s.base64_variants.ORIGINAL));
