@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>무한매수법 가이드</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/libsodium-wrappers/0.7.13/sodium.min.js"></script>
 <style>
   :root {
     --bg:#0f1420; --card:#1a2233; --line:#2a3550; --text:#e8ecf4;
@@ -85,7 +86,9 @@
     <summary>🔑 GitHub 토큰 설정 (최초 1회)</summary>
     <p class="memo" style="margin-top:6px">
       Fine-grained 토큰 필요: Settings → Developer settings → Fine-grained tokens →
-      이 저장소만 선택 → Permissions에서 <b>Actions: Read and write</b>.
+      이 저장소만 선택 → Permissions에서 <b>Actions: Read and write</b>,
+      <b>Contents: Read-only</b>(현황판 조회용),
+      <b>Secrets: Read and write</b>(텔레그램 설정용).
       토큰은 <b>이 브라우저에만</b> 저장되며 저장소에 올라가지 않습니다.</p>
     <label>GitHub Personal Access Token</label>
     <input id="ghToken" type="password" placeholder="github_pat_...">
@@ -94,6 +97,28 @@
       <div><label>저장소 이름</label><input id="ghRepo"></div>
     </div>
     <button onclick="saveGh()">저장</button>
+  </details>
+</div>
+
+<div class="card">
+  <details>
+    <summary>📱 텔레그램 설정 (봇 토큰 / chat_id 변경)</summary>
+    <p class="memo" style="margin-top:6px">
+      입력한 값은 GitHub Secrets에 <b>암호화되어</b> 저장됩니다.
+      먼저 아래 "🔑 GitHub 토큰 설정"에 <b>Secrets: Read and write</b> 권한이
+      포함된 토큰이 저장되어 있어야 합니다.</p>
+    <label>텔레그램 봇 토큰 (변경할 때만 입력)</label>
+    <input id="tgToken" type="password" placeholder="123456:ABC-DEF...">
+    <label>chat_id</label>
+    <div class="row2">
+      <div><input id="tgChat" placeholder="예: 123456789"></div>
+      <div><button style="margin-top:0" onclick="detectChatId()">chat_id 자동 감지</button></div>
+    </div>
+    <p class="memo">자동 감지: 위에 봇 토큰 입력 → 텔레그램에서 봇에게 아무
+      메시지나 전송 → 버튼 클릭</p>
+    <button onclick="saveTelegram()">Secrets에 저장</button>
+    <button style="background:var(--ok)" onclick="testBot()">봇 실행 테스트 (가이드 전송)</button>
+    <div id="tgStatus" class="memo" style="margin-top:8px"></div>
   </details>
 </div>
 
@@ -155,12 +180,28 @@
 const LABEL = {LOC_BUY:'LOC 매수', LOC_SELL:'LOC 매도',
                LIMIT_SELL:'지정가 매도', MOC_SELL:'MOC 매도'};
 
-// ---------------- 대시보드: state.json 읽기 ----------------
+// ---------------- 데이터 읽기: Pages 상대경로 → GitHub API 폴백 ----------------
+// (Private 저장소나 로컬에서 열어도 GitHub 토큰만 있으면 상태를 볼 수 있음)
+async function fetchData(path) {
+  try {
+    const res = await fetch(path + '?t=' + Date.now());
+    if (res.ok) return await res.json();
+  } catch (e) { /* 폴백으로 */ }
+  const c = ghConf();
+  if (!c.token || !c.owner || !c.repo) throw new Error('no-source');
+  const res = await fetch(
+    `https://api.github.com/repos/${c.owner}/${c.repo}/contents/${path}?ref=main&t=${Date.now()}`,
+    { headers: { 'Authorization': `Bearer ${c.token}`,
+                 'Accept': 'application/vnd.github+json' } });
+  if (!res.ok) throw new Error('api-' + res.status);
+  const body = await res.json();
+  return JSON.parse(decodeURIComponent(escape(atob(body.content))));
+}
+
+// ---------------- 대시보드 ----------------
 async function load() {
   try {
-    const res = await fetch('data/state.json?t=' + Date.now());
-    if (!res.ok) throw new Error(res.status);
-    const st = await res.json();
+    const st = await fetchData('data/state.json');
     document.getElementById('lastRun').textContent =
       '마지막 봇 실행: ' + (st.last_run ?? '아직 없음 (Actions 실행 대기)');
     const dash = document.getElementById('dashboard');
@@ -174,7 +215,8 @@ async function load() {
     loadBacktest(enabled);
   } catch (e) {
     document.getElementById('lastRun').textContent =
-      'state.json을 읽지 못했습니다 — 로컬에서 열었거나 아직 봇이 실행되지 않았습니다. 아래 수동 계산기를 사용하세요.';
+      'state.json을 읽지 못했습니다 — GitHub Pages가 꺼져 있거나(Private 저장소), ' +
+      '"🔑 GitHub 토큰 설정"에 Contents(Read) 권한 토큰이 없습니다. 토큰 저장 후 새로고침하세요.';
   }
 }
 
@@ -206,8 +248,19 @@ function card(ticker, t) {
       <div class="stat"><div class="k">1회 매수금</div>
         <div class="v">$${oneBuy.toFixed(0)}</div></div>
     </div>
-    ${rows ? `<table><tr><th>주문</th><th>수량</th><th>가격</th><th>설명</th></tr>${rows}</table>`
-           : '<p class="memo">대기 중인 주문 없음</p>'}`;
+    ${rows ? `<p style="font-size:.85rem;margin:4px 0"><b>오늘 밤 걸어둘 주문</b></p>
+              <table><tr><th>주문</th><th>수량</th><th>가격</th><th>설명</th></tr>${rows}</table>`
+           : '<p class="memo">대기 중인 주문 없음</p>'}
+    ${t.realized_profit ? `<p class="memo" style="margin-top:6px">이번 사이클 실현손익:
+       <b style="color:${t.realized_profit>=0?'var(--ok)':'var(--sell)'}">
+       $${t.realized_profit.toFixed(2)}</b></p>` : ''}
+    ${(t.history||[]).length ? `<details style="margin-top:6px">
+       <summary>완료 사이클 이력 (${t.history.length}개, 누적
+         $${t.history.reduce((a,c)=>a+c.profit,0).toFixed(2)})</summary>
+       <table><tr><th>#</th><th>종료일</th><th>손익</th></tr>
+       ${t.history.slice(-8).reverse().map(c=>`<tr><td>${c.cycle}</td>
+         <td>${c.end??'-'}</td><td class="${c.profit>=0?'buy':'sell'}">
+         $${c.profit.toFixed(2)}</td></tr>`).join('')}</table></details>` : ''}`;
   return div;
 }
 
@@ -216,9 +269,7 @@ async function loadBacktest(tickers) {
   const wrap = document.getElementById('backtest');
   for (const ticker of tickers) {
     try {
-      const res = await fetch(`data/backtest_${ticker}.json?t=` + Date.now());
-      if (!res.ok) continue;
-      wrap.appendChild(btCard(ticker, await res.json()));
+      wrap.appendChild(btCard(ticker, await fetchData(`data/backtest_${ticker}.json`)));
     } catch (e) { /* 파일 없으면 무시 (봇 첫 실행 전) */ }
   }
   if (!wrap.children.length) {
@@ -449,6 +500,84 @@ async function runCommand() {
   } catch (e) {
     el.textContent = '❌ 네트워크 오류: ' + e.message;
   }
+}
+
+// ---------------- 텔레그램 설정 (Secrets 암호화 저장) ----------------
+async function detectChatId() {
+  const tok = document.getElementById('tgToken').value.trim();
+  const el = document.getElementById('tgStatus');
+  if (!tok) { el.textContent = '⚠️ 먼저 봇 토큰을 입력하세요'; return; }
+  el.textContent = '⏳ 감지 중… (봇에게 방금 메시지를 보냈어야 합니다)';
+  try {
+    const res = await fetch(`https://api.telegram.org/bot${tok}/getUpdates`);
+    const data = await res.json();
+    if (!data.ok) { el.textContent = '❌ 토큰이 잘못되었습니다: ' + data.description; return; }
+    const chats = [...new Map(data.result
+      .filter(u => u.message).map(u => [u.message.chat.id,
+        `${u.message.chat.id} (${u.message.chat.first_name || u.message.chat.title || ''})`]))
+      .values()];
+    if (!chats.length) {
+      el.textContent = '❌ 감지 실패 — 텔레그램에서 봇에게 아무 메시지나 보낸 뒤 다시 시도하세요';
+      return;
+    }
+    document.getElementById('tgChat').value = String([...new Map(data.result
+      .filter(u => u.message).map(u => [u.message.chat.id, 1])).keys()].pop());
+    el.textContent = '✅ 감지됨: ' + chats.join(', ');
+  } catch (e) { el.textContent = '❌ 오류: ' + e.message; }
+}
+
+async function putSecret(c, name, value) {
+  // 저장소 공개키 조회 → libsodium sealed box로 암호화 → Secrets 저장
+  const H = { 'Authorization': `Bearer ${c.token}`, 'Accept': 'application/vnd.github+json' };
+  const pk = await (await fetch(
+    `https://api.github.com/repos/${c.owner}/${c.repo}/actions/secrets/public-key`,
+    { headers: H })).json();
+  if (!pk.key) throw new Error('공개키 조회 실패 — 토큰에 Secrets 권한이 있는지 확인');
+  await window.sodium.ready;
+  const s = window.sodium;
+  const sealed = s.crypto_box_seal(s.from_string(value),
+                                   s.from_base64(pk.key, s.base64_variants.ORIGINAL));
+  const res = await fetch(
+    `https://api.github.com/repos/${c.owner}/${c.repo}/actions/secrets/${name}`,
+    { method: 'PUT', headers: { ...H, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        encrypted_value: s.to_base64(sealed, s.base64_variants.ORIGINAL),
+        key_id: pk.key_id }) });
+  if (res.status !== 201 && res.status !== 204)
+    throw new Error(`${name} 저장 실패 (${res.status})`);
+}
+
+async function saveTelegram() {
+  const el = document.getElementById('tgStatus');
+  const c = ghConf();
+  if (!c.token) { el.textContent = '⚠️ 먼저 "🔑 GitHub 토큰 설정"을 완료하세요'; return; }
+  const tok = document.getElementById('tgToken').value.trim();
+  const chat = document.getElementById('tgChat').value.trim();
+  if (!tok && !chat) { el.textContent = '⚠️ 저장할 값을 입력하세요'; return; }
+  el.textContent = '⏳ 암호화하여 저장 중…';
+  try {
+    if (tok) await putSecret(c, 'TELEGRAM_BOT_TOKEN', tok);
+    if (chat) await putSecret(c, 'TELEGRAM_CHAT_ID', chat);
+    document.getElementById('tgToken').value = '';
+    el.textContent = '✅ 저장 완료! "봇 실행 테스트"로 확인해 보세요.';
+  } catch (e) { el.textContent = '❌ ' + e.message; }
+}
+
+async function testBot() {
+  const el = document.getElementById('tgStatus');
+  const c = ghConf();
+  if (!c.token) { el.textContent = '⚠️ 먼저 GitHub 토큰을 설정하세요'; return; }
+  el.textContent = '⏳ 봇 실행 요청 중…';
+  const res = await fetch(
+    `https://api.github.com/repos/${c.owner}/${c.repo}/actions/workflows/daily.yml/dispatches`,
+    { method: 'POST',
+      headers: { 'Authorization': `Bearer ${c.token}`,
+                 'Accept': 'application/vnd.github+json',
+                 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ref: 'main' }) });
+  el.textContent = res.status === 204
+    ? '✅ 실행됨! 1~2분 내에 텔레그램 메시지가 오는지 확인하세요.'
+    : `❌ 실패 (${res.status}) — 토큰의 Actions 권한을 확인하세요`;
 }
 
 // ---------------- state.json 생성기 ----------------

@@ -32,18 +32,28 @@
    ⚠️ `.github` 폴더는 숨김 폴더입니다. 웹 업로드 시 누락되기 쉬우니
    업로드 후 저장소에 `.github/workflows/daily.yml`이 있는지 확인하세요.
 
-### 1-2. 텔레그램 시크릿 등록
+### 1-2. 텔레그램 봇 만들기 + 시크릿 등록
 
-저장소 → **Settings → Secrets and variables → Actions → New repository secret**
+**새 봇 만들기 (BotFather):**
 
-| Name | Value |
-|---|---|
-| `TELEGRAM_BOT_TOKEN` | BotFather에서 받은 봇 토큰 |
-| `TELEGRAM_CHAT_ID` | 내 chat_id |
+1. 텔레그램에서 `@BotFather` 검색 → 대화 시작
+2. `/newbot` 입력 → 봇 이름 입력 (예: `내 무한매수 알리미`)
+3. 봇 아이디 입력 — 반드시 `bot`으로 끝나야 함 (예: `my_infinite_buy_bot`)
+4. BotFather가 주는 **토큰**(`123456:ABC-DEF...`) 복사
+5. 만들어진 봇과의 대화방을 열고 **/start를 꼭 누르기**
+   (이걸 안 하면 봇이 메시지를 보낼 수 없습니다)
 
-> chat_id를 모르면: 봇에게 아무 메시지나 보낸 뒤 브라우저에서
-> `https://api.telegram.org/bot<토큰>/getUpdates` 접속 → `"chat":{"id":숫자}` 확인.
-> 그리고 봇과의 대화방에서 **먼저 /start를 눌러야** 봇이 메시지를 보낼 수 있습니다.
+**등록 (2가지 방법):**
+
+- 방법 A (웹앱, 편함): 웹앱 → **"📱 텔레그램 설정"** → 봇 토큰 입력 →
+  봇에게 아무 메시지 전송 → **chat_id 자동 감지** → **Secrets에 저장** →
+  **봇 실행 테스트**. (GitHub 토큰에 Secrets 권한 필요, §2-B 참고)
+- 방법 B (GitHub 웹): Settings → Secrets and variables → Actions →
+  `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID` 두 개 등록.
+  chat_id는 봇에게 메시지를 보낸 뒤
+  `https://api.telegram.org/bot<토큰>/getUpdates`에서 `"chat":{"id":숫자}` 확인.
+
+> chat_id가 바뀌었을 때(새 계정, 새 봇 등)도 방법 A로 언제든 갱신하면 됩니다.
 
 ### 1-3. GitHub Pages 켜기 (웹앱)
 
@@ -85,9 +95,17 @@ Branch: main / (root) → Save**
 웹앱 상단 **"🕹 원격 명령"** 카드에서 작업/종목/금액 선택 → 실행.
 즉시 적용되고 텔레그램으로 결과가 옵니다.
 
-최초 1회 설정: Fine-grained 토큰(이 저장소만, **Actions: Read and write** 권한)을
-만들어 카드 하단 "🔑 GitHub 토큰 설정"에 저장. 토큰은 해당 브라우저에만
-저장되며 저장소에는 올라가지 않습니다. 공용 PC에서는 저장하지 마세요.
+최초 1회 설정: Fine-grained 토큰(이 저장소만 선택)을 만들어 카드 하단
+"🔑 GitHub 토큰 설정"에 저장. 권한 3개:
+
+| 권한 | 용도 |
+|---|---|
+| **Actions: Read and write** | 원격 명령 실행, 봇 테스트 |
+| **Contents: Read-only** | Private 저장소/로컬에서도 현황판 표시 |
+| **Secrets: Read and write** | 웹에서 텔레그램 토큰/chat_id 변경 |
+
+토큰은 해당 브라우저에만 저장되며 저장소에는 올라가지 않습니다.
+공용 PC에서는 저장하지 마세요.
 
 ### 방법 B-2. Actions 버튼
 
