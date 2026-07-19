@@ -310,11 +310,52 @@ def format_message(state, report):
 
 
 # ---------------------------------------------------------------
+# 텔레그램 명령 수신 (/start, /stop, /fix, /seed, /status ...)
+# ---------------------------------------------------------------
+def poll_telegram_commands(state):
+    """봇 대화방에 쌓인 명령을 읽어 상태에 반영하고 확인 메시지를 보낸다."""
+    if not TELEGRAM_TOKEN or not TELEGRAM_CHAT_ID:
+        return
+    import manage
+    offset = state.get("tg_offset", 0)
+    url = (f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/getUpdates"
+           f"?offset={offset + 1}&timeout=0")
+    try:
+        req = urllib.request.Request(url)
+        with urllib.request.urlopen(req, timeout=30) as r:
+            updates = json.load(r).get("result", [])
+    except Exception as e:
+        print(f"[warn] getUpdates 실패: {e}")
+        return
+
+    replies = []
+    for upd in updates:
+        state["tg_offset"] = upd["update_id"]
+        msg = upd.get("message") or {}
+        text = (msg.get("text") or "").strip()
+        chat_id = str((msg.get("chat") or {}).get("id", ""))
+        if chat_id != str(TELEGRAM_CHAT_ID):
+            continue  # 내 대화방이 아니면 무시 (보안)
+        if not text.startswith("/") or text.startswith("/start@"):
+            continue
+        if text == "/start":  # 텔레그램 기본 /start는 도움말로 처리
+            text = "/help"
+        ok, reply = manage.apply_command(state, text)
+        replies.append(("✅ " if ok else "❌ ") + f"<code>{text}</code>\n{reply}")
+
+    if replies:
+        send_telegram("<b>🛠 명령 처리 결과</b>\n\n" + "\n\n".join(replies))
+
+
+# ---------------------------------------------------------------
 # 메인
 # ---------------------------------------------------------------
 def main():
     with open(STATE_PATH, encoding="utf-8") as f:
         state = json.load(f)
+
+    # 먼저 텔레그램 명령을 반영 (시작/중지/보정 등)
+    poll_telegram_commands(state)
 
     report = {"date": None, "tickers": {}}
 

@@ -1,0 +1,64 @@
+name: 관리 (시작·중지·시드·보정)
+
+on:
+  workflow_dispatch:
+    inputs:
+      action:
+        description: "작업"
+        type: choice
+        required: true
+        options: [start, stop, resume, seed, fix, status]
+      ticker:
+        description: "종목"
+        type: choice
+        required: true
+        options: [TQQQ, SOXL]
+      value1:
+        description: "시드$(start/seed) 또는 보유수량(fix)"
+        required: false
+        default: ""
+      value2:
+        description: "평단가$ (fix 전용)"
+        required: false
+        default: ""
+      version:
+        description: "버전 (start 전용)"
+        type: choice
+        required: false
+        options: ["v2.2", "v3.0"]
+
+permissions:
+  contents: write
+
+jobs:
+  manage:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: 명령 적용
+        run: |
+          CMD="${{ inputs.action }} ${{ inputs.ticker }} ${{ inputs.value1 }} ${{ inputs.value2 }}"
+          if [ "${{ inputs.action }}" = "start" ]; then
+            CMD="start ${{ inputs.ticker }} ${{ inputs.value1 }} ${{ inputs.version }}"
+          fi
+          echo "실행: $CMD"
+          python bot/manage.py $CMD
+
+      - name: 즉시 가이드 재계산 + 텔레그램 전송
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: python bot/daily.py
+
+      - name: 상태 저장(커밋)
+        run: |
+          git config user.name "infinite-buying-bot"
+          git config user.email "bot@users.noreply.github.com"
+          git add data/
+          git diff --cached --quiet || git commit -m "chore: manage ${{ inputs.action }} ${{ inputs.ticker }}"
+          git push
