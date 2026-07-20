@@ -259,8 +259,74 @@ function card(ticker, t) {
        <table><tr><th>#</th><th>종료일</th><th>손익</th></tr>
        ${t.history.slice(-8).reverse().map(c=>`<tr><td>${c.cycle}</td>
          <td>${c.end??'-'}</td><td class="${c.profit>=0?'buy':'sell'}">
-         $${c.profit.toFixed(2)}</td></tr>`).join('')}</table></details>` : ''}`;
+         $${c.profit.toFixed(2)}</td></tr>`).join('')}</table></details>` : ''}
+    <details style="margin-top:6px">
+      <summary>✏️ 잔고/시드 수정 (증권사 실제 값으로 보정)</summary>
+      <div class="row2">
+        <div><label>보유수량 (주)</label>
+          <input id="fx_sh_${ticker}" type="number" value="${t.shares}"></div>
+        <div><label>평단가 ($)</label>
+          <input id="fx_av_${ticker}" type="number" step="0.0001"
+                 value="${t.avg_price.toFixed(4)}"></div>
+      </div>
+      <button onclick="fixPosition('${ticker}')">잔고 보정 실행</button>
+      <div class="row2" style="margin-top:8px">
+        <div><label>시드 ($)</label>
+          <input id="fx_sd_${ticker}" type="number" value="${t.seed}"></div>
+        <div><button style="margin-top:22px" onclick="changeSeed('${ticker}')">시드 변경</button></div>
+      </div>
+      <div id="fx_st_${ticker}" class="memo" style="margin-top:6px"></div>
+      <p class="memo" style="margin-top:6px">보정하면 봇이 즉시 재실행되어
+        주문 가이드가 새 값 기준으로 다시 계산되고 텔레그램으로 전송됩니다.</p>
+    </details>`;
   return div;
+}
+
+// ---------------- 카드 내 잔고/시드 수정 ----------------
+async function dispatchManage(inputs, statusEl) {
+  const c = ghConf();
+  if (!c.token || !c.owner || !c.repo) {
+    statusEl.textContent = '⚠️ 먼저 "🔑 GitHub 토큰 설정"을 완료하세요'; return false;
+  }
+  statusEl.textContent = '⏳ 실행 요청 중…';
+  try {
+    const res = await fetch(
+      `https://api.github.com/repos/${c.owner}/${c.repo}/actions/workflows/manage.yml/dispatches`,
+      { method: 'POST',
+        headers: { 'Authorization': `Bearer ${c.token}`,
+                   'Accept': 'application/vnd.github+json',
+                   'Content-Type': 'application/json' },
+        body: JSON.stringify({ ref: 'main', inputs }) });
+    if (res.status === 204) {
+      statusEl.textContent = '✅ 실행됨! 약 1분 후 텔레그램 확인 → 페이지 새로고침';
+      return true;
+    }
+    const body = await res.json().catch(() => ({}));
+    statusEl.textContent = `❌ 실패 (${res.status}): ${body.message || '토큰 권한 확인'}`;
+  } catch (e) { statusEl.textContent = '❌ 오류: ' + e.message; }
+  return false;
+}
+
+async function fixPosition(ticker) {
+  const sh = document.getElementById(`fx_sh_${ticker}`).value;
+  const av = document.getElementById(`fx_av_${ticker}`).value;
+  const el = document.getElementById(`fx_st_${ticker}`);
+  if (sh === '' || av === '' || +sh < 0 || +av < 0) {
+    el.textContent = '⚠️ 수량과 평단가를 올바르게 입력하세요'; return;
+  }
+  if (!confirm(`${ticker} 잔고를 ${sh}주 / 평단 $${(+av).toFixed(2)}로 보정합니다. ` +
+               `증권사 앱의 실제 값과 일치하는지 확인했습니까?`)) return;
+  await dispatchManage({ action: 'fix', ticker, value1: String(sh),
+                         value2: String(av), version: 'v2.2' }, el);
+}
+
+async function changeSeed(ticker) {
+  const sd = document.getElementById(`fx_sd_${ticker}`).value;
+  const el = document.getElementById(`fx_st_${ticker}`);
+  if (sd === '' || +sd < 100) { el.textContent = '⚠️ 시드는 $100 이상'; return; }
+  if (!confirm(`${ticker} 시드를 $${sd}로 변경합니다. (1회 매수금이 바뀝니다)`)) return;
+  await dispatchManage({ action: 'seed', ticker, value1: String(sd),
+                         value2: '', version: 'v2.2' }, el);
 }
 
 // ---------------- 백테스트 결과 표시 ----------------
