@@ -6,21 +6,33 @@
       "seed": 4000.0,
       "divisions": 40,
       "active": true,
-      "shares": 0,
-      "total_bought": 0.0,
-      "avg_price": 0.0,
+      "shares": 1,
+      "total_bought": 67.9,
+      "avg_price": 67.9,
       "realized_profit": 0.0,
       "cycle_no": 1,
-      "cycle_start": null,
+      "cycle_start": "2026-07-17",
       "one_buy_override": null,
       "last_close": 67.53,
       "last_date": "2026-07-17",
       "pending_orders": [
         {
           "type": "LOC_BUY",
-          "price": 77.66,
+          "price": 67.9,
           "qty": 1,
-          "memo": "사이클 시작: 1회분 매수"
+          "memo": "전반전: 평단가 LOC"
+        },
+        {
+          "type": "LOC_BUY",
+          "price": 74.45,
+          "qty": 1,
+          "memo": "전반전: 평단+9.7% LOC"
+        },
+        {
+          "type": "LOC_SELL",
+          "price": 74.45,
+          "qty": 1,
+          "memo": "1/4 매도: 평단+9.7% LOC"
         }
       ],
       "history": []
@@ -63,6 +75,6 @@
       "history": []
     }
   },
-  "last_run": "2026-07-20T11:55:23+00:00",
+  "last_run": "2026-07-20T11:55:40+00:00",
   "tg_offset": 541703691
 }
