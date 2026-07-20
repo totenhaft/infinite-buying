@@ -40,7 +40,7 @@
     "SOXL": {
       "enabled": true,
       "version": "v2.2",
-      "seed": 4000.0,
+      "seed": 11000.0,
       "divisions": 40,
       "active": true,
       "shares": 1,
@@ -56,25 +56,25 @@
         {
           "type": "LOC_BUY",
           "price": 135.57,
-          "qty": 0,
+          "qty": 1,
           "memo": "전반전: 평단가 LOC"
         },
         {
           "type": "LOC_BUY",
-          "price": 148.18,
-          "qty": 0,
-          "memo": "전반전: 평단+9.3% LOC"
+          "price": 148.79,
+          "qty": 1,
+          "memo": "전반전: 평단+9.8% LOC"
         },
         {
           "type": "LOC_SELL",
-          "price": 148.18,
+          "price": 148.79,
           "qty": 1,
-          "memo": "1/4 매도: 평단+9.3% LOC"
+          "memo": "1/4 매도: 평단+9.8% LOC"
         }
       ],
       "history": []
     }
   },
-  "last_run": "2026-07-20T11:55:40+00:00",
+  "last_run": "2026-07-20T12:03:40+00:00",
   "tg_offset": 541703691
 }
