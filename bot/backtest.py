@@ -32,25 +32,63 @@ DATA_DIR = os.path.join(os.path.dirname(__file__), "..", "data")
 _HIST_CACHE = {}  # 여러 계좌가 같은 종목을 쓸 때 중복 다운로드 방지
 
 
-def fetch_history(ticker):
-    """상장 이후 전체 일봉. yahoo 실패 시 stooq 폴백. (실행 내 캐시)"""
+def _cache_path(ticker):
+    return os.path.join(DATA_DIR, f"history_{ticker}.json")
+
+
+def fetch_history(ticker, latest_ohlc=None):
+    """상장 이후 전체 일봉.
+    네트워크(yahoo→stooq) 성공 시 저장소에 캐시하고,
+    실패 시 캐시 파일로 폴백. latest_ohlc가 있으면 캐시에 이어붙임."""
     if ticker in _HIST_CACHE:
         return _HIST_CACHE[ticker]
+
+    out = None
     try:
         out = _hist_yahoo(ticker)
     except Exception as e:
         print(f"[warn] yahoo history 실패({ticker}): {e} -> stooq")
-        out = _hist_stooq(ticker)
+        try:
+            out = _hist_stooq(ticker)
+        except Exception as e2:
+            print(f"[warn] stooq history 실패({ticker}): {e2} -> 캐시 폴백")
+
+    if out is not None:
+        with open(_cache_path(ticker), "w", encoding="utf-8") as f:
+            json.dump(out, f)
+    else:
+        # 네트워크 모두 실패: 저장소에 캐시된 히스토리 사용
+        if not os.path.exists(_cache_path(ticker)):
+            raise RuntimeError(f"{ticker}: 히스토리 소스 없음 (네트워크 실패 + 캐시 없음)")
+        with open(_cache_path(ticker), encoding="utf-8") as f:
+            out = json.load(f)
+        print(f"[info] {ticker}: 캐시 히스토리 사용 ({out[-1]['date']}까지 {len(out)}일)")
+        # 오늘 시세(짧은 조회는 성공하는 경우가 많음)를 이어붙여 최신화
+        if latest_ohlc and latest_ohlc["date"] > out[-1]["date"]:
+            out.append(latest_ohlc)
+
     _HIST_CACHE[ticker] = out
     return out
 
 
 def _hist_yahoo(ticker):
-    url = ("https://query1.finance.yahoo.com/v8/finance/chart/"
-           f"{ticker}?range=max&interval=1d")
-    req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
-    with urllib.request.urlopen(req, timeout=60) as r:
-        data = json.load(r)
+    last_err = None
+    data = None
+    for host in ("query1", "query2"):
+        for rng in ("max", "10y"):
+            url = (f"https://{host}.finance.yahoo.com/v8/finance/chart/"
+                   f"{ticker}?range={rng}&interval=1d")
+            req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
+            try:
+                with urllib.request.urlopen(req, timeout=60) as r:
+                    data = json.load(r)
+                break
+            except Exception as e:
+                last_err = e
+        if data:
+            break
+    if data is None:
+        raise RuntimeError(f"yahoo 모든 시도 실패: {last_err}")
     res = data["chart"]["result"][0]
     ts, q = res["timestamp"], res["indicators"]["quote"][0]
     out = []
@@ -257,14 +295,10 @@ def analyze_entry(snapshots, summary, cur_above_ma):
 # ---------------------------------------------------------------
 # 통합 실행 (daily.py에서 호출)
 # ---------------------------------------------------------------
-def run_for_ticker(ticker, live_t, account_id="main"):
+def run_for_ticker(ticker, live_t, account_id="main", latest_ohlc=None):
     """히스토리 수집 → 백테스트 → 현재 상태 기준 분석 → 파일 저장.
     반환: 텔레그램 메시지용 분석 dict (없으면 None)"""
-    try:
-        prices = fetch_history(ticker)
-    except Exception as e:
-        print(f"[warn] {ticker} 히스토리 수집 실패: {e}")
-        return None
+    prices = fetch_history(ticker, latest_ohlc)
 
     version = live_t.get("version", "v2.2")
     seed = live_t.get("seed", 4000)

@@ -399,9 +399,12 @@ def main():
             bt = None
             try:
                 import backtest
-                bt = backtest.run_for_ticker(ticker, t, account["id"])
-            except Exception as e:
-                print(f"[warn] {account['id']}/{ticker} 백테스트 실패: {e}")
+                bt = backtest.run_for_ticker(ticker, t, account["id"],
+                                             latest_ohlc=ohlc)
+            except Exception:
+                import traceback
+                print(f"[warn] {account['id']}/{ticker} 백테스트 실패:")
+                traceback.print_exc()
 
             report["date"] = ohlc["date"]
             report["tickers"][ticker] = {
