@@ -29,13 +29,20 @@ DATA_DIR = os.path.join(os.path.dirname(__file__), "..", "data")
 # ---------------------------------------------------------------
 # 전체 히스토리 수집
 # ---------------------------------------------------------------
+_HIST_CACHE = {}  # 여러 계좌가 같은 종목을 쓸 때 중복 다운로드 방지
+
+
 def fetch_history(ticker):
-    """상장 이후 전체 일봉. yahoo 실패 시 stooq 폴백."""
+    """상장 이후 전체 일봉. yahoo 실패 시 stooq 폴백. (실행 내 캐시)"""
+    if ticker in _HIST_CACHE:
+        return _HIST_CACHE[ticker]
     try:
-        return _hist_yahoo(ticker)
+        out = _hist_yahoo(ticker)
     except Exception as e:
         print(f"[warn] yahoo history 실패({ticker}): {e} -> stooq")
-        return _hist_stooq(ticker)
+        out = _hist_stooq(ticker)
+    _HIST_CACHE[ticker] = out
+    return out
 
 
 def _hist_yahoo(ticker):
@@ -250,7 +257,7 @@ def analyze_entry(snapshots, summary, cur_above_ma):
 # ---------------------------------------------------------------
 # 통합 실행 (daily.py에서 호출)
 # ---------------------------------------------------------------
-def run_for_ticker(ticker, live_t):
+def run_for_ticker(ticker, live_t, account_id="main"):
     """히스토리 수집 → 백테스트 → 현재 상태 기준 분석 → 파일 저장.
     반환: 텔레그램 메시지용 분석 dict (없으면 None)"""
     try:
@@ -282,7 +289,7 @@ def run_for_ticker(ticker, live_t):
         result["entry"] = analyze_entry(snapshots, summary, cur_above_ma)
         result["entry"]["above_ma"] = cur_above_ma
 
-    out = os.path.join(DATA_DIR, f"backtest_{ticker}.json")
+    out = os.path.join(DATA_DIR, f"backtest_{account_id}_{ticker}.json")
     with open(out, "w", encoding="utf-8") as f:
         json.dump(result, f, ensure_ascii=False, indent=1)
     print(f"[info] {ticker} 백테스트 저장: 사이클 {summary['n_cycles']}개, "

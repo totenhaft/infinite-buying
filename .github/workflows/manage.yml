@@ -1,4 +1,4 @@
-name: 관리 (시작·중지·시드·보정)
+name: 관리 (시작·중지·시드·보정·계좌)
 
 on:
   workflow_dispatch:
@@ -7,14 +7,18 @@ on:
         description: "작업"
         type: choice
         required: true
-        options: [start, stop, resume, seed, fix, status]
+        options: [start, stop, resume, seed, fix, status, addaccount, delaccount, chatid]
+      account:
+        description: "계좌 (기본: main / addaccount일 땐 새 계좌 이름)"
+        required: false
+        default: "main"
       ticker:
         description: "종목"
         type: choice
-        required: true
+        required: false
         options: [TQQQ, SOXL]
       value1:
-        description: "시드$(start/seed) 또는 보유수량(fix)"
+        description: "시드$(start/seed) · 수량(fix) · chat_id(addaccount/chatid)"
         required: false
         default: ""
       value2:
@@ -42,10 +46,17 @@ jobs:
 
       - name: 명령 적용
         run: |
-          CMD="${{ inputs.action }} ${{ inputs.ticker }} ${{ inputs.value1 }} ${{ inputs.value2 }}"
-          if [ "${{ inputs.action }}" = "start" ]; then
-            CMD="start ${{ inputs.ticker }} ${{ inputs.value1 }} ${{ inputs.version }}"
-          fi
+          case "${{ inputs.action }}" in
+            start)      CMD="start ${{ inputs.account }} ${{ inputs.ticker }} ${{ inputs.value1 }} ${{ inputs.version }}";;
+            stop)       CMD="stop ${{ inputs.account }} ${{ inputs.ticker }}";;
+            resume)     CMD="resume ${{ inputs.account }} ${{ inputs.ticker }}";;
+            seed)       CMD="seed ${{ inputs.account }} ${{ inputs.ticker }} ${{ inputs.value1 }}";;
+            fix)        CMD="fix ${{ inputs.account }} ${{ inputs.ticker }} ${{ inputs.value1 }} ${{ inputs.value2 }}";;
+            addaccount) CMD="addaccount ${{ inputs.account }} ${{ inputs.value1 }}";;
+            delaccount) CMD="delaccount ${{ inputs.account }}";;
+            chatid)     CMD="chatid ${{ inputs.account }} ${{ inputs.value1 }}";;
+            status)     CMD="status";;
+          esac
           echo "실행: $CMD"
           python bot/manage.py $CMD
 
@@ -59,6 +70,7 @@ jobs:
         run: |
           git config user.name "infinite-buying-bot"
           git config user.email "bot@users.noreply.github.com"
+          git pull --rebase origin main || true
           git add data/
-          git diff --cached --quiet || git commit -m "chore: manage ${{ inputs.action }} ${{ inputs.ticker }}"
+          git diff --cached --quiet || git commit -m "chore: manage ${{ inputs.action }} ${{ inputs.account }} ${{ inputs.ticker }}"
           git push

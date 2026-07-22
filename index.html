@@ -59,6 +59,8 @@
 
 <div class="card">
   <h2>🕹 원격 명령 <span class="badge">Actions 직접 실행</span></h2>
+  <div><label>계좌</label>
+    <select id="cAccount"><option value="main">메인 계좌 (main)</option></select></div>
   <div class="row2">
     <div><label>작업</label>
       <select id="cAction" onchange="cmdHint()">
@@ -145,24 +147,6 @@
   </details>
 </div>
 
-<div class="card">
-  <details>
-    <summary>⚙️ 시작 설정 생성기 (state.json 만들기)</summary>
-    <p class="memo" style="margin-top:8px">
-      값을 입력하고 생성 버튼을 누르면 state.json 내용이 나옵니다.
-      GitHub 저장소의 <b>data/state.json</b>에 붙여넣고 커밋하면 다음 실행부터 적용됩니다.</p>
-    <div class="row2">
-      <div><label>TQQQ 시드 ($, 0=미사용)</label><input id="sTqqq" type="number" value="4000"></div>
-      <div><label>SOXL 시드 ($, 0=미사용)</label><input id="sSoxl" type="number" value="4000"></div>
-    </div>
-    <div><label>버전</label>
-      <select id="sVer"><option value="v2.2">v2.2 (40분할, 권장)</option>
-      <option value="v3.0">v3.0 (20분할, 고위험)</option></select></div>
-    <button onclick="genState()">state.json 생성</button>
-    <textarea id="sOut" readonly placeholder="여기에 결과가 표시됩니다"></textarea>
-  </details>
-</div>
-
 <div class="warn">
   ⚠️ <b>주의</b> — 이 도구는 주문 '가이드'만 제공합니다. 실제 매매는 본인이 증권사
   앱(한국투자증권/토스증권)에서 직접 실행해야 하며, 봇의 체결 추정과 실제 체결이
@@ -198,20 +182,67 @@ async function fetchData(path) {
 }
 
 // ---------------- 대시보드 ----------------
+let ACCOUNTS = [];  // 원격 명령 계좌 선택용
+
+function migrateView(st) {
+  // 구버전(단일 계좌) state.json도 표시 가능하게
+  if (!st.accounts) st.accounts = [{ id: 'main', name: '메인 계좌',
+                                     chat_id: '', tickers: st.tickers || {} }];
+  return st;
+}
+
 async function load() {
   try {
-    const st = await fetchData('data/state.json');
+    const st = migrateView(await fetchData('data/state.json'));
     document.getElementById('lastRun').textContent =
       '마지막 봇 실행: ' + (st.last_run ?? '아직 없음 (Actions 실행 대기)');
     const dash = document.getElementById('dashboard');
     dash.innerHTML = '';
-    const enabled = [];
-    for (const [ticker, t] of Object.entries(st.tickers)) {
-      if (!t.enabled) continue;
-      enabled.push(ticker);
-      dash.appendChild(card(ticker, t));
+    ACCOUNTS = st.accounts.map(a => ({ id: a.id, name: a.name }));
+    fillAccountSelect();
+    const btList = [];
+    for (const acc of st.accounts) {
+      const head = document.createElement('div');
+      head.style.cssText = 'display:flex;justify-content:space-between;' +
+        'align-items:center;margin:18px 0 8px';
+      head.innerHTML = `<h2 style="font-size:1.1rem">📁 ${acc.name}
+          <span class="badge">${acc.id}${acc.chat_id ? ' · 전용 텔레그램' : ' · 메인 텔레그램'}</span></h2>
+        ${acc.id !== 'main' ? `<button style="background:var(--sell);padding:6px 12px;
+          margin:0;font-size:.75rem" onclick="delAccount('${acc.id}','${acc.name}')">계좌 삭제</button>` : ''}`;
+      dash.appendChild(head);
+      let shown = 0;
+      for (const [ticker, t] of Object.entries(acc.tickers)) {
+        if (!t.enabled) continue;
+        if (!t.active && t.shares === 0 && acc.id !== 'main') {
+          // 미시작 종목은 간단한 시작 버튼만
+          const mini = document.createElement('div');
+          mini.className = 'card';
+          mini.innerHTML = `<h2>${ticker} <span class="badge">미시작</span></h2>
+            <div class="row2">
+              <div><label>시드 ($)</label><input id="st_${acc.id}_${ticker}"
+                   type="number" placeholder="3350"></div>
+              <div><button style="margin-top:22px"
+                   onclick="startTicker('${acc.id}','${ticker}')">▶ 시작</button></div>
+            </div>
+            <div id="fx_st_${acc.id}_${ticker}" class="memo"></div>`;
+          dash.appendChild(mini);
+          shown++;
+          continue;
+        }
+        dash.appendChild(card(ticker, t, acc.id));
+        if (t.active || t.shares > 0) btList.push([acc, ticker]);
+        shown++;
+      }
+      if (!shown) dash.insertAdjacentHTML('beforeend',
+        '<p class="memo">활성화된 종목 없음</p>');
     }
-    loadBacktest(enabled);
+    // 계좌 추가 버튼
+    const addBtn = document.createElement('button');
+    addBtn.textContent = '➕ 신규 계좌 추가';
+    addBtn.style.marginBottom = '14px';
+    addBtn.onclick = addAccount;
+    dash.appendChild(addBtn);
+    loadBacktest(btList);
   } catch (e) {
     document.getElementById('lastRun').textContent =
       'state.json을 읽지 못했습니다 — GitHub Pages가 꺼져 있거나(Private 저장소), ' +
@@ -219,7 +250,8 @@ async function load() {
   }
 }
 
-function card(ticker, t) {
+function card(ticker, t, accId) {
+  const key = `${accId}_${ticker}`;
   const div = document.createElement('div');
   div.className = 'card';
   const oneBuy = t.one_buy_override || (t.seed / t.divisions);
@@ -264,18 +296,18 @@ function card(ticker, t) {
       <summary>✏️ 잔고/시드 수정 (증권사 실제 값으로 보정)</summary>
       <div class="row2">
         <div><label>보유수량 (주)</label>
-          <input id="fx_sh_${ticker}" type="number" value="${t.shares}"></div>
+          <input id="fx_sh_${key}" type="number" value="${t.shares}"></div>
         <div><label>평단가 ($)</label>
-          <input id="fx_av_${ticker}" type="number" step="0.0001"
+          <input id="fx_av_${key}" type="number" step="0.0001"
                  value="${t.avg_price.toFixed(4)}"></div>
       </div>
-      <button onclick="fixPosition('${ticker}')">잔고 보정 실행</button>
+      <button onclick="fixPosition('${accId}','${ticker}')">잔고 보정 실행</button>
       <div class="row2" style="margin-top:8px">
         <div><label>시드 ($)</label>
-          <input id="fx_sd_${ticker}" type="number" value="${t.seed}"></div>
-        <div><button style="margin-top:22px" onclick="changeSeed('${ticker}')">시드 변경</button></div>
+          <input id="fx_sd_${key}" type="number" value="${t.seed}"></div>
+        <div><button style="margin-top:22px" onclick="changeSeed('${accId}','${ticker}')">시드 변경</button></div>
       </div>
-      <div id="fx_st_${ticker}" class="memo" style="margin-top:6px"></div>
+      <div id="fx_st_${key}" class="memo" style="margin-top:6px"></div>
       <p class="memo" style="margin-top:6px">보정하면 봇이 즉시 재실행되어
         주문 가이드가 새 값 기준으로 다시 계산되고 텔레그램으로 전송됩니다.</p>
     </details>`;
@@ -307,35 +339,75 @@ async function dispatchManage(inputs, statusEl) {
   return false;
 }
 
-async function fixPosition(ticker) {
-  const sh = document.getElementById(`fx_sh_${ticker}`).value;
-  const av = document.getElementById(`fx_av_${ticker}`).value;
-  const el = document.getElementById(`fx_st_${ticker}`);
+async function fixPosition(accId, ticker) {
+  const key = `${accId}_${ticker}`;
+  const sh = document.getElementById(`fx_sh_${key}`).value;
+  const av = document.getElementById(`fx_av_${key}`).value;
+  const el = document.getElementById(`fx_st_${key}`);
   if (sh === '' || av === '' || +sh < 0 || +av < 0) {
     el.textContent = '⚠️ 수량과 평단가를 올바르게 입력하세요'; return;
   }
-  if (!confirm(`${ticker} 잔고를 ${sh}주 / 평단 $${(+av).toFixed(2)}로 보정합니다. ` +
-               `증권사 앱의 실제 값과 일치하는지 확인했습니까?`)) return;
-  await dispatchManage({ action: 'fix', ticker, value1: String(sh),
-                         value2: String(av), version: 'v2.2' }, el);
+  if (!confirm(`[${accId}] ${ticker} 잔고를 ${sh}주 / 평단 $${(+av).toFixed(2)}로 ` +
+               `보정합니다. 증권사 앱의 실제 값과 일치하는지 확인했습니까?`)) return;
+  await dispatchManage({ action: 'fix', account: accId, ticker,
+                         value1: String(sh), value2: String(av), version: 'v2.2' }, el);
 }
 
-async function changeSeed(ticker) {
-  const sd = document.getElementById(`fx_sd_${ticker}`).value;
-  const el = document.getElementById(`fx_st_${ticker}`);
+async function changeSeed(accId, ticker) {
+  const key = `${accId}_${ticker}`;
+  const sd = document.getElementById(`fx_sd_${key}`).value;
+  const el = document.getElementById(`fx_st_${key}`);
   if (sd === '' || +sd < 100) { el.textContent = '⚠️ 시드는 $100 이상'; return; }
-  if (!confirm(`${ticker} 시드를 $${sd}로 변경합니다. (1회 매수금이 바뀝니다)`)) return;
-  await dispatchManage({ action: 'seed', ticker, value1: String(sd),
-                         value2: '', version: 'v2.2' }, el);
+  if (!confirm(`[${accId}] ${ticker} 시드를 $${sd}로 변경합니다.`)) return;
+  await dispatchManage({ action: 'seed', account: accId, ticker,
+                         value1: String(sd), value2: '', version: 'v2.2' }, el);
+}
+
+async function startTicker(accId, ticker) {
+  const sd = document.getElementById(`st_${accId}_${ticker}`).value;
+  const el = document.getElementById(`fx_st_${accId}_${ticker}`);
+  if (!sd || +sd < 100) { el.textContent = '⚠️ 시드는 $100 이상'; return; }
+  if (!confirm(`[${accId}] ${ticker}를 시드 $${sd}로 시작합니다 (v2.2).`)) return;
+  await dispatchManage({ action: 'start', account: accId, ticker,
+                         value1: String(sd), value2: '', version: 'v2.2' }, el);
+}
+
+async function addAccount() {
+  const name = prompt('새 계좌 이름 (공백 없이, 영문/숫자/한글/-)\n예: 한투ISA, sub1');
+  if (!name) return;
+  if (!/^[A-Za-z0-9가-힣_-]{1,20}$/.test(name)) {
+    alert('이름은 공백 없이 20자 이내여야 합니다'); return;
+  }
+  const chat = prompt('이 계좌 전용 텔레그램 chat_id\n(공란이면 메인 계좌의 텔레그램으로 전송됩니다)') || '';
+  const el = document.getElementById('lastRun');
+  const ok = await dispatchManage({ action: 'addaccount', account: name,
+                                    ticker: 'TQQQ', value1: chat.trim(),
+                                    value2: '', version: 'v2.2' }, el);
+  if (ok) el.textContent += ' — 계좌 생성 중, 1분 후 새로고침하세요';
+}
+
+async function delAccount(accId, name) {
+  if (!confirm(`계좌 "${name}"를 삭제합니까? (보유 종목이 있으면 거부됩니다)`)) return;
+  await dispatchManage({ action: 'delaccount', account: accId, ticker: 'TQQQ',
+                         value1: '', value2: '', version: 'v2.2' },
+                       document.getElementById('lastRun'));
 }
 
 // ---------------- 백테스트 결과 표시 ----------------
-async function loadBacktest(tickers) {
+async function loadBacktest(pairs) {   // pairs: [[acc, ticker], ...]
   const wrap = document.getElementById('backtest');
-  for (const ticker of tickers) {
+  wrap.innerHTML = '';
+  for (const [acc, ticker] of pairs) {
     try {
-      wrap.appendChild(btCard(ticker, await fetchData(`data/backtest_${ticker}.json`)));
-    } catch (e) { /* 파일 없으면 무시 (봇 첫 실행 전) */ }
+      wrap.appendChild(btCard(ticker,
+        await fetchData(`data/backtest_${acc.id}_${ticker}.json`), acc.name));
+    } catch (e) {
+      try {  // 구버전 파일명 폴백
+        if (acc.id === 'main')
+          wrap.appendChild(btCard(ticker,
+            await fetchData(`data/backtest_${ticker}.json`), acc.name));
+      } catch (e2) { /* 봇 첫 실행 전 */ }
+    }
   }
   if (!wrap.children.length) {
     wrap.innerHTML = `<div class="card"><h2>🧪 백테스트</h2>
@@ -344,7 +416,7 @@ async function loadBacktest(tickers) {
   }
 }
 
-function btCard(ticker, bt) {
+function btCard(ticker, bt, accName) {
   const s = bt.summary;
   const div = document.createElement('div');
   div.className = 'card';
@@ -389,8 +461,8 @@ function btCard(ticker, bt) {
   ).reverse().join('');
 
   div.innerHTML = `
-    <h2>🧪 ${ticker} 백테스트 <span class="badge">${s.version} ·
-      ${s.period[0]} ~ ${s.period[1]}</span></h2>
+    <h2>🧪 ${accName ? accName + ' · ' : ''}${ticker} 백테스트
+      <span class="badge">${s.version} · ${s.period[0]} ~ ${s.period[1]}</span></h2>
     ${sigHtml}
     <div class="grid">
       <div class="stat"><div class="k">완료 사이클</div>
@@ -549,6 +621,7 @@ async function runCommand() {
           ref: 'main',
           inputs: {
             action,
+            account: document.getElementById('cAccount').value,
             ticker: document.getElementById('cTicker').value,
             value1: v1 || '',
             value2: v2 || '',
@@ -666,21 +739,12 @@ async function testBot() {
     : `❌ 실패 (${res.status}) — 토큰의 Actions 권한을 확인하세요`;
 }
 
-// ---------------- state.json 생성기 ----------------
-function genState() {
-  const ver = document.getElementById('sVer').value;
-  const div = ver === 'v2.2' ? 40 : 20;
-  const mk = seed => ({
-    enabled: seed > 0, version: ver, seed, divisions: div, active: seed > 0,
-    shares: 0, total_bought: 0, avg_price: 0, realized_profit: 0,
-    cycle_no: 1, cycle_start: null, one_buy_override: null,
-    last_close: null, last_date: null, pending_orders: [], history: []
-  });
-  const st = { tickers: {
-    TQQQ: mk(+document.getElementById('sTqqq').value),
-    SOXL: mk(+document.getElementById('sSoxl').value)
-  }, last_run: null };
-  document.getElementById('sOut').value = JSON.stringify(st, null, 2);
+// ---------------- 계좌 선택 목록 채우기 ----------------
+function fillAccountSelect() {
+  const sel = document.getElementById('cAccount');
+  if (!sel || !ACCOUNTS.length) return;
+  sel.innerHTML = ACCOUNTS.map(a =>
+    `<option value="${a.id}">${a.name} (${a.id})</option>`).join('');
 }
 
 load();

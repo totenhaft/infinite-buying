@@ -242,22 +242,26 @@ def build_orders(t, ticker):
 # ---------------------------------------------------------------
 # 텔레그램
 # ---------------------------------------------------------------
-def send_telegram(text):
-    if not TELEGRAM_TOKEN or not TELEGRAM_CHAT_ID:
+def send_telegram(text, chat_id=None):
+    chat = chat_id or TELEGRAM_CHAT_ID
+    if not TELEGRAM_TOKEN or not chat:
         print("[warn] 텔레그램 시크릿 미설정 — 전송 생략")
         print(text)
         return
     url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage"
     payload = json.dumps({
-        "chat_id": TELEGRAM_CHAT_ID,
+        "chat_id": chat,
         "text": text,
         "parse_mode": "HTML",
         "disable_web_page_preview": True,
     }).encode()
     req = urllib.request.Request(url, data=payload,
                                  headers={"Content-Type": "application/json"})
-    with urllib.request.urlopen(req, timeout=30) as r:
-        print("telegram:", r.status)
+    try:
+        with urllib.request.urlopen(req, timeout=30) as r:
+            print("telegram:", r.status, "->", chat)
+    except Exception as e:
+        print(f"[warn] 텔레그램 전송 실패({chat}): {e}")
 
 
 ORDER_LABEL = {
@@ -268,11 +272,11 @@ ORDER_LABEL = {
 }
 
 
-def format_message(state, report):
-    lines = ["<b>📈 무한매수법 데일리 가이드</b>",
+def format_message(account, report):
+    lines = [f"<b>📈 무한매수법 데일리 가이드 — {account['name']}</b>",
              f"기준일(미국장): {report['date']}", ""]
     for ticker, r in report["tickers"].items():
-        t = state["tickers"][ticker]
+        t = account["tickers"][ticker]
         lines.append(f"<b>━━ {ticker} ({t['version']}) ━━</b>")
         lines.append(f"종가 ${r['close']:.2f} | 평단 ${t['avg_price']:.2f} | "
                      f"보유 {t['shares']}주 | T={r['T']}")
@@ -313,10 +317,17 @@ def format_message(state, report):
 # 텔레그램 명령 수신 (/start, /stop, /fix, /seed, /status ...)
 # ---------------------------------------------------------------
 def poll_telegram_commands(state):
-    """봇 대화방에 쌓인 명령을 읽어 상태에 반영하고 확인 메시지를 보낸다."""
+    """봇 대화방에 쌓인 명령을 읽어 상태에 반영하고 확인 메시지를 보낸다.
+    계좌별 chat_id가 등록되어 있으면 그 방에서 온 명령은 해당 계좌가 기본값."""
     if not TELEGRAM_TOKEN or not TELEGRAM_CHAT_ID:
         return
     import manage
+    # 허용된 대화방 → 기본 계좌 매핑
+    chat_map = {str(TELEGRAM_CHAT_ID): "main"}
+    for acc in state.get("accounts", []):
+        if acc.get("chat_id"):
+            chat_map.setdefault(str(acc["chat_id"]), acc["id"])
+
     offset = state.get("tg_offset", 0)
     url = (f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/getUpdates"
            f"?offset={offset + 1}&timeout=0")
@@ -328,79 +339,88 @@ def poll_telegram_commands(state):
         print(f"[warn] getUpdates 실패: {e}")
         return
 
-    replies = []
+    replies = {}  # chat_id -> [text]
     for upd in updates:
         state["tg_offset"] = upd["update_id"]
         msg = upd.get("message") or {}
         text = (msg.get("text") or "").strip()
         chat_id = str((msg.get("chat") or {}).get("id", ""))
-        if chat_id != str(TELEGRAM_CHAT_ID):
-            continue  # 내 대화방이 아니면 무시 (보안)
+        if chat_id not in chat_map:
+            continue  # 등록되지 않은 대화방 무시 (보안)
         if not text.startswith("/") or text.startswith("/start@"):
             continue
         if text == "/start":  # 텔레그램 기본 /start는 도움말로 처리
             text = "/help"
-        ok, reply = manage.apply_command(state, text)
-        replies.append(("✅ " if ok else "❌ ") + f"<code>{text}</code>\n{reply}")
+        ok, reply = manage.apply_command(state, text,
+                                         default_account=chat_map[chat_id])
+        replies.setdefault(chat_id, []).append(
+            ("✅ " if ok else "❌ ") + f"<code>{text}</code>\n{reply}")
 
-    if replies:
-        send_telegram("<b>🛠 명령 처리 결과</b>\n\n" + "\n\n".join(replies))
+    for chat_id, msgs in replies.items():
+        send_telegram("<b>🛠 명령 처리 결과</b>\n\n" + "\n\n".join(msgs), chat_id)
 
 
 # ---------------------------------------------------------------
 # 메인
 # ---------------------------------------------------------------
 def main():
+    import manage
     with open(STATE_PATH, encoding="utf-8") as f:
-        state = json.load(f)
+        state = manage.migrate(json.load(f))
 
-    # 먼저 텔레그램 명령을 반영 (시작/중지/보정 등)
+    # 먼저 텔레그램 명령을 반영 (시작/중지/보정/계좌추가 등)
     poll_telegram_commands(state)
 
-    report = {"date": None, "tickers": {}}
+    ohlc_cache = {}  # 종목별 시세는 한 번만 조회
 
-    for ticker, t in state["tickers"].items():
-        if not t.get("enabled"):
-            continue
-        ohlc = fetch_ohlc(ticker)
+    for account in state["accounts"]:
+        report = {"date": None, "tickers": {}}
 
-        # 같은 날 중복 실행 방지
-        if t.get("last_date") == ohlc["date"] and t.get("pending_orders") == []:
-            print(f"[info] {ticker}: {ohlc['date']} 이미 처리됨")
+        for ticker, t in account["tickers"].items():
+            if not t.get("enabled"):
+                continue
+            if ticker not in ohlc_cache:
+                ohlc_cache[ticker] = fetch_ohlc(ticker)
+            ohlc = ohlc_cache[ticker]
 
-        fills = []
-        if t.get("last_date") != ohlc["date"]:
-            fills = simulate_fills(t, ohlc)
+            fills = []
+            if t.get("last_date") != ohlc["date"]:
+                fills = simulate_fills(t, ohlc)
 
-        t["last_close"] = ohlc["close"]
-        t["last_date"] = ohlc["date"]
-        if t["active"] and t["shares"] > 0 and not t.get("cycle_start"):
-            t["cycle_start"] = ohlc["date"]
+            t["last_close"] = ohlc["close"]
+            t["last_date"] = ohlc["date"]
+            if t["active"] and t["shares"] > 0 and not t.get("cycle_start"):
+                t["cycle_start"] = ohlc["date"]
 
-        orders, T = build_orders(t, ticker)
-        t["pending_orders"] = orders
+            orders, T = build_orders(t, ticker)
+            t["pending_orders"] = orders
 
-        # 백테스트 + 유지/중단 신호 (실패해도 데일리 가이드는 계속)
-        bt = None
-        try:
-            import backtest
-            bt = backtest.run_for_ticker(ticker, t)
-        except Exception as e:
-            print(f"[warn] {ticker} 백테스트 실패: {e}")
+            # 백테스트 + 유지/중단 신호 (실패해도 데일리 가이드는 계속)
+            bt = None
+            try:
+                import backtest
+                bt = backtest.run_for_ticker(ticker, t, account["id"])
+            except Exception as e:
+                print(f"[warn] {account['id']}/{ticker} 백테스트 실패: {e}")
 
-        report["date"] = ohlc["date"]
-        report["tickers"][ticker] = {
-            "close": ohlc["close"], "T": T, "fills": fills, "orders": orders,
-            "backtest": bt,
-        }
+            report["date"] = ohlc["date"]
+            report["tickers"][ticker] = {
+                "close": ohlc["close"], "T": T, "fills": fills,
+                "orders": orders, "backtest": bt,
+            }
+
+        # 활성/보유 종목이 하나라도 있으면 계좌별 메시지 전송
+        # (chat_id가 비어있으면 메인 계좌의 텔레그램으로)
+        if any(t["active"] or t["shares"] > 0
+               for t in account["tickers"].values()):
+            msg = format_message(account, report)
+            send_telegram(msg, account.get("chat_id") or None)
 
     state["last_run"] = datetime.now(timezone.utc).isoformat(timespec="seconds")
 
     with open(STATE_PATH, "w", encoding="utf-8") as f:
         json.dump(state, f, ensure_ascii=False, indent=2)
 
-    msg = format_message(state, report)
-    send_telegram(msg)
     print("완료")
 
 
