@@ -1,5 +1,5 @@
 {
-  "last_run": "2026-07-22T16:42:22+00:00",
+  "last_run": "2026-07-22T23:13:30+00:00",
   "tg_offset": 541703691,
   "accounts": [
     {
@@ -20,7 +20,7 @@
           "cycle_no": 1,
           "cycle_start": "2026-07-17",
           "one_buy_override": null,
-          "last_close": 71.23,
+          "last_close": 70.28,
           "last_date": "2026-07-22",
           "pending_orders": [
             {
@@ -63,7 +63,7 @@
           "cycle_no": 2,
           "cycle_start": "2026-07-22",
           "one_buy_override": null,
-          "last_close": 163.192,
+          "last_close": 160.99,
           "last_date": "2026-07-22",
           "pending_orders": [
             {
@@ -119,12 +119,12 @@
           "cycle_no": 1,
           "cycle_start": null,
           "one_buy_override": null,
-          "last_close": 71.23,
+          "last_close": 70.28,
           "last_date": "2026-07-22",
           "pending_orders": [
             {
               "type": "LOC_BUY",
-              "price": 81.91,
+              "price": 80.82,
               "qty": 2,
               "memo": "사이클 시작: 1회분 매수"
             }
@@ -144,7 +144,7 @@
           "cycle_no": 1,
           "cycle_start": null,
           "one_buy_override": null,
-          "last_close": 163.192,
+          "last_close": 160.99,
           "last_date": "2026-07-22",
           "pending_orders": [],
           "history": []
