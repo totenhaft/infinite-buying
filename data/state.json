@@ -1,5 +1,5 @@
 {
-  "last_run": "2026-07-22T14:12:26+00:00",
+  "last_run": "2026-07-22T16:42:22+00:00",
   "tg_offset": 541703691,
   "accounts": [
     {
@@ -20,7 +20,7 @@
           "cycle_no": 1,
           "cycle_start": "2026-07-17",
           "one_buy_override": null,
-          "last_close": 70.935,
+          "last_close": 71.23,
           "last_date": "2026-07-22",
           "pending_orders": [
             {
@@ -63,7 +63,7 @@
           "cycle_no": 2,
           "cycle_start": "2026-07-22",
           "one_buy_override": null,
-          "last_close": 158.31,
+          "last_close": 163.192,
           "last_date": "2026-07-22",
           "pending_orders": [
             {
@@ -109,9 +109,9 @@
         "TQQQ": {
           "enabled": true,
           "version": "v2.2",
-          "seed": 0,
+          "seed": 5000.0,
           "divisions": 40,
-          "active": false,
+          "active": true,
           "shares": 0,
           "total_bought": 0.0,
           "avg_price": 0.0,
@@ -119,9 +119,16 @@
           "cycle_no": 1,
           "cycle_start": null,
           "one_buy_override": null,
-          "last_close": 70.935,
+          "last_close": 71.23,
           "last_date": "2026-07-22",
-          "pending_orders": [],
+          "pending_orders": [
+            {
+              "type": "LOC_BUY",
+              "price": 81.91,
+              "qty": 2,
+              "memo": "사이클 시작: 1회분 매수"
+            }
+          ],
           "history": []
         },
         "SOXL": {
@@ -137,7 +144,7 @@
           "cycle_no": 1,
           "cycle_start": null,
           "one_buy_override": null,
-          "last_close": 158.31,
+          "last_close": 163.192,
           "last_date": "2026-07-22",
           "pending_orders": [],
           "history": []
