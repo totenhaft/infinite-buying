@@ -1,5 +1,5 @@
 {
- "generated": "2026-08-06T13:43:41+00:00",
+ "generated": "2026-08-06T23:58:53+00:00",
  "strategies": {
   "base40": "v2.2 원본(40분할)",
   "v30": "v3.0(20분할)",
@@ -194,7 +194,7 @@
       "2026-08-06"
      ],
      "days": 329,
-     "index_move_pct": 1042.1,
+     "index_move_pct": 1047.3,
      "results": {
       "base40": {
        "total_pct": 59.3,
@@ -257,7 +257,7 @@
        "open_position": false
       },
       "bh3x": {
-       "total_pct": 1042.1,
+       "total_pct": 1047.3,
        "mdd_pct": -99.9,
        "cycles": null,
        "win_rate": null,
@@ -266,7 +266,7 @@
        "invested_peak_pct": 100.0
       }
      },
-     "index_1x_pct": 1271.3
+     "index_1x_pct": 1273.5
     }
    ]
   },
@@ -448,10 +448,10 @@
       "2026-08-06"
      ],
      "days": 387,
-     "index_move_pct": 318.4,
+     "index_move_pct": 329.1,
      "results": {
       "base40": {
-       "total_pct": 71.1,
+       "total_pct": 71.2,
        "mdd_pct": -8.5,
        "cycles": 84,
        "win_rate": 100.0,
@@ -461,14 +461,14 @@
        "open_position": false
       },
       "v30": {
-       "total_pct": 243.8,
+       "total_pct": 244.0,
        "mdd_pct": -29.6,
-       "cycles": 64,
+       "cycles": 65,
        "win_rate": 100.0,
        "max_cycle_days": 20,
        "exhausted_days": 0,
        "invested_peak_pct": 86.8,
-       "open_position": true
+       "open_position": false
       },
       "div80": {
        "total_pct": 35.6,
@@ -481,7 +481,7 @@
        "open_position": false
       },
       "ma200": {
-       "total_pct": 32.0,
+       "total_pct": 32.1,
        "mdd_pct": -11.2,
        "cycles": 38,
        "win_rate": 100.0,
@@ -491,7 +491,7 @@
        "open_position": false
       },
       "reserve": {
-       "total_pct": 47.5,
+       "total_pct": 47.6,
        "mdd_pct": -6.4,
        "cycles": 84,
        "win_rate": 100.0,
@@ -501,7 +501,7 @@
        "open_position": false
       },
       "ma_res": {
-       "total_pct": 21.3,
+       "total_pct": 21.4,
        "mdd_pct": -7.9,
        "cycles": 38,
        "win_rate": 100.0,
@@ -511,7 +511,7 @@
        "open_position": false
       },
       "bh3x": {
-       "total_pct": 318.4,
+       "total_pct": 329.1,
        "mdd_pct": -100.0,
        "cycles": null,
        "win_rate": null,
@@ -520,7 +520,7 @@
        "invested_peak_pct": 100.0
       }
      },
-     "index_1x_pct": 9648.5
+     "index_1x_pct": 9739.3
     }
    ]
   }
