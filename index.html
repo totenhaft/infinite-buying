@@ -57,6 +57,8 @@
 
 <div id="backtest"></div>
 
+<div id="regime"></div>
+
 <div class="card">
   <h2>🕹 원격 명령 <span class="badge">Actions 직접 실행</span></h2>
   <div><label>계좌</label>
@@ -739,6 +741,51 @@ async function testBot() {
     : `❌ 실패 (${res.status}) — 토큰의 Actions 권한을 확인하세요`;
 }
 
+// ---------------- 국면별 백테스트 표 ----------------
+async function loadRegime() {
+  const wrap = document.getElementById('regime');
+  let d;
+  try { d = await fetchData('data/regime_backtest.json'); }
+  catch (e) {
+    wrap.innerHTML = `<div class="card"><h2>📉 국면별 백테스트</h2>
+      <p class="memo">아직 실행되지 않았습니다. GitHub → Actions →
+      "국면별 백테스트" → Run workflow를 한 번 실행하세요.
+      (닷컴버블·금융위기·코로나·2022 등 국면별로 전략을 비교합니다)</p></div>`;
+    return;
+  }
+  const keys = Object.keys(d.strategies);
+  let html = `<div class="card"><h2>📉 국면별 백테스트
+    <span class="badge">${(d.generated||'').slice(0,10)}</span></h2>
+    <p class="memo">각 칸: <b>총손익%</b> (최대낙폭%) · 최장사이클 · 원금소진일수.
+    2010년 이전은 지수로 합성한 3배 ETF(근사치)입니다.</p>`;
+  for (const res of d.results) {
+    html += `<h3 style="margin:14px 0 6px;font-size:.95rem">${res.ticker}</h3>
+      <div style="overflow-x:auto"><table><tr><th>국면</th><th>지수</th>` +
+      keys.map(k => `<th>${d.strategies[k]}</th>`).join('') + '</tr>';
+    for (const r of res.regimes) {
+      const vals = keys.map(k => r.results[k]?.total_pct)
+                       .filter(v => v !== undefined && v !== null);
+      const best = Math.max(...vals);
+      html += `<tr><td><b>${r.name}</b><br><span class="memo">${r.period[0].slice(0,7)}~${r.period[1].slice(0,7)}</span></td>
+        <td class="${r.index_move_pct>=0?'buy':'sell'}">${r.index_move_pct}%</td>`;
+      for (const k of keys) {
+        const v = r.results[k] || {};
+        if (v.total_pct === undefined || v.total_pct === null) { html += '<td>-</td>'; continue; }
+        const hl = v.total_pct === best ? 'font-weight:800;color:var(--ok)' : '';
+        html += `<td style="${hl}">${v.total_pct}%<br>
+          <span class="memo">MDD ${v.mdd_pct}%${v.max_cycle_days!=null
+            ? ` · ${v.max_cycle_days}일 · 소진${v.exhausted_days}` : ''}</span></td>`;
+      }
+      html += '</tr>';
+    }
+    html += '</table></div>';
+  }
+  html += `<p class="memo" style="margin-top:10px">⚠️ 합성 데이터와 근사 비용 가정에
+    기반한 참고치입니다. 전략 선택은 수익률뿐 아니라 <b>MDD와 최장 사이클(버티는 기간)</b>을
+    함께 보고 판단하세요.</p></div>`;
+  wrap.innerHTML = html;
+}
+
 // ---------------- 계좌 선택 목록 채우기 ----------------
 function fillAccountSelect() {
   const sel = document.getElementById('cAccount');
@@ -748,6 +795,7 @@ function fillAccountSelect() {
 }
 
 load();
+loadRegime();
 initGh();
 </script>
 </body>

@@ -1,0 +1,62 @@
+name: 국면별 백테스트 (상승·하락·횡보)
+
+on:
+  workflow_dispatch: {}
+  schedule:
+    - cron: "0 3 1 * *"   # 매월 1일 12:00 KST
+
+permissions:
+  contents: write
+
+jobs:
+  regime:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: 국면별 백테스트 실행
+        run: python bot/regime_backtest.py
+
+      - name: 결과 요약 출력
+        run: cat docs/REGIME_BACKTEST.md
+
+      - name: 텔레그램으로 요약 전송
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          python - <<'PY'
+          import json, os, sys
+          sys.path.insert(0, 'bot')
+          import daily
+          d = json.load(open('data/regime_backtest.json', encoding='utf-8'))
+          lines = ["<b>🧪 국면별 백테스트 완료</b>", ""]
+          for res in d["results"]:
+              lines.append(f"<b>{res['ticker']}</b>")
+              for r in res["regimes"]:
+                  base = r["results"].get("base40", {})
+                  best = max((k for k in r["results"]
+                              if r["results"][k].get("total_pct") is not None),
+                             key=lambda k: r["results"][k]["total_pct"], default=None)
+                  if base.get("total_pct") is None:
+                      continue
+                  lines.append(
+                      f"· {r['name']}: v2.2 {base['total_pct']}% "
+                      f"(MDD {base['mdd_pct']}%) / 최선 {d['strategies'].get(best, best)}")
+              lines.append("")
+          lines.append("자세한 표는 저장소 docs/REGIME_BACKTEST.md 참고")
+          daily.send_telegram("\n".join(lines))
+          PY
+
+      - name: 결과 커밋
+        run: |
+          git config user.name "infinite-buying-bot"
+          git config user.email "bot@users.noreply.github.com"
+          git pull --rebase origin main || true
+          git add data/regime_backtest.json docs/REGIME_BACKTEST.md
+          git diff --cached --quiet || git commit -m "chore: 국면별 백테스트 갱신"
+          git push
