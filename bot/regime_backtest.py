@@ -64,8 +64,7 @@ REGIMES = [
 # ---------------------------------------------------------------
 # 데이터
 # ---------------------------------------------------------------
-def fetch_history(symbol):
-    """야후에서 전체 일봉. 지수는 ^NDX, ^SOX 형태."""
+def _fetch_one(symbol):
     last_err = None
     for host in ("query1", "query2"):
         url = (f"https://{host}.finance.yahoo.com/v8/finance/chart/"
@@ -89,7 +88,34 @@ def fetch_history(symbol):
             last_err = f"데이터 부족({len(out)})"
         except Exception as e:
             last_err = e
-    raise RuntimeError(f"{symbol} 조회 실패: {last_err}")
+    raise RuntimeError(f"{symbol}: {last_err}")
+
+
+def fetch_history(symbols):
+    """여러 후보 심볼을 순서대로 시도해 첫 성공을 반환. (심볼, 데이터)"""
+    if isinstance(symbols, str):
+        symbols = [symbols]
+    errors = []
+    for s in symbols:
+        try:
+            out = _fetch_one(s)
+            print(f"[info] {s}: {out[0]['date']}~{out[-1]['date']} ({len(out)}일)")
+            return s, out
+        except Exception as e:
+            print(f"[warn] {e}")
+            errors.append(str(e))
+    raise RuntimeError(" / ".join(errors))
+
+
+def rebase(seg, start_price=60.0):
+    """구간 첫 종가를 start_price로 맞춤 (수익률은 그대로).
+    합성 3배 시계열은 과거로 갈수록 가격이 폭발하므로 구간별 재기준이 필수."""
+    if not seg:
+        return seg
+    k = start_price / seg[0]["close"]
+    return [{"date": p["date"], "open": round(p["open"] * k, 4),
+             "high": round(p["high"] * k, 4), "low": round(p["low"] * k, 4),
+             "close": round(p["close"] * k, 4)} for p in seg]
 
 
 def synth_leveraged(index_prices, mult=3.0):
@@ -294,13 +320,25 @@ STRATEGIES = {
 # ---------------------------------------------------------------
 # 실행
 # ---------------------------------------------------------------
-def analyze(ticker, prices, index_prices=None):
+def analyze(ticker, real, synth, index_prices=None):
+    """국면마다 실물(가능하면) 또는 합성 시계열을 골라 재기준화 후 백테스트."""
     result = {"ticker": ticker, "regimes": []}
+    real_start = real[0]["date"] if real else "9999"
+
     for name, start, end, kind in REGIMES:
-        seg = slice_period(prices, start, end)
-        if len(seg) < 60:
+        # 실물 데이터가 구간 전체를 덮으면 실물, 아니면 합성
+        use_real = real and (start is None or start >= real_start) and name != "전체 기간"
+        if name == "전체 기간":
+            seg_raw, src = (real, "실물") if real else (synth, "합성")
+        elif use_real:
+            seg_raw, src = slice_period(real, start, end), "실물"
+        else:
+            seg_raw, src = slice_period(synth, start, end), "합성"
+        if len(seg_raw) < 60:
             continue
-        row = {"name": name, "kind": kind,
+        seg = rebase(seg_raw)
+
+        row = {"name": name, "kind": kind, "source": src,
                "period": [seg[0]["date"], seg[-1]["date"]], "days": len(seg),
                "index_move_pct": round((seg[-1]["close"] / seg[0]["close"] - 1) * 100, 1),
                "results": {}}
@@ -310,7 +348,7 @@ def analyze(ticker, prices, index_prices=None):
             except Exception as e:
                 row["results"][key] = {"error": str(e)}
         if index_prices:
-            seg_i = slice_period(index_prices, start, end)
+            seg_i = slice_period(index_prices, row["period"][0], row["period"][1])
             if seg_i:
                 row["index_1x_pct"] = round(
                     (seg_i[-1]["close"] / seg_i[0]["close"] - 1) * 100, 1)
@@ -327,9 +365,9 @@ def to_markdown(all_results):
     keys = list(STRATEGIES.keys())
     for res in all_results:
         L += [f"## {res['ticker']}", "",
-              "| 국면 | 기간 | 3배지수 | " + " | ".join(
+              "| 국면 | 기간 | 데이터 | 3배지수 | " + " | ".join(
                   STRATEGIES[k]["label"] for k in keys) + " |",
-              "|---|---|---|" + "---|" * len(keys)]
+              "|---|---|---|---|" + "---|" * len(keys)]
         for r in res["regimes"]:
             cells = []
             for k in keys:
@@ -342,50 +380,46 @@ def to_markdown(all_results):
                     cells.append(f"**{v['total_pct']}%** ({v['mdd_pct']}%) · "
                                  f"{v['max_cycle_days']}일 · {v['exhausted_days']}일")
             L.append(f"| {r['name']} | {r['period'][0]}~{r['period'][1]} | "
-                     f"{r['index_move_pct']}% | " + " | ".join(cells) + " |")
+                     f"{r.get('source','-')} | {r['index_move_pct']}% | "
+                     + " | ".join(cells) + " |")
         L.append("")
     return "\n".join(L)
 
 
+SOURCES = {
+    "TQQQ": {"real": ["TQQQ"], "index": ["^NDX", "QQQ", "^IXIC"]},
+    "SOXL": {"real": ["SOXL"], "index": ["^SOX", "SOXX", "^SOXX"]},
+}
+
+
 def main():
     os.makedirs(DOCS_DIR, exist_ok=True)
-    all_results = []
-    for ticker, index_sym in (("TQQQ", "^NDX"), ("SOXL", "^SOX")):
+    all_results, notes = [], []
+    for ticker, src in SOURCES.items():
+        real, idx, synth = [], [], []
         try:
-            real = fetch_history(ticker)
+            _, real = fetch_history(src["real"])
         except Exception as e:
-            print(f"[warn] {ticker} 실물 조회 실패: {e}")
-            real = []
+            notes.append(f"{ticker} 실물 조회 실패: {e}")
         try:
-            idx = fetch_history(index_sym)
+            used, idx = fetch_history(src["index"])
             synth = synth_leveraged(idx)
+            notes.append(f"{ticker} 합성 기준지수: {used} ({idx[0]['date']}~)")
         except Exception as e:
-            print(f"[warn] {index_sym} 조회 실패: {e}")
-            idx, synth = [], []
+            notes.append(f"{ticker} 지수 조회 실패: {e}")
 
-        # 합성(과거) + 실물(2010~)을 이어붙임: 실물 시작일 이전은 합성 사용
-        if real and synth:
-            cut = real[0]["date"]
-            merged = [p for p in synth if p["date"] < cut]
-            # 이음매에서 가격 레벨 맞추기
-            if merged:
-                ratio = real[0]["close"] / merged[-1]["close"]
-                merged = [{**p, "open": p["open"] * ratio, "high": p["high"] * ratio,
-                           "low": p["low"] * ratio, "close": p["close"] * ratio}
-                          for p in merged]
-            prices = merged + real
-        else:
-            prices = real or synth
-        if not prices:
+        if not real and not synth:
+            notes.append(f"{ticker}: 사용 가능한 데이터 없음 — 건너뜀")
             continue
-        print(f"[info] {ticker}: {prices[0]['date']} ~ {prices[-1]['date']} "
-              f"({len(prices)}일, 합성 {len(prices)-len(real)}일)")
-        all_results.append(analyze(ticker, prices, idx))
+        all_results.append(analyze(ticker, real, synth, idx))
 
+    for n in notes:
+        print("[note]", n)
     with open(os.path.join(DATA_DIR, "regime_backtest.json"), "w", encoding="utf-8") as f:
         json.dump({"generated": datetime.now(timezone.utc).isoformat(timespec="seconds"),
                    "strategies": {k: v["label"] for k, v in STRATEGIES.items()},
-                   "results": all_results}, f, ensure_ascii=False, indent=1)
+                   "notes": notes, "results": all_results}, f,
+                  ensure_ascii=False, indent=1)
     with open(os.path.join(DOCS_DIR, "REGIME_BACKTEST.md"), "w", encoding="utf-8") as f:
         f.write(to_markdown(all_results))
     print("완료: data/regime_backtest.json, docs/REGIME_BACKTEST.md")

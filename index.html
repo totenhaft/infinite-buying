@@ -762,13 +762,14 @@ async function loadRegime() {
     2010년 이전은 지수로 합성한 3배 ETF(근사치)입니다.</p>`;
   for (const res of d.results) {
     html += `<h3 style="margin:14px 0 6px;font-size:.95rem">${res.ticker}</h3>
-      <div style="overflow-x:auto"><table><tr><th>국면</th><th>지수</th>` +
+      <div style="overflow-x:auto"><table><tr><th>국면</th><th>3배지수</th>` +
       keys.map(k => `<th>${d.strategies[k]}</th>`).join('') + '</tr>';
     for (const r of res.regimes) {
       const vals = keys.map(k => r.results[k]?.total_pct)
                        .filter(v => v !== undefined && v !== null);
       const best = Math.max(...vals);
-      html += `<tr><td><b>${r.name}</b><br><span class="memo">${r.period[0].slice(0,7)}~${r.period[1].slice(0,7)}</span></td>
+      html += `<tr><td><b>${r.name}</b><br><span class="memo">${r.period[0].slice(0,7)}~${r.period[1].slice(0,7)}
+        · ${r.source === '합성' ? '합성' : '실물'}</span></td>
         <td class="${r.index_move_pct>=0?'buy':'sell'}">${r.index_move_pct}%</td>`;
       for (const k of keys) {
         const v = r.results[k] || {};
@@ -782,9 +783,13 @@ async function loadRegime() {
     }
     html += '</table></div>';
   }
-  html += `<p class="memo" style="margin-top:10px">⚠️ 합성 데이터와 근사 비용 가정에
-    기반한 참고치입니다. 전략 선택은 수익률뿐 아니라 <b>MDD와 최장 사이클(버티는 기간)</b>을
-    함께 보고 판단하세요.</p>${runBtn}</div>`;
+  html += `<p class="memo" style="margin-top:10px">⚠️ '합성'은 지수로 만든 3배 ETF 근사치이며
+    ETF 상장 이전 국면에만 사용됩니다. 각 국면은 시작가를 $60으로 재기준화해
+    비교합니다. 전략 선택은 수익률뿐 아니라 <b>MDD와 최장 사이클(버티는 기간)</b>을
+    함께 보고 판단하세요.</p>
+    ${(d.notes||[]).length ? `<details><summary class="memo">데이터 출처/경고 (${d.notes.length})</summary>
+      <p class="memo">${d.notes.join('<br>')}</p></details>` : ''}
+    ${runBtn}</div>`;
   wrap.innerHTML = html;
 }
 
