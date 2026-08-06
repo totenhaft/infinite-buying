@@ -744,13 +744,15 @@ async function testBot() {
 // ---------------- 국면별 백테스트 표 ----------------
 async function loadRegime() {
   const wrap = document.getElementById('regime');
+  const runBtn = `<button onclick="runRegime()">▶ 국면별 백테스트 실행</button>
+    <span id="rgStatus" class="memo" style="margin-left:10px"></span>`;
   let d;
   try { d = await fetchData('data/regime_backtest.json'); }
   catch (e) {
     wrap.innerHTML = `<div class="card"><h2>📉 국면별 백테스트</h2>
-      <p class="memo">아직 실행되지 않았습니다. GitHub → Actions →
-      "국면별 백테스트" → Run workflow를 한 번 실행하세요.
-      (닷컴버블·금융위기·코로나·2022 등 국면별로 전략을 비교합니다)</p></div>`;
+      <p class="memo">아직 실행되지 않았습니다. 아래 버튼을 누르면
+      닷컴버블·금융위기·코로나·2022 하락장 등 국면별로 전략 6종을 비교합니다.
+      (2~3분 소요, 완료 후 새로고침)</p>${runBtn}</div>`;
     return;
   }
   const keys = Object.keys(d.strategies);
@@ -782,8 +784,33 @@ async function loadRegime() {
   }
   html += `<p class="memo" style="margin-top:10px">⚠️ 합성 데이터와 근사 비용 가정에
     기반한 참고치입니다. 전략 선택은 수익률뿐 아니라 <b>MDD와 최장 사이클(버티는 기간)</b>을
-    함께 보고 판단하세요.</p></div>`;
+    함께 보고 판단하세요.</p>${runBtn}</div>`;
   wrap.innerHTML = html;
+}
+
+async function runRegime() {
+  const el = document.getElementById('rgStatus');
+  const c = ghConf();
+  if (!c.token || !c.owner || !c.repo) {
+    el.textContent = '⚠️ 먼저 "🔑 GitHub 토큰 설정"을 완료하세요'; return;
+  }
+  el.textContent = '⏳ 실행 요청 중…';
+  try {
+    const res = await fetch(
+      `https://api.github.com/repos/${c.owner}/${c.repo}/actions/workflows/regime.yml/dispatches`,
+      { method: 'POST',
+        headers: { 'Authorization': `Bearer ${c.token}`,
+                   'Accept': 'application/vnd.github+json',
+                   'Content-Type': 'application/json' },
+        body: JSON.stringify({ ref: 'main' }) });
+    if (res.status === 204) {
+      el.textContent = '✅ 실행됨! 2~3분 소요 — 완료되면 텔레그램 알림이 오고, 새로고침하면 표가 표시됩니다';
+      setTimeout(() => { el.textContent = '⏳ 계산 중… 잠시 후 새로고침해 보세요'; }, 30000);
+    } else {
+      const b = await res.json().catch(() => ({}));
+      el.textContent = `❌ 실패 (${res.status}): ${b.message || '토큰의 Actions 권한 확인'}`;
+    }
+  } catch (e) { el.textContent = '❌ 오류: ' + e.message; }
 }
 
 // ---------------- 계좌 선택 목록 채우기 ----------------
