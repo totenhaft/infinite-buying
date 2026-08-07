@@ -1,0 +1,98 @@
+{
+ "summary": {
+  "ticker": "SOXL",
+  "version": "v2.2",
+  "seed": 11000.0,
+  "period": [
+   "2010-03-11",
+   "2026-08-06"
+  ],
+  "n_days": 4127,
+  "n_cycles": 159,
+  "win_cycles": 156,
+  "win_rate": 98.1,
+  "total_profit": 37913.36,
+  "total_profit_pct": 344.7,
+  "avg_cycle_days": 24.8,
+  "max_cycle_days": 517,
+  "worst_cycle_profit": -513.28,
+  "mdd_pct": -32.5,
+  "open_cycle": true,
+  "recent_cycles": [
+   {
+    "start": "2026-04-22",
+    "end": "2026-04-24",
+    "days": 2,
+    "profit": 49.2
+   },
+   {
+    "start": "2026-04-27",
+    "end": "2026-05-01",
+    "days": 4,
+    "profit": 71.15
+   },
+   {
+    "start": "2026-05-04",
+    "end": "2026-05-05",
+    "days": 1,
+    "profit": 29.37
+   },
+   {
+    "start": "2026-05-07",
+    "end": "2026-05-08",
+    "days": 1,
+    "profit": 40.05
+   },
+   {
+    "start": "2026-05-11",
+    "end": "2026-05-22",
+    "days": 9,
+    "profit": 248.22
+   },
+   {
+    "start": "2026-05-27",
+    "end": "2026-06-02",
+    "days": 4,
+    "profit": 109.85
+   },
+   {
+    "start": "2026-06-03",
+    "end": "2026-06-11",
+    "days": 6,
+    "profit": 183.17
+   },
+   {
+    "start": "2026-06-12",
+    "end": "2026-06-15",
+    "days": 1,
+    "profit": 37.82
+   },
+   {
+    "start": "2026-06-16",
+    "end": "2026-06-18",
+    "days": 2,
+    "profit": 72.27
+   },
+   {
+    "start": "2026-06-22",
+    "end": "2026-06-30",
+    "days": 6,
+    "profit": 220.1
+   }
+  ]
+ },
+ "generated": "2026-08-07T01:32:49+00:00",
+ "signal": {
+  "available": true,
+  "n": 650,
+  "criteria": "T±3, 괴리±5%p, 200일선 동일",
+  "prob_hold_better": 97.5,
+  "avg_extra_pct": 2.31,
+  "p10_extra_pct": 0.64,
+  "p90_extra_pct": 4.63,
+  "cur_T": 1.5,
+  "cur_gap": 0.1,
+  "above_ma": true
+ },
+ "entry": null
+}
