@@ -18,6 +18,7 @@
 import json
 import math
 import os
+import urllib.parse
 import urllib.request
 from datetime import datetime, timezone
 
@@ -71,24 +72,46 @@ def fetch_history(ticker, latest_ohlc=None):
     return out
 
 
+def is_daily(rows):
+    """일봉인지 검증. yahoo는 range=max 요청에 월봉을 주는 경우가 있어 필수."""
+    if len(rows) < 30:
+        return False
+    from datetime import date
+    gaps = []
+    for a, b in zip(rows[-30:-1], rows[-29:]):
+        d1 = date(*map(int, a["date"].split("-")))
+        d2 = date(*map(int, b["date"].split("-")))
+        gaps.append((d2 - d1).days)
+    gaps.sort()
+    return gaps[len(gaps) // 2] <= 5  # 중앙값 5일 이하 = 일봉
+
+
 def _hist_yahoo(ticker):
+    """전체 일봉. period1/period2를 쓰면 야후가 interval=1d를 지켜준다."""
+    import time
     last_err = None
-    data = None
+    now = int(time.time())
     for host in ("query1", "query2"):
-        for rng in ("max", "10y"):
+        for params in (f"period1=0&period2={now}&interval=1d",
+                       "range=10y&interval=1d",
+                       "range=max&interval=1d"):
             url = (f"https://{host}.finance.yahoo.com/v8/finance/chart/"
-                   f"{ticker}?range={rng}&interval=1d")
+                   f"{urllib.parse.quote(ticker)}?{params}")
             req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
             try:
                 with urllib.request.urlopen(req, timeout=60) as r:
                     data = json.load(r)
-                break
+                rows = _parse_chart(data)
+                if not is_daily(rows):
+                    last_err = f"일봉 아님({len(rows)}행, {params})"
+                    continue
+                return rows
             except Exception as e:
                 last_err = e
-        if data:
-            break
-    if data is None:
-        raise RuntimeError(f"yahoo 모든 시도 실패: {last_err}")
+    raise RuntimeError(f"yahoo 실패({ticker}): {last_err}")
+
+
+def _parse_chart(data):
     res = data["chart"]["result"][0]
     ts, q = res["timestamp"], res["indicators"]["quote"][0]
     out = []
@@ -100,8 +123,8 @@ def _hist_yahoo(ticker):
             "open": round(q["open"][i], 4), "high": round(q["high"][i], 4),
             "low": round(q["low"][i], 4), "close": round(q["close"][i], 4),
         })
-    if len(out) < 300:
-        raise RuntimeError("yahoo: 데이터 부족")
+    if len(out) < 250:
+        raise RuntimeError(f"yahoo: 데이터 부족({len(out)})")
     return out
 
 

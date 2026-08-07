@@ -32,7 +32,8 @@ import urllib.request
 from datetime import datetime, timezone
 
 sys.path.insert(0, os.path.dirname(__file__))
-import daily  # noqa: E402  (체결 엔진 재사용)
+import daily      # noqa: E402  (체결 엔진 재사용)
+import backtest   # noqa: E402  (일봉 수집기 재사용)
 
 DATA_DIR = os.path.join(os.path.dirname(__file__), "..", "data")
 DOCS_DIR = os.path.join(os.path.dirname(__file__), "..", "docs")
@@ -65,30 +66,25 @@ REGIMES = [
 # 데이터
 # ---------------------------------------------------------------
 def _fetch_one(symbol):
-    last_err = None
-    for host in ("query1", "query2"):
-        url = (f"https://{host}.finance.yahoo.com/v8/finance/chart/"
-               f"{urllib.parse.quote(symbol)}?range=max&interval=1d")
+    """일봉 조회. yahoo(period1/period2) → 실패 시 stooq(지수 제외).
+    ※ range=max는 야후가 월봉을 돌려주므로 절대 단독 사용 금지."""
+    errs = []
+    try:
+        rows = backtest._hist_yahoo(symbol)
+        if backtest.is_daily(rows):
+            return rows
+        errs.append("yahoo: 월봉 응답")
+    except Exception as e:
+        errs.append(f"yahoo: {e}")
+    if not symbol.startswith("^"):   # stooq는 지수 심볼 형식이 다름
         try:
-            req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
-            with urllib.request.urlopen(req, timeout=60) as r:
-                data = json.load(r)
-            res = data["chart"]["result"][0]
-            ts, q = res["timestamp"], res["indicators"]["quote"][0]
-            out = []
-            for i in range(len(ts)):
-                if any(q[k][i] is None for k in ("open", "high", "low", "close")):
-                    continue
-                out.append({
-                    "date": datetime.fromtimestamp(ts[i], tz=timezone.utc).strftime("%Y-%m-%d"),
-                    "open": q["open"][i], "high": q["high"][i],
-                    "low": q["low"][i], "close": q["close"][i]})
-            if len(out) > 300:
-                return out
-            last_err = f"데이터 부족({len(out)})"
+            rows = backtest._hist_stooq(symbol)
+            if backtest.is_daily(rows):
+                return rows
+            errs.append("stooq: 일봉 아님")
         except Exception as e:
-            last_err = e
-    raise RuntimeError(f"{symbol}: {last_err}")
+            errs.append(f"stooq: {e}")
+    raise RuntimeError(f"{symbol} [{' / '.join(errs)}]")
 
 
 def fetch_history(symbols):
@@ -320,6 +316,9 @@ STRATEGIES = {
 # ---------------------------------------------------------------
 # 실행
 # ---------------------------------------------------------------
+SKIPPED = []
+
+
 def analyze(ticker, real, synth, index_prices=None):
     """국면마다 실물(가능하면) 또는 합성 시계열을 골라 재기준화 후 백테스트."""
     result = {"ticker": ticker, "regimes": []}
@@ -335,6 +334,7 @@ def analyze(ticker, real, synth, index_prices=None):
         else:
             seg_raw, src = slice_period(synth, start, end), "합성"
         if len(seg_raw) < 60:
+            SKIPPED.append(f"{ticker}/{name}: 데이터 {len(seg_raw)}행뿐 — 제외")
             continue
         seg = rebase(seg_raw)
 
@@ -399,12 +399,15 @@ def main():
         real, idx, synth = [], [], []
         try:
             _, real = fetch_history(src["real"])
+            notes.append(f"{ticker} 실물: {real[0]['date']}~{real[-1]['date']} "
+                         f"({len(real)}일)")
         except Exception as e:
             notes.append(f"{ticker} 실물 조회 실패: {e}")
         try:
             used, idx = fetch_history(src["index"])
             synth = synth_leveraged(idx)
-            notes.append(f"{ticker} 합성 기준지수: {used} ({idx[0]['date']}~)")
+            notes.append(f"{ticker} 합성 기준지수: {used} "
+                         f"({idx[0]['date']}~{idx[-1]['date']}, {len(idx)}일)")
         except Exception as e:
             notes.append(f"{ticker} 지수 조회 실패: {e}")
 
@@ -413,6 +416,7 @@ def main():
             continue
         all_results.append(analyze(ticker, real, synth, idx))
 
+    notes.extend(SKIPPED)
     for n in notes:
         print("[note]", n)
     with open(os.path.join(DATA_DIR, "regime_backtest.json"), "w", encoding="utf-8") as f:
