@@ -1,5 +1,5 @@
 {
- "generated": "2026-08-06T23:58:53+00:00",
+ "generated": "2026-08-07T03:12:34+00:00",
  "strategies": {
   "base40": "v2.2 원본(40분할)",
   "v30": "v3.0(20분할)",
@@ -10,508 +10,88 @@
   "bh3x": "3배 ETF 보유"
  },
  "notes": [
-  "TQQQ 실물 조회 실패: TQQQ: 데이터 부족(199)",
-  "TQQQ 합성 기준지수: QQQ (1999-04-01~)",
-  "SOXL 실물 조회 실패: SOXL: 데이터 부족(198)",
-  "SOXL 합성 기준지수: ^SOX (1994-06-01~)"
+  "TQQQ 실물: 2010-02-11~2026-08-06 (4146일)",
+  "TQQQ 합성 기준지수: ^NDX (1985-10-01~2026-08-06, 10291일)",
+  "SOXL 실물: 2010-03-11~2026-08-06 (4127일)",
+  "SOXL 합성 기준지수: ^SOX (1994-05-04~2026-08-06, 8119일)"
  ],
  "results": [
   {
    "ticker": "TQQQ",
    "regimes": [
     {
-     "name": "닷컴 이후 회복",
-     "kind": "상승",
+     "name": "닷컴버블 붕괴",
+     "kind": "폭락",
      "source": "합성",
      "period": [
-      "2002-11-01",
-      "2007-10-01"
+      "2000-03-10",
+      "2002-10-09"
      ],
-     "days": 60,
-     "index_move_pct": 435.8,
+     "days": 648,
+     "index_move_pct": -100.0,
      "results": {
       "base40": {
-       "total_pct": 9.9,
-       "mdd_pct": -2.1,
-       "cycles": 13,
+       "total_pct": -85.2,
+       "mdd_pct": -87.0,
+       "cycles": 5,
        "win_rate": 100.0,
-       "max_cycle_days": 7,
-       "exhausted_days": 0,
-       "invested_peak_pct": 15.1,
-       "open_position": false
+       "max_cycle_days": 526,
+       "exhausted_days": 506,
+       "invested_peak_pct": 99.1,
+       "open_position": true
       },
       "v30": {
-       "total_pct": 26.7,
-       "mdd_pct": -5.8,
-       "cycles": 10,
+       "total_pct": -99.8,
+       "mdd_pct": -99.8,
+       "cycles": 1,
        "win_rate": 100.0,
-       "max_cycle_days": 10,
-       "exhausted_days": 0,
-       "invested_peak_pct": 35.2,
-       "open_position": false
-      },
-      "div80": {
-       "total_pct": 6.0,
-       "mdd_pct": -1.2,
-       "cycles": 13,
-       "win_rate": 100.0,
-       "max_cycle_days": 7,
-       "exhausted_days": 0,
-       "invested_peak_pct": 9.1,
-       "open_position": false
-      },
-      "ma200": {
-       "total_pct": 9.9,
-       "mdd_pct": -2.1,
-       "cycles": 13,
-       "win_rate": 100.0,
-       "max_cycle_days": 7,
-       "exhausted_days": 0,
-       "invested_peak_pct": 15.1,
-       "open_position": false
-      },
-      "reserve": {
-       "total_pct": 6.6,
-       "mdd_pct": -1.4,
-       "cycles": 13,
-       "win_rate": 100.0,
-       "max_cycle_days": 7,
-       "exhausted_days": 0,
-       "invested_peak_pct": 15.1,
-       "open_position": false
-      },
-      "ma_res": {
-       "total_pct": 6.6,
-       "mdd_pct": -1.4,
-       "cycles": 13,
-       "win_rate": 100.0,
-       "max_cycle_days": 7,
-       "exhausted_days": 0,
-       "invested_peak_pct": 15.1,
-       "open_position": false
-      },
-      "bh3x": {
-       "total_pct": 435.8,
-       "mdd_pct": -36.3,
-       "cycles": null,
-       "win_rate": null,
-       "max_cycle_days": null,
-       "exhausted_days": null,
-       "invested_peak_pct": 100.0
-      }
-     },
-     "index_1x_pct": 98.5
-    },
-    {
-     "name": "위기 후 강세장",
-     "kind": "상승",
-     "source": "합성",
-     "period": [
-      "2009-04-01",
-      "2014-12-01"
-     ],
-     "days": 69,
-     "index_move_pct": 1724.5,
-     "results": {
-      "base40": {
-       "total_pct": 7.6,
-       "mdd_pct": -1.9,
-       "cycles": 12,
-       "win_rate": 100.0,
-       "max_cycle_days": 13,
-       "exhausted_days": 0,
-       "invested_peak_pct": 12.4,
-       "open_position": false
-      },
-      "v30": {
-       "total_pct": 32.5,
-       "mdd_pct": -5.5,
-       "cycles": 15,
-       "win_rate": 100.0,
-       "max_cycle_days": 12,
-       "exhausted_days": 0,
-       "invested_peak_pct": 36.3,
-       "open_position": false
-      },
-      "div80": {
-       "total_pct": 2.7,
-       "mdd_pct": -0.9,
-       "cycles": 8,
-       "win_rate": 100.0,
-       "max_cycle_days": 9,
-       "exhausted_days": 0,
-       "invested_peak_pct": 6.2,
-       "open_position": false
-      },
-      "ma200": {
-       "total_pct": 7.6,
-       "mdd_pct": -1.9,
-       "cycles": 12,
-       "win_rate": 100.0,
-       "max_cycle_days": 13,
-       "exhausted_days": 0,
-       "invested_peak_pct": 12.4,
-       "open_position": false
-      },
-      "reserve": {
-       "total_pct": 5.1,
-       "mdd_pct": -1.2,
-       "cycles": 12,
-       "win_rate": 100.0,
-       "max_cycle_days": 13,
-       "exhausted_days": 0,
-       "invested_peak_pct": 12.4,
-       "open_position": false
-      },
-      "ma_res": {
-       "total_pct": 5.1,
-       "mdd_pct": -1.2,
-       "cycles": 12,
-       "win_rate": 100.0,
-       "max_cycle_days": 13,
-       "exhausted_days": 0,
-       "invested_peak_pct": 12.4,
-       "open_position": false
-      },
-      "bh3x": {
-       "total_pct": 1724.5,
-       "mdd_pct": -37.0,
-       "cycles": null,
-       "win_rate": null,
-       "max_cycle_days": null,
-       "exhausted_days": null,
-       "invested_peak_pct": 100.0
-      }
-     },
-     "index_1x_pct": 201.2
-    },
-    {
-     "name": "전체 기간",
-     "kind": "전체",
-     "source": "합성",
-     "period": [
-      "1999-05-01",
-      "2026-08-06"
-     ],
-     "days": 329,
-     "index_move_pct": 1047.3,
-     "results": {
-      "base40": {
-       "total_pct": 59.3,
-       "mdd_pct": -43.4,
-       "cycles": 66,
-       "win_rate": 100.0,
-       "max_cycle_days": 43,
-       "exhausted_days": 0,
-       "invested_peak_pct": 82.4,
-       "open_position": false
-      },
-      "v30": {
-       "total_pct": 112.5,
-       "mdd_pct": -79.0,
-       "cycles": 53,
-       "win_rate": 98.1,
-       "max_cycle_days": 51,
+       "max_cycle_days": 639,
        "exhausted_days": 1,
-       "invested_peak_pct": 98.2,
+       "invested_peak_pct": 97.4,
        "open_position": true
       },
       "div80": {
-       "total_pct": 29.0,
-       "mdd_pct": -20.7,
-       "cycles": 63,
+       "total_pct": -88.9,
+       "mdd_pct": -89.9,
+       "cycles": 6,
        "win_rate": 100.0,
-       "max_cycle_days": 36,
-       "exhausted_days": 0,
-       "invested_peak_pct": 39.8,
-       "open_position": false
-      },
-      "ma200": {
-       "total_pct": 30.3,
-       "mdd_pct": -43.4,
-       "cycles": 29,
-       "win_rate": 100.0,
-       "max_cycle_days": 43,
-       "exhausted_days": 0,
-       "invested_peak_pct": 82.4,
-       "open_position": false
-      },
-      "reserve": {
-       "total_pct": 39.5,
-       "mdd_pct": -29.2,
-       "cycles": 66,
-       "win_rate": 100.0,
-       "max_cycle_days": 43,
-       "exhausted_days": 0,
-       "invested_peak_pct": 82.4,
-       "open_position": false
-      },
-      "ma_res": {
-       "total_pct": 20.2,
-       "mdd_pct": -29.2,
-       "cycles": 29,
-       "win_rate": 100.0,
-       "max_cycle_days": 43,
-       "exhausted_days": 0,
-       "invested_peak_pct": 82.4,
-       "open_position": false
-      },
-      "bh3x": {
-       "total_pct": 1047.3,
-       "mdd_pct": -99.9,
-       "cycles": null,
-       "win_rate": null,
-       "max_cycle_days": null,
-       "exhausted_days": null,
-       "invested_peak_pct": 100.0
-      }
-     },
-     "index_1x_pct": 1273.5
-    }
-   ]
-  },
-  {
-   "ticker": "SOXL",
-   "regimes": [
-    {
-     "name": "닷컴 이후 회복",
-     "kind": "상승",
-     "source": "합성",
-     "period": [
-      "2002-11-01",
-      "2007-10-01"
-     ],
-     "days": 60,
-     "index_move_pct": -35.1,
-     "results": {
-      "base40": {
-       "total_pct": 9.0,
-       "mdd_pct": -4.9,
-       "cycles": 9,
-       "win_rate": 100.0,
-       "max_cycle_days": 17,
-       "exhausted_days": 0,
-       "invested_peak_pct": 19.0,
-       "open_position": true
-      },
-      "v30": {
-       "total_pct": 29.5,
-       "mdd_pct": -26.5,
-       "cycles": 7,
-       "win_rate": 100.0,
-       "max_cycle_days": 20,
-       "exhausted_days": 0,
-       "invested_peak_pct": 87.8,
-       "open_position": true
-      },
-      "div80": {
-       "total_pct": 6.1,
-       "mdd_pct": -5.7,
-       "cycles": 9,
-       "win_rate": 100.0,
-       "max_cycle_days": 19,
-       "exhausted_days": 0,
-       "invested_peak_pct": 20.5,
+       "max_cycle_days": 526,
+       "exhausted_days": 446,
+       "invested_peak_pct": 99.0,
        "open_position": true
       },
       "ma200": {
-       "total_pct": 9.4,
-       "mdd_pct": -4.9,
-       "cycles": 9,
+       "total_pct": 7.5,
+       "mdd_pct": -48.6,
+       "cycles": 3,
        "win_rate": 100.0,
-       "max_cycle_days": 17,
-       "exhausted_days": 0,
-       "invested_peak_pct": 19.0,
+       "max_cycle_days": 79,
+       "exhausted_days": 19,
+       "invested_peak_pct": 97.8,
        "open_position": false
       },
       "reserve": {
-       "total_pct": 6.0,
-       "mdd_pct": -3.3,
-       "cycles": 9,
+       "total_pct": -87.4,
+       "mdd_pct": -88.7,
+       "cycles": 6,
        "win_rate": 100.0,
-       "max_cycle_days": 17,
-       "exhausted_days": 0,
-       "invested_peak_pct": 19.0,
+       "max_cycle_days": 526,
+       "exhausted_days": 467,
+       "invested_peak_pct": 148.2,
        "open_position": true
       },
       "ma_res": {
-       "total_pct": 6.3,
-       "mdd_pct": -3.3,
-       "cycles": 9,
+       "total_pct": 5.2,
+       "mdd_pct": -32.6,
+       "cycles": 3,
        "win_rate": 100.0,
-       "max_cycle_days": 17,
+       "max_cycle_days": 61,
        "exhausted_days": 0,
-       "invested_peak_pct": 19.0,
+       "invested_peak_pct": 116.1,
        "open_position": false
       },
       "bh3x": {
-       "total_pct": -35.1,
-       "mdd_pct": -72.6,
-       "cycles": null,
-       "win_rate": null,
-       "max_cycle_days": null,
-       "exhausted_days": null,
-       "invested_peak_pct": 100.0
-      }
-     },
-     "index_1x_pct": 24.1
-    },
-    {
-     "name": "위기 후 강세장",
-     "kind": "상승",
-     "source": "합성",
-     "period": [
-      "2009-04-01",
-      "2014-12-01"
-     ],
-     "days": 69,
-     "index_move_pct": 750.2,
-     "results": {
-      "base40": {
-       "total_pct": 13.8,
-       "mdd_pct": -9.2,
-       "cycles": 15,
-       "win_rate": 100.0,
-       "max_cycle_days": 12,
-       "exhausted_days": 0,
-       "invested_peak_pct": 32.2,
-       "open_position": false
-      },
-      "v30": {
-       "total_pct": 42.9,
-       "mdd_pct": -13.0,
-       "cycles": 13,
-       "win_rate": 100.0,
-       "max_cycle_days": 12,
-       "exhausted_days": 0,
-       "invested_peak_pct": 55.3,
-       "open_position": true
-      },
-      "div80": {
-       "total_pct": 5.7,
-       "mdd_pct": -1.4,
-       "cycles": 12,
-       "win_rate": 100.0,
-       "max_cycle_days": 11,
-       "exhausted_days": 0,
-       "invested_peak_pct": 10.2,
-       "open_position": false
-      },
-      "ma200": {
-       "total_pct": 13.8,
-       "mdd_pct": -9.2,
-       "cycles": 15,
-       "win_rate": 100.0,
-       "max_cycle_days": 12,
-       "exhausted_days": 0,
-       "invested_peak_pct": 32.2,
-       "open_position": false
-      },
-      "reserve": {
-       "total_pct": 9.2,
-       "mdd_pct": -6.2,
-       "cycles": 15,
-       "win_rate": 100.0,
-       "max_cycle_days": 12,
-       "exhausted_days": 0,
-       "invested_peak_pct": 32.2,
-       "open_position": false
-      },
-      "ma_res": {
-       "total_pct": 9.2,
-       "mdd_pct": -6.2,
-       "cycles": 15,
-       "win_rate": 100.0,
-       "max_cycle_days": 12,
-       "exhausted_days": 0,
-       "invested_peak_pct": 32.2,
-       "open_position": false
-      },
-      "bh3x": {
-       "total_pct": 750.2,
-       "mdd_pct": -62.5,
-       "cycles": null,
-       "win_rate": null,
-       "max_cycle_days": null,
-       "exhausted_days": null,
-       "invested_peak_pct": 100.0
-      }
-     },
-     "index_1x_pct": 165.7
-    },
-    {
-     "name": "전체 기간",
-     "kind": "전체",
-     "source": "합성",
-     "period": [
-      "1994-07-01",
-      "2026-08-06"
-     ],
-     "days": 387,
-     "index_move_pct": 329.1,
-     "results": {
-      "base40": {
-       "total_pct": 71.2,
-       "mdd_pct": -8.5,
-       "cycles": 84,
-       "win_rate": 100.0,
-       "max_cycle_days": 19,
-       "exhausted_days": 0,
-       "invested_peak_pct": 35.6,
-       "open_position": false
-      },
-      "v30": {
-       "total_pct": 244.0,
-       "mdd_pct": -29.6,
-       "cycles": 65,
-       "win_rate": 100.0,
-       "max_cycle_days": 20,
-       "exhausted_days": 0,
-       "invested_peak_pct": 86.8,
-       "open_position": false
-      },
-      "div80": {
-       "total_pct": 35.6,
-       "mdd_pct": -5.8,
-       "cycles": 78,
-       "win_rate": 100.0,
-       "max_cycle_days": 19,
-       "exhausted_days": 0,
-       "invested_peak_pct": 18.8,
-       "open_position": false
-      },
-      "ma200": {
-       "total_pct": 32.1,
-       "mdd_pct": -11.2,
-       "cycles": 38,
-       "win_rate": 100.0,
-       "max_cycle_days": 15,
-       "exhausted_days": 0,
-       "invested_peak_pct": 35.6,
-       "open_position": false
-      },
-      "reserve": {
-       "total_pct": 47.6,
-       "mdd_pct": -6.4,
-       "cycles": 84,
-       "win_rate": 100.0,
-       "max_cycle_days": 19,
-       "exhausted_days": 0,
-       "invested_peak_pct": 35.6,
-       "open_position": false
-      },
-      "ma_res": {
-       "total_pct": 21.4,
-       "mdd_pct": -7.9,
-       "cycles": 38,
-       "win_rate": 100.0,
-       "max_cycle_days": 15,
-       "exhausted_days": 0,
-       "invested_peak_pct": 35.6,
-       "open_position": false
-      },
-      "bh3x": {
-       "total_pct": 329.1,
+       "total_pct": -100.0,
        "mdd_pct": -100.0,
        "cycles": null,
        "win_rate": null,
@@ -520,7 +100,1589 @@
        "invested_peak_pct": 100.0
       }
      },
-     "index_1x_pct": 9739.3
+     "index_1x_pct": -82.4
+    },
+    {
+     "name": "닷컴 이후 회복",
+     "kind": "상승",
+     "source": "합성",
+     "period": [
+      "2002-10-10",
+      "2007-10-31"
+     ],
+     "days": 1274,
+     "index_move_pct": 601.8,
+     "results": {
+      "base40": {
+       "total_pct": 106.0,
+       "mdd_pct": -17.5,
+       "cycles": 47,
+       "win_rate": 97.9,
+       "max_cycle_days": 132,
+       "exhausted_days": 65,
+       "invested_peak_pct": 99.2,
+       "open_position": true
+      },
+      "v30": {
+       "total_pct": 121.4,
+       "mdd_pct": -14.4,
+       "cycles": 23,
+       "win_rate": 91.3,
+       "max_cycle_days": 187,
+       "exhausted_days": 1,
+       "invested_peak_pct": 103.2,
+       "open_position": true
+      },
+      "div80": {
+       "total_pct": 22.0,
+       "mdd_pct": -6.7,
+       "cycles": 20,
+       "win_rate": 100.0,
+       "max_cycle_days": 493,
+       "exhausted_days": 0,
+       "invested_peak_pct": 53.5,
+       "open_position": false
+      },
+      "ma200": {
+       "total_pct": 101.8,
+       "mdd_pct": -17.9,
+       "cycles": 45,
+       "win_rate": 97.8,
+       "max_cycle_days": 132,
+       "exhausted_days": 65,
+       "invested_peak_pct": 99.2,
+       "open_position": true
+      },
+      "reserve": {
+       "total_pct": 73.2,
+       "mdd_pct": -16.3,
+       "cycles": 47,
+       "win_rate": 100.0,
+       "max_cycle_days": 125,
+       "exhausted_days": 18,
+       "invested_peak_pct": 149.1,
+       "open_position": true
+      },
+      "ma_res": {
+       "total_pct": 70.4,
+       "mdd_pct": -16.6,
+       "cycles": 45,
+       "win_rate": 100.0,
+       "max_cycle_days": 125,
+       "exhausted_days": 18,
+       "invested_peak_pct": 149.1,
+       "open_position": true
+      },
+      "bh3x": {
+       "total_pct": 601.8,
+       "mdd_pct": -49.1,
+       "cycles": null,
+       "win_rate": null,
+       "max_cycle_days": null,
+       "exhausted_days": null,
+       "invested_peak_pct": 100.0
+      }
+     },
+     "index_1x_pct": 163.5
+    },
+    {
+     "name": "금융위기",
+     "kind": "폭락",
+     "source": "합성",
+     "period": [
+      "2007-11-01",
+      "2009-03-09"
+     ],
+     "days": 339,
+     "index_move_pct": -94.8,
+     "results": {
+      "base40": {
+       "total_pct": -69.9,
+       "mdd_pct": -73.6,
+       "cycles": 6,
+       "win_rate": 100.0,
+       "max_cycle_days": 144,
+       "exhausted_days": 111,
+       "invested_peak_pct": 100.0,
+       "open_position": true
+      },
+      "v30": {
+       "total_pct": -89.0,
+       "mdd_pct": -89.5,
+       "cycles": 3,
+       "win_rate": 66.7,
+       "max_cycle_days": 144,
+       "exhausted_days": 5,
+       "invested_peak_pct": 100.0,
+       "open_position": true
+      },
+      "div80": {
+       "total_pct": -55.6,
+       "mdd_pct": -59.3,
+       "cycles": 3,
+       "win_rate": 100.0,
+       "max_cycle_days": 141,
+       "exhausted_days": 0,
+       "invested_peak_pct": 97.9,
+       "open_position": true
+      },
+      "ma200": {
+       "total_pct": 12.5,
+       "mdd_pct": -24.5,
+       "cycles": 5,
+       "win_rate": 100.0,
+       "max_cycle_days": 78,
+       "exhausted_days": 9,
+       "invested_peak_pct": 100.0,
+       "open_position": false
+      },
+      "reserve": {
+       "total_pct": -63.4,
+       "mdd_pct": -67.2,
+       "cycles": 6,
+       "win_rate": 100.0,
+       "max_cycle_days": 144,
+       "exhausted_days": 0,
+       "invested_peak_pct": 146.7,
+       "open_position": true
+      },
+      "ma_res": {
+       "total_pct": 10.7,
+       "mdd_pct": -20.2,
+       "cycles": 5,
+       "win_rate": 100.0,
+       "max_cycle_days": 78,
+       "exhausted_days": 0,
+       "invested_peak_pct": 144.4,
+       "open_position": false
+      },
+      "bh3x": {
+       "total_pct": -94.8,
+       "mdd_pct": -95.0,
+       "cycles": null,
+       "win_rate": null,
+       "max_cycle_days": null,
+       "exhausted_days": null,
+       "invested_peak_pct": 100.0
+      }
+     },
+     "index_1x_pct": -52.5
+    },
+    {
+     "name": "위기 후 강세장",
+     "kind": "상승",
+     "source": "합성",
+     "period": [
+      "2009-03-10",
+      "2014-12-31"
+     ],
+     "days": 1465,
+     "index_move_pct": 2769.1,
+     "results": {
+      "base40": {
+       "total_pct": 49.8,
+       "mdd_pct": -6.4,
+       "cycles": 30,
+       "win_rate": 100.0,
+       "max_cycle_days": 257,
+       "exhausted_days": 0,
+       "invested_peak_pct": 69.1,
+       "open_position": false
+      },
+      "v30": {
+       "total_pct": 132.9,
+       "mdd_pct": -15.1,
+       "cycles": 30,
+       "win_rate": 100.0,
+       "max_cycle_days": 129,
+       "exhausted_days": 2,
+       "invested_peak_pct": 104.5,
+       "open_position": false
+      },
+      "div80": {
+       "total_pct": 10.2,
+       "mdd_pct": -1.9,
+       "cycles": 15,
+       "win_rate": 100.0,
+       "max_cycle_days": 85,
+       "exhausted_days": 0,
+       "invested_peak_pct": 25.1,
+       "open_position": false
+      },
+      "ma200": {
+       "total_pct": 50.3,
+       "mdd_pct": -5.6,
+       "cycles": 29,
+       "win_rate": 100.0,
+       "max_cycle_days": 257,
+       "exhausted_days": 0,
+       "invested_peak_pct": 68.3,
+       "open_position": false
+      },
+      "reserve": {
+       "total_pct": 33.2,
+       "mdd_pct": -4.7,
+       "cycles": 30,
+       "win_rate": 100.0,
+       "max_cycle_days": 257,
+       "exhausted_days": 0,
+       "invested_peak_pct": 69.1,
+       "open_position": false
+      },
+      "ma_res": {
+       "total_pct": 33.5,
+       "mdd_pct": -4.1,
+       "cycles": 29,
+       "win_rate": 100.0,
+       "max_cycle_days": 257,
+       "exhausted_days": 0,
+       "invested_peak_pct": 68.3,
+       "open_position": false
+      },
+      "bh3x": {
+       "total_pct": 2769.1,
+       "mdd_pct": -44.2,
+       "cycles": null,
+       "win_rate": null,
+       "max_cycle_days": null,
+       "exhausted_days": null,
+       "invested_peak_pct": 100.0
+      }
+     },
+     "index_1x_pct": 280.8
+    },
+    {
+     "name": "2015-16 횡보",
+     "kind": "횡보",
+     "source": "실물",
+     "period": [
+      "2015-01-02",
+      "2016-11-30"
+     ],
+     "days": 483,
+     "index_move_pct": 28.3,
+     "results": {
+      "base40": {
+       "total_pct": 27.7,
+       "mdd_pct": -25.1,
+       "cycles": 6,
+       "win_rate": 100.0,
+       "max_cycle_days": 150,
+       "exhausted_days": 16,
+       "invested_peak_pct": 99.7,
+       "open_position": true
+      },
+      "v30": {
+       "total_pct": 25.4,
+       "mdd_pct": -22.4,
+       "cycles": 4,
+       "win_rate": 100.0,
+       "max_cycle_days": 181,
+       "exhausted_days": 2,
+       "invested_peak_pct": 95.5,
+       "open_position": true
+      },
+      "div80": {
+       "total_pct": 21.8,
+       "mdd_pct": -19.6,
+       "cycles": 7,
+       "win_rate": 100.0,
+       "max_cycle_days": 111,
+       "exhausted_days": 0,
+       "invested_peak_pct": 83.3,
+       "open_position": true
+      },
+      "ma200": {
+       "total_pct": 27.7,
+       "mdd_pct": -25.1,
+       "cycles": 6,
+       "win_rate": 100.0,
+       "max_cycle_days": 150,
+       "exhausted_days": 16,
+       "invested_peak_pct": 99.7,
+       "open_position": true
+      },
+      "reserve": {
+       "total_pct": 19.6,
+       "mdd_pct": -17.6,
+       "cycles": 7,
+       "win_rate": 100.0,
+       "max_cycle_days": 106,
+       "exhausted_days": 0,
+       "invested_peak_pct": 130.7,
+       "open_position": true
+      },
+      "ma_res": {
+       "total_pct": 19.6,
+       "mdd_pct": -17.6,
+       "cycles": 7,
+       "win_rate": 100.0,
+       "max_cycle_days": 106,
+       "exhausted_days": 0,
+       "invested_peak_pct": 130.7,
+       "open_position": true
+      },
+      "bh3x": {
+       "total_pct": 28.3,
+       "mdd_pct": -44.5,
+       "cycles": null,
+       "win_rate": null,
+       "max_cycle_days": null,
+       "exhausted_days": null,
+       "invested_peak_pct": 100.0
+      }
+     },
+     "index_1x_pct": 13.7
+    },
+    {
+     "name": "2018 Q4 급락",
+     "kind": "급락",
+     "source": "실물",
+     "period": [
+      "2018-09-04",
+      "2018-12-31"
+     ],
+     "days": 82,
+     "index_move_pct": -48.2,
+     "results": {
+      "base40": {
+       "total_pct": -22.5,
+       "mdd_pct": -35.9,
+       "cycles": 0,
+       "win_rate": null,
+       "max_cycle_days": 81,
+       "exhausted_days": 1,
+       "invested_peak_pct": 97.8,
+       "open_position": true
+      },
+      "v30": {
+       "total_pct": -20.8,
+       "mdd_pct": -35.0,
+       "cycles": 0,
+       "win_rate": null,
+       "max_cycle_days": 81,
+       "exhausted_days": 1,
+       "invested_peak_pct": 96.6,
+       "open_position": true
+      },
+      "div80": {
+       "total_pct": -21.7,
+       "mdd_pct": -32.4,
+       "cycles": 0,
+       "win_rate": null,
+       "max_cycle_days": 81,
+       "exhausted_days": 0,
+       "invested_peak_pct": 83.3,
+       "open_position": true
+      },
+      "ma200": {
+       "total_pct": -22.5,
+       "mdd_pct": -35.9,
+       "cycles": 0,
+       "win_rate": null,
+       "max_cycle_days": 81,
+       "exhausted_days": 1,
+       "invested_peak_pct": 97.8,
+       "open_position": true
+      },
+      "reserve": {
+       "total_pct": -15.0,
+       "mdd_pct": -24.0,
+       "cycles": 0,
+       "win_rate": null,
+       "max_cycle_days": 81,
+       "exhausted_days": 0,
+       "invested_peak_pct": 100.2,
+       "open_position": true
+      },
+      "ma_res": {
+       "total_pct": -15.0,
+       "mdd_pct": -24.0,
+       "cycles": 0,
+       "win_rate": null,
+       "max_cycle_days": 81,
+       "exhausted_days": 0,
+       "invested_peak_pct": 100.2,
+       "open_position": true
+      },
+      "bh3x": {
+       "total_pct": -48.2,
+       "mdd_pct": -57.5,
+       "cycles": null,
+       "win_rate": null,
+       "max_cycle_days": null,
+       "exhausted_days": null,
+       "invested_peak_pct": 100.0
+      }
+     },
+     "index_1x_pct": -17.0
+    },
+    {
+     "name": "코로나 쇼크",
+     "kind": "급락+V반등",
+     "source": "실물",
+     "period": [
+      "2020-02-03",
+      "2020-06-30"
+     ],
+     "days": 104,
+     "index_move_pct": -0.3,
+     "results": {
+      "base40": {
+       "total_pct": 11.0,
+       "mdd_pct": -31.1,
+       "cycles": 6,
+       "win_rate": 100.0,
+       "max_cycle_days": 48,
+       "exhausted_days": 0,
+       "invested_peak_pct": 94.6,
+       "open_position": true
+      },
+      "v30": {
+       "total_pct": 6.2,
+       "mdd_pct": -51.8,
+       "cycles": 3,
+       "win_rate": 66.7,
+       "max_cycle_days": 66,
+       "exhausted_days": 1,
+       "invested_peak_pct": 96.2,
+       "open_position": true
+      },
+      "div80": {
+       "total_pct": 8.4,
+       "mdd_pct": -16.1,
+       "cycles": 6,
+       "win_rate": 100.0,
+       "max_cycle_days": 50,
+       "exhausted_days": 0,
+       "invested_peak_pct": 50.8,
+       "open_position": true
+      },
+      "ma200": {
+       "total_pct": 10.1,
+       "mdd_pct": -31.1,
+       "cycles": 5,
+       "win_rate": 100.0,
+       "max_cycle_days": 48,
+       "exhausted_days": 0,
+       "invested_peak_pct": 94.6,
+       "open_position": true
+      },
+      "reserve": {
+       "total_pct": 7.4,
+       "mdd_pct": -20.8,
+       "cycles": 6,
+       "win_rate": 100.0,
+       "max_cycle_days": 48,
+       "exhausted_days": 0,
+       "invested_peak_pct": 94.6,
+       "open_position": true
+      },
+      "ma_res": {
+       "total_pct": 6.7,
+       "mdd_pct": -20.8,
+       "cycles": 5,
+       "win_rate": 100.0,
+       "max_cycle_days": 48,
+       "exhausted_days": 0,
+       "invested_peak_pct": 94.6,
+       "open_position": true
+      },
+      "bh3x": {
+       "total_pct": -0.3,
+       "mdd_pct": -69.9,
+       "cycles": null,
+       "win_rate": null,
+       "max_cycle_days": null,
+       "exhausted_days": null,
+       "invested_peak_pct": 100.0
+      }
+     },
+     "index_1x_pct": 11.3
+    },
+    {
+     "name": "2022 하락장",
+     "kind": "하락",
+     "source": "실물",
+     "period": [
+      "2021-11-19",
+      "2023-01-06"
+     ],
+     "days": 284,
+     "index_move_pct": -80.1,
+     "results": {
+      "base40": {
+       "total_pct": -57.1,
+       "mdd_pct": -61.6,
+       "cycles": 0,
+       "win_rate": null,
+       "max_cycle_days": 283,
+       "exhausted_days": 173,
+       "invested_peak_pct": 98.7,
+       "open_position": true
+      },
+      "v30": {
+       "total_pct": -64.3,
+       "mdd_pct": -68.9,
+       "cycles": 0,
+       "win_rate": null,
+       "max_cycle_days": 283,
+       "exhausted_days": 1,
+       "invested_peak_pct": 99.5,
+       "open_position": true
+      },
+      "div80": {
+       "total_pct": -4.8,
+       "mdd_pct": -33.7,
+       "cycles": 1,
+       "win_rate": 100.0,
+       "max_cycle_days": 181,
+       "exhausted_days": 0,
+       "invested_peak_pct": 97.7,
+       "open_position": true
+      },
+      "ma200": {
+       "total_pct": -57.1,
+       "mdd_pct": -61.6,
+       "cycles": 0,
+       "win_rate": null,
+       "max_cycle_days": 283,
+       "exhausted_days": 173,
+       "invested_peak_pct": 98.7,
+       "open_position": true
+      },
+      "reserve": {
+       "total_pct": -8.4,
+       "mdd_pct": -32.9,
+       "cycles": 2,
+       "win_rate": 100.0,
+       "max_cycle_days": 102,
+       "exhausted_days": 0,
+       "invested_peak_pct": 147.1,
+       "open_position": true
+      },
+      "ma_res": {
+       "total_pct": 3.4,
+       "mdd_pct": -23.0,
+       "cycles": 1,
+       "win_rate": 100.0,
+       "max_cycle_days": 87,
+       "exhausted_days": 0,
+       "invested_peak_pct": 119.3,
+       "open_position": false
+      },
+      "bh3x": {
+       "total_pct": -80.1,
+       "mdd_pct": -81.8,
+       "cycles": null,
+       "win_rate": null,
+       "max_cycle_days": null,
+       "exhausted_days": null,
+       "invested_peak_pct": 100.0
+      }
+     },
+     "index_1x_pct": -33.4
+    },
+    {
+     "name": "2023- 회복",
+     "kind": "상승",
+     "source": "실물",
+     "period": [
+      "2023-01-09",
+      "2026-08-06"
+     ],
+     "days": 897,
+     "index_move_pct": 699.9,
+     "results": {
+      "base40": {
+       "total_pct": 63.8,
+       "mdd_pct": -14.7,
+       "cycles": 31,
+       "win_rate": 100.0,
+       "max_cycle_days": 128,
+       "exhausted_days": 0,
+       "invested_peak_pct": 93.2,
+       "open_position": true
+      },
+      "v30": {
+       "total_pct": 107.8,
+       "mdd_pct": -20.5,
+       "cycles": 20,
+       "win_rate": 100.0,
+       "max_cycle_days": 124,
+       "exhausted_days": 2,
+       "invested_peak_pct": 99.5,
+       "open_position": true
+      },
+      "div80": {
+       "total_pct": 18.1,
+       "mdd_pct": -4.7,
+       "cycles": 21,
+       "win_rate": 100.0,
+       "max_cycle_days": 83,
+       "exhausted_days": 0,
+       "invested_peak_pct": 42.8,
+       "open_position": false
+      },
+      "ma200": {
+       "total_pct": 64.5,
+       "mdd_pct": -14.7,
+       "cycles": 31,
+       "win_rate": 100.0,
+       "max_cycle_days": 127,
+       "exhausted_days": 0,
+       "invested_peak_pct": 93.2,
+       "open_position": true
+      },
+      "reserve": {
+       "total_pct": 42.5,
+       "mdd_pct": -11.1,
+       "cycles": 31,
+       "win_rate": 100.0,
+       "max_cycle_days": 128,
+       "exhausted_days": 0,
+       "invested_peak_pct": 93.2,
+       "open_position": true
+      },
+      "ma_res": {
+       "total_pct": 43.0,
+       "mdd_pct": -11.1,
+       "cycles": 31,
+       "win_rate": 100.0,
+       "max_cycle_days": 127,
+       "exhausted_days": 0,
+       "invested_peak_pct": 93.2,
+       "open_position": true
+      },
+      "bh3x": {
+       "total_pct": 699.9,
+       "mdd_pct": -58.3,
+       "cycles": null,
+       "win_rate": null,
+       "max_cycle_days": null,
+       "exhausted_days": null,
+       "invested_peak_pct": 100.0
+      }
+     },
+     "index_1x_pct": 164.4
+    },
+    {
+     "name": "전체 기간",
+     "kind": "전체",
+     "source": "실물",
+     "period": [
+      "2010-02-11",
+      "2026-08-06"
+     ],
+     "days": 4146,
+     "index_move_pct": 33201.0,
+     "results": {
+      "base40": {
+       "total_pct": 72.7,
+       "mdd_pct": -13.5,
+       "cycles": 33,
+       "win_rate": 100.0,
+       "max_cycle_days": 153,
+       "exhausted_days": 9,
+       "invested_peak_pct": 99.1,
+       "open_position": false
+      },
+      "v30": {
+       "total_pct": 157.1,
+       "mdd_pct": -16.4,
+       "cycles": 29,
+       "win_rate": 100.0,
+       "max_cycle_days": 183,
+       "exhausted_days": 2,
+       "invested_peak_pct": 102.6,
+       "open_position": false
+      },
+      "div80": {
+       "total_pct": 38.6,
+       "mdd_pct": -14.2,
+       "cycles": 24,
+       "win_rate": 100.0,
+       "max_cycle_days": 162,
+       "exhausted_days": 0,
+       "invested_peak_pct": 73.0,
+       "open_position": false
+      },
+      "ma200": {
+       "total_pct": 66.9,
+       "mdd_pct": -13.7,
+       "cycles": 27,
+       "win_rate": 100.0,
+       "max_cycle_days": 153,
+       "exhausted_days": 9,
+       "invested_peak_pct": 99.1,
+       "open_position": false
+      },
+      "reserve": {
+       "total_pct": 56.1,
+       "mdd_pct": -9.9,
+       "cycles": 33,
+       "win_rate": 100.0,
+       "max_cycle_days": 153,
+       "exhausted_days": 0,
+       "invested_peak_pct": 120.2,
+       "open_position": false
+      },
+      "ma_res": {
+       "total_pct": 52.2,
+       "mdd_pct": -10.1,
+       "cycles": 27,
+       "win_rate": 100.0,
+       "max_cycle_days": 153,
+       "exhausted_days": 0,
+       "invested_peak_pct": 120.2,
+       "open_position": false
+      },
+      "bh3x": {
+       "total_pct": 33201.0,
+       "mdd_pct": -81.8,
+       "cycles": null,
+       "win_rate": null,
+       "max_cycle_days": null,
+       "exhausted_days": null,
+       "invested_peak_pct": 100.0
+      }
+     },
+     "index_1x_pct": 1554.1
+    }
+   ]
+  },
+  {
+   "ticker": "SOXL",
+   "regimes": [
+    {
+     "name": "닷컴버블 붕괴",
+     "kind": "폭락",
+     "source": "합성",
+     "period": [
+      "2000-03-10",
+      "2002-10-09"
+     ],
+     "days": 648,
+     "index_move_pct": -100.0,
+     "results": {
+      "base40": {
+       "total_pct": -72.8,
+       "mdd_pct": -78.2,
+       "cycles": 9,
+       "win_rate": 100.0,
+       "max_cycle_days": 531,
+       "exhausted_days": 487,
+       "invested_peak_pct": 97.7,
+       "open_position": true
+      },
+      "v30": {
+       "total_pct": -99.8,
+       "mdd_pct": -99.9,
+       "cycles": 6,
+       "win_rate": 100.0,
+       "max_cycle_days": 537,
+       "exhausted_days": 6,
+       "invested_peak_pct": 106.7,
+       "open_position": true
+      },
+      "div80": {
+       "total_pct": -85.7,
+       "mdd_pct": -87.4,
+       "cycles": 10,
+       "win_rate": 100.0,
+       "max_cycle_days": 536,
+       "exhausted_days": 447,
+       "invested_peak_pct": 98.8,
+       "open_position": true
+      },
+      "ma200": {
+       "total_pct": 21.7,
+       "mdd_pct": -16.4,
+       "cycles": 6,
+       "win_rate": 100.0,
+       "max_cycle_days": 23,
+       "exhausted_days": 0,
+       "invested_peak_pct": 56.4,
+       "open_position": false
+      },
+      "reserve": {
+       "total_pct": -81.4,
+       "mdd_pct": -84.1,
+       "cycles": 9,
+       "win_rate": 100.0,
+       "max_cycle_days": 531,
+       "exhausted_days": 0,
+       "invested_peak_pct": 147.1,
+       "open_position": true
+      },
+      "ma_res": {
+       "total_pct": 14.5,
+       "mdd_pct": -11.2,
+       "cycles": 6,
+       "win_rate": 100.0,
+       "max_cycle_days": 23,
+       "exhausted_days": 0,
+       "invested_peak_pct": 56.4,
+       "open_position": false
+      },
+      "bh3x": {
+       "total_pct": -100.0,
+       "mdd_pct": -100.0,
+       "cycles": null,
+       "win_rate": null,
+       "max_cycle_days": null,
+       "exhausted_days": null,
+       "invested_peak_pct": 100.0
+      }
+     },
+     "index_1x_pct": -83.9
+    },
+    {
+     "name": "닷컴 이후 회복",
+     "kind": "상승",
+     "source": "합성",
+     "period": [
+      "2002-10-10",
+      "2007-10-31"
+     ],
+     "days": 1274,
+     "index_move_pct": 27.7,
+     "results": {
+      "base40": {
+       "total_pct": 112.1,
+       "mdd_pct": -23.0,
+       "cycles": 58,
+       "win_rate": 100.0,
+       "max_cycle_days": 211,
+       "exhausted_days": 109,
+       "invested_peak_pct": 99.7,
+       "open_position": true
+      },
+      "v30": {
+       "total_pct": 124.2,
+       "mdd_pct": -32.9,
+       "cycles": 31,
+       "win_rate": 93.5,
+       "max_cycle_days": 184,
+       "exhausted_days": 16,
+       "invested_peak_pct": 104.8,
+       "open_position": true
+      },
+      "div80": {
+       "total_pct": 68.7,
+       "mdd_pct": -18.7,
+       "cycles": 55,
+       "win_rate": 100.0,
+       "max_cycle_days": 168,
+       "exhausted_days": 0,
+       "invested_peak_pct": 98.1,
+       "open_position": true
+      },
+      "ma200": {
+       "total_pct": 91.4,
+       "mdd_pct": -25.5,
+       "cycles": 49,
+       "win_rate": 100.0,
+       "max_cycle_days": 211,
+       "exhausted_days": 98,
+       "invested_peak_pct": 99.7,
+       "open_position": true
+      },
+      "reserve": {
+       "total_pct": 86.5,
+       "mdd_pct": -22.0,
+       "cycles": 63,
+       "win_rate": 100.0,
+       "max_cycle_days": 102,
+       "exhausted_days": 0,
+       "invested_peak_pct": 147.3,
+       "open_position": true
+      },
+      "ma_res": {
+       "total_pct": 65.0,
+       "mdd_pct": -24.2,
+       "cycles": 49,
+       "win_rate": 100.0,
+       "max_cycle_days": 102,
+       "exhausted_days": 0,
+       "invested_peak_pct": 147.3,
+       "open_position": true
+      },
+      "bh3x": {
+       "total_pct": 27.7,
+       "mdd_pct": -84.2,
+       "cycles": null,
+       "win_rate": null,
+       "max_cycle_days": null,
+       "exhausted_days": null,
+       "invested_peak_pct": 100.0
+      }
+     },
+     "index_1x_pct": 103.9
+    },
+    {
+     "name": "금융위기",
+     "kind": "폭락",
+     "source": "합성",
+     "period": [
+      "2007-11-01",
+      "2009-03-09"
+     ],
+     "days": 339,
+     "index_move_pct": -87.2,
+     "results": {
+      "base40": {
+       "total_pct": -65.8,
+       "mdd_pct": -67.4,
+       "cycles": 0,
+       "win_rate": null,
+       "max_cycle_days": 338,
+       "exhausted_days": 80,
+       "invested_peak_pct": 97.8,
+       "open_position": true
+      },
+      "v30": {
+       "total_pct": -71.8,
+       "mdd_pct": -72.6,
+       "cycles": 1,
+       "win_rate": 0.0,
+       "max_cycle_days": 203,
+       "exhausted_days": 1,
+       "invested_peak_pct": 96.3,
+       "open_position": true
+      },
+      "div80": {
+       "total_pct": -39.6,
+       "mdd_pct": -53.7,
+       "cycles": 2,
+       "win_rate": 100.0,
+       "max_cycle_days": 204,
+       "exhausted_days": 0,
+       "invested_peak_pct": 98.7,
+       "open_position": true
+      },
+      "ma200": {
+       "total_pct": -65.8,
+       "mdd_pct": -67.4,
+       "cycles": 0,
+       "win_rate": null,
+       "max_cycle_days": 338,
+       "exhausted_days": 80,
+       "invested_peak_pct": 97.8,
+       "open_position": true
+      },
+      "reserve": {
+       "total_pct": 1.5,
+       "mdd_pct": -52.6,
+       "cycles": 4,
+       "win_rate": 100.0,
+       "max_cycle_days": 162,
+       "exhausted_days": 43,
+       "invested_peak_pct": 148.4,
+       "open_position": true
+      },
+      "ma_res": {
+       "total_pct": 5.4,
+       "mdd_pct": -52.6,
+       "cycles": 2,
+       "win_rate": 100.0,
+       "max_cycle_days": 162,
+       "exhausted_days": 43,
+       "invested_peak_pct": 148.4,
+       "open_position": false
+      },
+      "bh3x": {
+       "total_pct": -87.2,
+       "mdd_pct": -87.8,
+       "cycles": null,
+       "win_rate": null,
+       "max_cycle_days": null,
+       "exhausted_days": null,
+       "invested_peak_pct": 100.0
+      }
+     },
+     "index_1x_pct": -58.2
+    },
+    {
+     "name": "위기 후 강세장",
+     "kind": "상승",
+     "source": "합성",
+     "period": [
+      "2009-03-10",
+      "2014-12-31"
+     ],
+     "days": 1465,
+     "index_move_pct": 943.8,
+     "results": {
+      "base40": {
+       "total_pct": 126.4,
+       "mdd_pct": -22.6,
+       "cycles": 62,
+       "win_rate": 100.0,
+       "max_cycle_days": 277,
+       "exhausted_days": 188,
+       "invested_peak_pct": 100.1,
+       "open_position": false
+      },
+      "v30": {
+       "total_pct": 187.1,
+       "mdd_pct": -20.2,
+       "cycles": 32,
+       "win_rate": 93.8,
+       "max_cycle_days": 148,
+       "exhausted_days": 11,
+       "invested_peak_pct": 106.2,
+       "open_position": true
+      },
+      "div80": {
+       "total_pct": 29.4,
+       "mdd_pct": -4.9,
+       "cycles": 51,
+       "win_rate": 100.0,
+       "max_cycle_days": 124,
+       "exhausted_days": 0,
+       "invested_peak_pct": 38.0,
+       "open_position": false
+      },
+      "ma200": {
+       "total_pct": 99.3,
+       "mdd_pct": -26.0,
+       "cycles": 52,
+       "win_rate": 100.0,
+       "max_cycle_days": 277,
+       "exhausted_days": 188,
+       "invested_peak_pct": 100.1,
+       "open_position": false
+      },
+      "reserve": {
+       "total_pct": 87.8,
+       "mdd_pct": -21.6,
+       "cycles": 66,
+       "win_rate": 98.5,
+       "max_cycle_days": 199,
+       "exhausted_days": 0,
+       "invested_peak_pct": 147.4,
+       "open_position": false
+      },
+      "ma_res": {
+       "total_pct": 69.8,
+       "mdd_pct": -24.1,
+       "cycles": 56,
+       "win_rate": 98.2,
+       "max_cycle_days": 199,
+       "exhausted_days": 0,
+       "invested_peak_pct": 147.4,
+       "open_position": false
+      },
+      "bh3x": {
+       "total_pct": 943.8,
+       "mdd_pct": -73.1,
+       "cycles": null,
+       "win_rate": null,
+       "max_cycle_days": null,
+       "exhausted_days": null,
+       "invested_peak_pct": 100.0
+      }
+     },
+     "index_1x_pct": 233.7
+    },
+    {
+     "name": "2015-16 횡보",
+     "kind": "횡보",
+     "source": "실물",
+     "period": [
+      "2015-01-02",
+      "2016-11-30"
+     ],
+     "days": 483,
+     "index_move_pct": 65.3,
+     "results": {
+      "base40": {
+       "total_pct": 23.8,
+       "mdd_pct": -45.1,
+       "cycles": 9,
+       "win_rate": 88.9,
+       "max_cycle_days": 250,
+       "exhausted_days": 145,
+       "invested_peak_pct": 97.9,
+       "open_position": true
+      },
+      "v30": {
+       "total_pct": 42.9,
+       "mdd_pct": -39.9,
+       "cycles": 7,
+       "win_rate": 85.7,
+       "max_cycle_days": 96,
+       "exhausted_days": 5,
+       "invested_peak_pct": 105.0,
+       "open_position": true
+      },
+      "div80": {
+       "total_pct": 29.1,
+       "mdd_pct": -30.4,
+       "cycles": 13,
+       "win_rate": 100.0,
+       "max_cycle_days": 104,
+       "exhausted_days": 0,
+       "invested_peak_pct": 98.6,
+       "open_position": true
+      },
+      "ma200": {
+       "total_pct": 23.8,
+       "mdd_pct": -45.1,
+       "cycles": 9,
+       "win_rate": 88.9,
+       "max_cycle_days": 250,
+       "exhausted_days": 145,
+       "invested_peak_pct": 97.9,
+       "open_position": true
+      },
+      "reserve": {
+       "total_pct": 24.3,
+       "mdd_pct": -40.0,
+       "cycles": 11,
+       "win_rate": 100.0,
+       "max_cycle_days": 194,
+       "exhausted_days": 0,
+       "invested_peak_pct": 147.2,
+       "open_position": true
+      },
+      "ma_res": {
+       "total_pct": 23.4,
+       "mdd_pct": -40.0,
+       "cycles": 10,
+       "win_rate": 100.0,
+       "max_cycle_days": 194,
+       "exhausted_days": 0,
+       "invested_peak_pct": 147.2,
+       "open_position": true
+      },
+      "bh3x": {
+       "total_pct": 65.3,
+       "mdd_pct": -62.9,
+       "cycles": null,
+       "win_rate": null,
+       "max_cycle_days": null,
+       "exhausted_days": null,
+       "invested_peak_pct": 100.0
+      }
+     },
+     "index_1x_pct": 28.1
+    },
+    {
+     "name": "2018 Q4 급락",
+     "kind": "급락",
+     "source": "실물",
+     "period": [
+      "2018-09-04",
+      "2018-12-31"
+     ],
+     "days": 82,
+     "index_move_pct": -51.5,
+     "results": {
+      "base40": {
+       "total_pct": -21.0,
+       "mdd_pct": -36.4,
+       "cycles": 0,
+       "win_rate": null,
+       "max_cycle_days": 81,
+       "exhausted_days": 3,
+       "invested_peak_pct": 97.7,
+       "open_position": true
+      },
+      "v30": {
+       "total_pct": -19.7,
+       "mdd_pct": -34.8,
+       "cycles": 0,
+       "win_rate": null,
+       "max_cycle_days": 81,
+       "exhausted_days": 1,
+       "invested_peak_pct": 97.7,
+       "open_position": true
+      },
+      "div80": {
+       "total_pct": -14.9,
+       "mdd_pct": -26.2,
+       "cycles": 0,
+       "win_rate": null,
+       "max_cycle_days": 81,
+       "exhausted_days": 0,
+       "invested_peak_pct": 75.5,
+       "open_position": true
+      },
+      "ma200": {
+       "total_pct": -21.0,
+       "mdd_pct": -36.4,
+       "cycles": 0,
+       "win_rate": null,
+       "max_cycle_days": 81,
+       "exhausted_days": 3,
+       "invested_peak_pct": 97.7,
+       "open_position": true
+      },
+      "reserve": {
+       "total_pct": -16.3,
+       "mdd_pct": -29.1,
+       "cycles": 0,
+       "win_rate": null,
+       "max_cycle_days": 81,
+       "exhausted_days": 0,
+       "invested_peak_pct": 127.5,
+       "open_position": true
+      },
+      "ma_res": {
+       "total_pct": -16.3,
+       "mdd_pct": -29.1,
+       "cycles": 0,
+       "win_rate": null,
+       "max_cycle_days": 81,
+       "exhausted_days": 0,
+       "invested_peak_pct": 127.5,
+       "open_position": true
+      },
+      "bh3x": {
+       "total_pct": -51.5,
+       "mdd_pct": -61.0,
+       "cycles": null,
+       "win_rate": null,
+       "max_cycle_days": null,
+       "exhausted_days": null,
+       "invested_peak_pct": 100.0
+      }
+     },
+     "index_1x_pct": -18.1
+    },
+    {
+     "name": "코로나 쇼크",
+     "kind": "급락+V반등",
+     "source": "실물",
+     "period": [
+      "2020-02-03",
+      "2020-06-30"
+     ],
+     "days": 104,
+     "index_move_pct": -25.6,
+     "results": {
+      "base40": {
+       "total_pct": 8.8,
+       "mdd_pct": -36.6,
+       "cycles": 6,
+       "win_rate": 100.0,
+       "max_cycle_days": 52,
+       "exhausted_days": 0,
+       "invested_peak_pct": 94.0,
+       "open_position": true
+      },
+      "v30": {
+       "total_pct": -6.0,
+       "mdd_pct": -63.4,
+       "cycles": 1,
+       "win_rate": 0.0,
+       "max_cycle_days": 83,
+       "exhausted_days": 1,
+       "invested_peak_pct": 98.3,
+       "open_position": true
+      },
+      "div80": {
+       "total_pct": 7.4,
+       "mdd_pct": -17.4,
+       "cycles": 6,
+       "win_rate": 100.0,
+       "max_cycle_days": 52,
+       "exhausted_days": 0,
+       "invested_peak_pct": 49.0,
+       "open_position": true
+      },
+      "ma200": {
+       "total_pct": 5.4,
+       "mdd_pct": -36.6,
+       "cycles": 3,
+       "win_rate": 100.0,
+       "max_cycle_days": 52,
+       "exhausted_days": 0,
+       "invested_peak_pct": 94.0,
+       "open_position": true
+      },
+      "reserve": {
+       "total_pct": 5.9,
+       "mdd_pct": -24.6,
+       "cycles": 6,
+       "win_rate": 100.0,
+       "max_cycle_days": 52,
+       "exhausted_days": 0,
+       "invested_peak_pct": 94.0,
+       "open_position": true
+      },
+      "ma_res": {
+       "total_pct": 3.6,
+       "mdd_pct": -24.6,
+       "cycles": 3,
+       "win_rate": 100.0,
+       "max_cycle_days": 52,
+       "exhausted_days": 0,
+       "invested_peak_pct": 94.0,
+       "open_position": true
+      },
+      "bh3x": {
+       "total_pct": -25.6,
+       "mdd_pct": -80.4,
+       "cycles": null,
+       "win_rate": null,
+       "max_cycle_days": null,
+       "exhausted_days": null,
+       "invested_peak_pct": 100.0
+      }
+     },
+     "index_1x_pct": 10.2
+    },
+    {
+     "name": "2022 하락장",
+     "kind": "하락",
+     "source": "실물",
+     "period": [
+      "2021-11-19",
+      "2023-01-06"
+     ],
+     "days": 284,
+     "index_move_pct": -84.2,
+     "results": {
+      "base40": {
+       "total_pct": -63.7,
+       "mdd_pct": -76.6,
+       "cycles": 2,
+       "win_rate": 100.0,
+       "max_cycle_days": 259,
+       "exhausted_days": 184,
+       "invested_peak_pct": 99.1,
+       "open_position": true
+      },
+      "v30": {
+       "total_pct": 16.7,
+       "mdd_pct": -46.6,
+       "cycles": 5,
+       "win_rate": 80.0,
+       "max_cycle_days": 87,
+       "exhausted_days": 5,
+       "invested_peak_pct": 99.9,
+       "open_position": true
+      },
+      "div80": {
+       "total_pct": -57.6,
+       "mdd_pct": -72.5,
+       "cycles": 2,
+       "win_rate": 100.0,
+       "max_cycle_days": 259,
+       "exhausted_days": 0,
+       "invested_peak_pct": 97.7,
+       "open_position": true
+      },
+      "ma200": {
+       "total_pct": -63.7,
+       "mdd_pct": -76.6,
+       "cycles": 2,
+       "win_rate": 100.0,
+       "max_cycle_days": 259,
+       "exhausted_days": 184,
+       "invested_peak_pct": 99.1,
+       "open_position": true
+      },
+      "reserve": {
+       "total_pct": -50.8,
+       "mdd_pct": -69.7,
+       "cycles": 2,
+       "win_rate": 100.0,
+       "max_cycle_days": 259,
+       "exhausted_days": 94,
+       "invested_peak_pct": 147.8,
+       "open_position": true
+      },
+      "ma_res": {
+       "total_pct": -50.8,
+       "mdd_pct": -69.7,
+       "cycles": 2,
+       "win_rate": 100.0,
+       "max_cycle_days": 259,
+       "exhausted_days": 94,
+       "invested_peak_pct": 147.8,
+       "open_position": true
+      },
+      "bh3x": {
+       "total_pct": -84.2,
+       "mdd_pct": -90.5,
+       "cycles": null,
+       "win_rate": null,
+       "max_cycle_days": null,
+       "exhausted_days": null,
+       "invested_peak_pct": 100.0
+      }
+     },
+     "index_1x_pct": -32.6
+    },
+    {
+     "name": "2023- 회복",
+     "kind": "상승",
+     "source": "실물",
+     "period": [
+      "2023-01-09",
+      "2026-08-06"
+     ],
+     "days": 897,
+     "index_move_pct": 1047.7,
+     "results": {
+      "base40": {
+       "total_pct": 118.4,
+       "mdd_pct": -23.8,
+       "cycles": 52,
+       "win_rate": 100.0,
+       "max_cycle_days": 73,
+       "exhausted_days": 14,
+       "invested_peak_pct": 98.7,
+       "open_position": false
+      },
+      "v30": {
+       "total_pct": 160.9,
+       "mdd_pct": -28.2,
+       "cycles": 31,
+       "win_rate": 96.8,
+       "max_cycle_days": 84,
+       "exhausted_days": 4,
+       "invested_peak_pct": 106.5,
+       "open_position": true
+      },
+      "div80": {
+       "total_pct": 37.4,
+       "mdd_pct": -23.5,
+       "cycles": 30,
+       "win_rate": 100.0,
+       "max_cycle_days": 202,
+       "exhausted_days": 0,
+       "invested_peak_pct": 81.9,
+       "open_position": false
+      },
+      "ma200": {
+       "total_pct": 89.5,
+       "mdd_pct": -11.8,
+       "cycles": 40,
+       "win_rate": 100.0,
+       "max_cycle_days": 73,
+       "exhausted_days": 0,
+       "invested_peak_pct": 73.8,
+       "open_position": false
+      },
+      "reserve": {
+       "total_pct": 79.9,
+       "mdd_pct": -18.7,
+       "cycles": 52,
+       "win_rate": 100.0,
+       "max_cycle_days": 73,
+       "exhausted_days": 0,
+       "invested_peak_pct": 130.9,
+       "open_position": false
+      },
+      "ma_res": {
+       "total_pct": 59.6,
+       "mdd_pct": -8.4,
+       "cycles": 40,
+       "win_rate": 100.0,
+       "max_cycle_days": 73,
+       "exhausted_days": 0,
+       "invested_peak_pct": 73.8,
+       "open_position": false
+      },
+      "bh3x": {
+       "total_pct": 1047.7,
+       "mdd_pct": -88.0,
+       "cycles": null,
+       "win_rate": null,
+       "max_cycle_days": null,
+       "exhausted_days": null,
+       "invested_peak_pct": 100.0
+      }
+     },
+     "index_1x_pct": 348.4
+    },
+    {
+     "name": "전체 기간",
+     "kind": "전체",
+     "source": "실물",
+     "period": [
+      "2010-03-11",
+      "2026-08-06"
+     ],
+     "days": 4127,
+     "index_move_pct": 19934.8,
+     "results": {
+      "base40": {
+       "total_pct": 122.9,
+       "mdd_pct": -32.3,
+       "cycles": 59,
+       "win_rate": 96.6,
+       "max_cycle_days": 220,
+       "exhausted_days": 231,
+       "invested_peak_pct": 99.6,
+       "open_position": false
+      },
+      "v30": {
+       "total_pct": 261.7,
+       "mdd_pct": -28.2,
+       "cycles": 59,
+       "win_rate": 98.3,
+       "max_cycle_days": 249,
+       "exhausted_days": 15,
+       "invested_peak_pct": 103.8,
+       "open_position": false
+      },
+      "div80": {
+       "total_pct": 58.4,
+       "mdd_pct": -43.5,
+       "cycles": 49,
+       "win_rate": 100.0,
+       "max_cycle_days": 259,
+       "exhausted_days": 0,
+       "invested_peak_pct": 97.9,
+       "open_position": false
+      },
+      "ma200": {
+       "total_pct": 111.0,
+       "mdd_pct": -34.1,
+       "cycles": 52,
+       "win_rate": 96.2,
+       "max_cycle_days": 220,
+       "exhausted_days": 231,
+       "invested_peak_pct": 99.6,
+       "open_position": false
+      },
+      "reserve": {
+       "total_pct": 105.7,
+       "mdd_pct": -23.0,
+       "cycles": 66,
+       "win_rate": 100.0,
+       "max_cycle_days": 192,
+       "exhausted_days": 46,
+       "invested_peak_pct": 148.6,
+       "open_position": false
+      },
+      "ma_res": {
+       "total_pct": 91.8,
+       "mdd_pct": -24.1,
+       "cycles": 55,
+       "win_rate": 100.0,
+       "max_cycle_days": 192,
+       "exhausted_days": 46,
+       "invested_peak_pct": 148.6,
+       "open_position": false
+      },
+      "bh3x": {
+       "total_pct": 19934.8,
+       "mdd_pct": -90.5,
+       "cycles": null,
+       "win_rate": null,
+       "max_cycle_days": null,
+       "exhausted_days": null,
+       "invested_peak_pct": 100.0
+      }
+     },
+     "index_1x_pct": 3273.5
     }
    ]
   }
