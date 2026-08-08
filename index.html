@@ -29,8 +29,12 @@
   table { width:100%; border-collapse:collapse; font-size:.85rem; }
   th,td { padding:8px 6px; border-bottom:1px solid var(--line); text-align:left; }
   th { color:var(--sub); font-weight:500; font-size:.75rem; }
-  .buy { color:var(--buy); font-weight:700; }
-  .sell { color:var(--sell); font-weight:700; }
+  .buy { color:var(--buy); font-weight:700; }   /* 매수 주문 */
+  .sell { color:var(--sell); font-weight:700; } /* 매도 주문 */
+  /* 손익 표시: 이익=파랑, 손실=빨강 */
+  .pos { color:var(--buy); font-weight:700; }
+  .neg { color:var(--sell); font-weight:700; }
+  .best { text-decoration:underline; text-underline-offset:3px; }
   .memo { color:var(--sub); font-size:.75rem; }
   .warn { background:#2a1e10; border:1px solid #6b4b1e; color:#ffd9a0;
           border-radius:10px; padding:12px; font-size:.8rem; line-height:1.6; }
@@ -165,6 +169,10 @@
 const LABEL = {LOC_BUY:'LOC 매수', LOC_SELL:'LOC 매도',
                LIMIT_SELL:'지정가 매도', MOC_SELL:'MOC 매도'};
 
+// 손익 색상: 이익=파랑(pos), 손실=빨강(neg)
+const sc = v => (v >= 0 ? 'pos' : 'neg');
+const scv = v => `var(${v >= 0 ? '--buy' : '--sell'})`;
+
 // ---------------- 데이터 읽기: Pages 상대경로 → GitHub API 폴백 ----------------
 // (Private 저장소나 로컬에서 열어도 GitHub 토큰만 있으면 상태를 볼 수 있음)
 async function fetchData(path) {
@@ -285,15 +293,16 @@ function card(ticker, t, accId) {
               <table><tr><th>주문</th><th>수량</th><th>가격</th><th>설명</th></tr>${rows}</table>`
            : '<p class="memo">대기 중인 주문 없음</p>'}
     ${t.realized_profit ? `<p class="memo" style="margin-top:6px">이번 사이클 실현손익:
-       <b style="color:${t.realized_profit>=0?'var(--ok)':'var(--sell)'}">
-       $${t.realized_profit.toFixed(2)}</b></p>` : ''}
-    ${(t.history||[]).length ? `<details style="margin-top:6px">
+       <b class="${sc(t.realized_profit)}">$${t.realized_profit.toFixed(2)}</b></p>` : ''}
+    ${(t.history||[]).length ? (() => {
+       const sum = t.history.reduce((a,c)=>a+c.profit,0);
+       return `<details style="margin-top:6px">
        <summary>완료 사이클 이력 (${t.history.length}개, 누적
-         $${t.history.reduce((a,c)=>a+c.profit,0).toFixed(2)})</summary>
+         <span class="${sc(sum)}">$${sum.toFixed(2)}</span>)</summary>
        <table><tr><th>#</th><th>종료일</th><th>손익</th></tr>
        ${t.history.slice(-8).reverse().map(c=>`<tr><td>${c.cycle}</td>
-         <td>${c.end??'-'}</td><td class="${c.profit>=0?'buy':'sell'}">
-         $${c.profit.toFixed(2)}</td></tr>`).join('')}</table></details>` : ''}
+         <td>${c.end??'-'}</td><td class="${sc(c.profit)}">
+         $${c.profit.toFixed(2)}</td></tr>`).join('')}</table></details>`; })() : ''}
     <details style="margin-top:6px">
       <summary>✏️ 잔고/시드 수정 (증권사 실제 값으로 보정)</summary>
       <div class="row2">
@@ -428,7 +437,7 @@ function btCard(ticker, bt, accName) {
   const sig = bt.signal;
   if (sig && sig.available) {
     const p = sig.prob_hold_better;
-    const color = p >= 60 ? 'var(--ok)' : (p >= 45 ? 'var(--accent)' : 'var(--sell)');
+    const color = p >= 60 ? 'var(--buy)' : (p >= 45 ? 'var(--accent)' : 'var(--sell)');
     const verdict = p >= 60 ? '유지가 유리했던 구간' :
                     p >= 45 ? '유지/중단 우열이 뚜렷하지 않은 구간' :
                               '⚠️ 과거에 중단이 더 나았던 경우가 많은 구간';
@@ -459,7 +468,7 @@ function btCard(ticker, bt, accName) {
 
   let cyclesRows = (s.recent_cycles || []).map(c =>
     `<tr><td>${c.start ?? '-'}</td><td>${c.end}</td><td>${c.days}일</td>
-     <td class="${c.profit >= 0 ? 'buy' : 'sell'}">$${c.profit.toFixed(2)}</td></tr>`
+     <td class="${sc(c.profit)}">$${c.profit.toFixed(2)}</td></tr>`
   ).reverse().join('');
 
   div.innerHTML = `
@@ -472,13 +481,13 @@ function btCard(ticker, bt, accName) {
       <div class="stat"><div class="k">사이클 승률</div>
         <div class="v">${s.win_rate}%</div></div>
       <div class="stat"><div class="k">누적 수익 (시드 대비)</div>
-        <div class="v">${s.total_profit_pct}%</div></div>
+        <div class="v ${sc(s.total_profit_pct)}">${s.total_profit_pct}%</div></div>
       <div class="stat"><div class="k">최대 낙폭 (MDD)</div>
-        <div class="v" style="color:var(--sell)">${s.mdd_pct}%</div></div>
+        <div class="v neg">${s.mdd_pct}%</div></div>
       <div class="stat"><div class="k">평균/최장 사이클</div>
         <div class="v">${s.avg_cycle_days} / ${s.max_cycle_days}일</div></div>
       <div class="stat"><div class="k">최악 사이클</div>
-        <div class="v" style="color:var(--sell)">$${s.worst_cycle_profit}</div></div>
+        <div class="v ${sc(s.worst_cycle_profit)}">$${s.worst_cycle_profit}</div></div>
     </div>
     <details><summary>최근 10개 사이클 보기</summary>
       <table><tr><th>시작</th><th>종료</th><th>기간</th><th>손익</th></tr>${cyclesRows}</table>
@@ -759,6 +768,8 @@ async function loadRegime() {
   let html = `<div class="card"><h2>📉 국면별 백테스트
     <span class="badge">${(d.generated||'').slice(0,10)}</span></h2>
     <p class="memo">각 칸: <b>총손익%</b> (최대낙폭%) · 최장사이클 · 원금소진일수.
+    <span class="pos">이익=파랑</span> / <span class="neg">손실=빨강</span>,
+    <span class="best">밑줄</span>=해당 국면 최고 성과.
     2010년 이전은 지수로 합성한 3배 ETF(근사치)입니다.</p>`;
   for (const res of d.results) {
     html += `<h3 style="margin:14px 0 6px;font-size:.95rem">${res.ticker}</h3>
@@ -774,13 +785,13 @@ async function loadRegime() {
         <span style="color:${kindColor};font-size:.7rem"> ●${r.kind}</span>
         <br><span class="memo">${r.period[0].slice(0,7)}~${r.period[1].slice(0,7)}
         · ${r.source === '합성' ? '합성' : '실물'}</span></td>
-        <td class="${r.index_move_pct>=0?'buy':'sell'}">${r.index_move_pct}%</td>`;
+        <td class="${sc(r.index_move_pct)}">${r.index_move_pct}%</td>`;
       for (const k of keys) {
         const v = r.results[k] || {};
         if (v.total_pct === undefined || v.total_pct === null) { html += '<td>-</td>'; continue; }
-        const hl = v.total_pct === best ? 'font-weight:800;color:var(--ok)' : '';
-        html += `<td style="${hl}">${v.total_pct}%<br>
-          <span class="memo">MDD ${v.mdd_pct}%${v.max_cycle_days!=null
+        html += `<td><span class="${sc(v.total_pct)} ${v.total_pct===best?'best':''}">
+          ${v.total_pct}%</span><br>
+          <span class="memo">MDD <span class="neg" style="font-weight:400">${v.mdd_pct}%</span>${v.max_cycle_days!=null
             ? ` · ${v.max_cycle_days}일 · 소진${v.exhausted_days}` : ''}</span></td>`;
       }
       html += '</tr>';
