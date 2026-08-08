@@ -63,6 +63,8 @@
 
 <div id="regime"></div>
 
+<div id="rolling"></div>
+
 <div class="card">
   <h2>🕹 원격 명령 <span class="badge">Actions 직접 실행</span></h2>
   <div><label>계좌</label>
@@ -835,6 +837,88 @@ async function runRegime() {
   } catch (e) { el.textContent = '❌ 오류: ' + e.message; }
 }
 
+// ---------------- 롤링 시뮬레이션 ----------------
+let RS = null, RS_H = '1년';
+
+async function loadRolling() {
+  try { RS = await fetchData('data/rolling_sim.json'); }
+  catch (e) {
+    document.getElementById('rolling').innerHTML =
+      `<div class="card"><h2>🎲 롤링 시뮬레이션</h2>
+       <p class="memo">아직 실행되지 않았습니다. 위 "국면별 백테스트 실행" 버튼을 누르면
+       함께 계산됩니다. 모든 시작일에서 전략을 굴려 결과 분포(승률·중앙값·최악권)를
+       만들어, 진입 시점 운에 따른 편차를 제거한 그림을 보여줍니다.</p></div>`;
+    return;
+  }
+  renderRolling();
+}
+
+function setHorizon(h) { RS_H = h; renderRolling(); }
+
+function renderRolling() {
+  if (!RS) return;
+  const keys = Object.keys(RS.strategies);
+  let html = `<div class="card"><h2>🎲 롤링 시뮬레이션
+    <span class="badge">${(RS.generated||'').slice(0,10)}</span></h2>
+    <p class="memo">모든 시작일(${RS.step}거래일 간격)에서 시드 $${RS.seed}로 굴린 결과 분포입니다.
+    진입 시점 운을 제거하고 전략 자체를 비교할 수 있습니다.</p>
+    <div style="margin:8px 0">
+      ${['1년','2년'].map(h => `<button onclick="setHorizon('${h}')"
+        style="margin-right:8px;background:${h===RS_H?'var(--buy)':'var(--line)'}">
+        ${h} 보유</button>`).join('')}
+    </div>`;
+
+  for (const res of RS.results) {
+    const h = res.horizons[RS_H];
+    if (!h) continue;
+    html += `<h3 style="margin:14px 0 4px;font-size:.95rem">${res.ticker}
+      <span class="memo">${res.period[0].slice(0,7)}~${res.period[1].slice(0,7)}
+      · 시작일 ${h.starts}개</span></h3>
+      <div style="overflow-x:auto"><table>
+      <tr><th>전략</th><th>승률</th><th>중앙값</th><th>하위25%</th>
+          <th>하위5%<br><span class="memo">최악권</span></th><th>최악</th>
+          <th>MDD중앙</th><th>소진경험</th></tr>`;
+    for (const k of keys) {
+      const s = h.strategies[k];
+      if (!s) continue;
+      html += `<tr><td>${RS.strategies[k]}</td>
+        <td>${s.win_rate}%</td>
+        <td class="${sc(s.median)}">${s.median}%</td>
+        <td class="${sc(s.p25)}">${s.p25}%</td>
+        <td class="${sc(s.p05)}">${s.p05}%</td>
+        <td class="${sc(s.worst)}">${s.worst}%</td>
+        <td class="neg" style="font-weight:400">${s.mdd_median}%</td>
+        <td>${s.exhausted_rate != null ? s.exhausted_rate + '%' : '-'}</td></tr>`;
+    }
+    html += '</table></div>';
+
+    // 200일선 조건부 비교
+    const rows = keys.filter(k => h.strategies[k] &&
+      (h.strategies[k].above_ma || h.strategies[k].below_ma));
+    if (rows.length) {
+      html += `<details style="margin-top:8px"><summary>📍 시작일이 200일선 위/아래일 때 비교</summary>
+        <div style="overflow-x:auto"><table>
+        <tr><th>전략</th><th>200일선 위<br><span class="memo">승률·중앙값·하위5%</span></th>
+        <th>200일선 아래<br><span class="memo">승률·중앙값·하위5%</span></th></tr>`;
+      for (const k of rows) {
+        const s = h.strategies[k];
+        const f = c => c ? `${c.win_rate}% · <span class="${sc(c.median)}">${c.median}%</span>
+          · <span class="${sc(c.p05)}">${c.p05}%</span>
+          <span class="memo">(n=${c.n})</span>` : '표본 부족';
+        html += `<tr><td>${RS.strategies[k]}</td><td>${f(s.above_ma)}</td>
+          <td>${f(s.below_ma)}</td></tr>`;
+      }
+      html += `</table></div><p class="memo" style="margin-top:6px">
+        승률은 비슷해도 <b>하위 5%(최악권)</b>가 크게 갈리는지 보세요.
+        차이가 크다면 하락 추세에서의 진입이 파멸적 손실의 주범이라는 뜻입니다.</p></details>`;
+    }
+  }
+  html += `<p class="memo" style="margin-top:10px">⚠️ 시작일 구간이 서로 겹치므로
+    표본은 독립이 아닙니다. "미래 확률"이 아니라 "과거의 시작일들이 어떻게 끝났는가"의
+    분포로 해석하세요. 복리(수익 재투자)는 미반영입니다.</p></div>`;
+  document.getElementById('rolling').innerHTML = html;
+}
+
 // ---------------- 계좌 선택 목록 채우기 ----------------
 function fillAccountSelect() {
   const sel = document.getElementById('cAccount');
@@ -845,6 +929,7 @@ function fillAccountSelect() {
 
 load();
 loadRegime();
+loadRolling();
 initGh();
 </script>
 </body>
