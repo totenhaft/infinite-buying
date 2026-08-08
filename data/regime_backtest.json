@@ -1,5 +1,5 @@
 {
- "generated": "2026-08-07T03:12:34+00:00",
+ "generated": "2026-08-08T06:16:51+00:00",
  "strategies": {
   "base40": "v2.2 원본(40분할)",
   "v30": "v3.0(20분할)",
@@ -10,10 +10,10 @@
   "bh3x": "3배 ETF 보유"
  },
  "notes": [
-  "TQQQ 실물: 2010-02-11~2026-08-06 (4146일)",
-  "TQQQ 합성 기준지수: ^NDX (1985-10-01~2026-08-06, 10291일)",
-  "SOXL 실물: 2010-03-11~2026-08-06 (4127일)",
-  "SOXL 합성 기준지수: ^SOX (1994-05-04~2026-08-06, 8119일)"
+  "TQQQ 실물: 2010-02-11~2026-08-07 (4147일)",
+  "TQQQ 합성 기준지수: ^NDX (1985-10-01~2026-08-07, 10292일)",
+  "SOXL 실물: 2010-03-11~2026-08-07 (4128일)",
+  "SOXL 합성 기준지수: ^SOX (1994-05-04~2026-08-07, 8120일)"
  ],
  "results": [
   {
@@ -689,13 +689,13 @@
      "source": "실물",
      "period": [
       "2023-01-09",
-      "2026-08-06"
+      "2026-08-07"
      ],
-     "days": 897,
-     "index_move_pct": 699.9,
+     "days": 898,
+     "index_move_pct": 727.0,
      "results": {
       "base40": {
-       "total_pct": 63.8,
+       "total_pct": 63.9,
        "mdd_pct": -14.7,
        "cycles": 31,
        "win_rate": 100.0,
@@ -705,7 +705,7 @@
        "open_position": true
       },
       "v30": {
-       "total_pct": 107.8,
+       "total_pct": 109.1,
        "mdd_pct": -20.5,
        "cycles": 20,
        "win_rate": 100.0,
@@ -725,7 +725,7 @@
        "open_position": false
       },
       "ma200": {
-       "total_pct": 64.5,
+       "total_pct": 64.7,
        "mdd_pct": -14.7,
        "cycles": 31,
        "win_rate": 100.0,
@@ -735,7 +735,7 @@
        "open_position": true
       },
       "reserve": {
-       "total_pct": 42.5,
+       "total_pct": 42.6,
        "mdd_pct": -11.1,
        "cycles": 31,
        "win_rate": 100.0,
@@ -745,7 +745,7 @@
        "open_position": true
       },
       "ma_res": {
-       "total_pct": 43.0,
+       "total_pct": 43.1,
        "mdd_pct": -11.1,
        "cycles": 31,
        "win_rate": 100.0,
@@ -755,7 +755,7 @@
        "open_position": true
       },
       "bh3x": {
-       "total_pct": 699.9,
+       "total_pct": 727.0,
        "mdd_pct": -58.3,
        "cycles": null,
        "win_rate": null,
@@ -764,7 +764,422 @@
        "invested_peak_pct": 100.0
       }
      },
-     "index_1x_pct": 164.4
+     "index_1x_pct": 167.6
+    },
+    {
+     "name": "금리인상 1999-00",
+     "kind": "금리인상",
+     "source": "합성",
+     "period": [
+      "1999-06-30",
+      "2000-05-16"
+     ],
+     "days": 223,
+     "index_move_pct": 111.6,
+     "results": {
+      "base40": {
+       "total_pct": 37.7,
+       "mdd_pct": -5.3,
+       "cycles": 21,
+       "win_rate": 100.0,
+       "max_cycle_days": 26,
+       "exhausted_days": 0,
+       "invested_peak_pct": 42.8,
+       "open_position": false
+      },
+      "v30": {
+       "total_pct": 33.5,
+       "mdd_pct": -32.2,
+       "cycles": 14,
+       "win_rate": 100.0,
+       "max_cycle_days": 38,
+       "exhausted_days": 4,
+       "invested_peak_pct": 101.1,
+       "open_position": true
+      },
+      "div80": {
+       "total_pct": 14.2,
+       "mdd_pct": -2.7,
+       "cycles": 17,
+       "win_rate": 100.0,
+       "max_cycle_days": 26,
+       "exhausted_days": 0,
+       "invested_peak_pct": 23.6,
+       "open_position": false
+      },
+      "ma200": {
+       "total_pct": 37.7,
+       "mdd_pct": -5.3,
+       "cycles": 21,
+       "win_rate": 100.0,
+       "max_cycle_days": 26,
+       "exhausted_days": 0,
+       "invested_peak_pct": 42.8,
+       "open_position": false
+      },
+      "reserve": {
+       "total_pct": 25.1,
+       "mdd_pct": -3.5,
+       "cycles": 21,
+       "win_rate": 100.0,
+       "max_cycle_days": 26,
+       "exhausted_days": 0,
+       "invested_peak_pct": 42.8,
+       "open_position": false
+      },
+      "ma_res": {
+       "total_pct": 25.1,
+       "mdd_pct": -3.5,
+       "cycles": 21,
+       "win_rate": 100.0,
+       "max_cycle_days": 26,
+       "exhausted_days": 0,
+       "invested_peak_pct": 42.8,
+       "open_position": false
+      },
+      "bh3x": {
+       "total_pct": 111.6,
+       "mdd_pct": -74.2,
+       "cycles": null,
+       "win_rate": null,
+       "max_cycle_days": null,
+       "exhausted_days": null,
+       "invested_peak_pct": 100.0
+      }
+     },
+     "index_1x_pct": 58.8
+    },
+    {
+     "name": "금리인상 2004-06",
+     "kind": "금리인상",
+     "source": "합성",
+     "period": [
+      "2004-06-30",
+      "2006-06-29"
+     ],
+     "days": 505,
+     "index_move_pct": -14.9,
+     "results": {
+      "base40": {
+       "total_pct": 10.2,
+       "mdd_pct": -20.5,
+       "cycles": 11,
+       "win_rate": 90.9,
+       "max_cycle_days": 117,
+       "exhausted_days": 16,
+       "invested_peak_pct": 99.9,
+       "open_position": true
+      },
+      "v30": {
+       "total_pct": 14.4,
+       "mdd_pct": -16.7,
+       "cycles": 7,
+       "win_rate": 85.7,
+       "max_cycle_days": 117,
+       "exhausted_days": 1,
+       "invested_peak_pct": 97.9,
+       "open_position": true
+      },
+      "div80": {
+       "total_pct": 9.0,
+       "mdd_pct": -18.6,
+       "cycles": 7,
+       "win_rate": 100.0,
+       "max_cycle_days": 163,
+       "exhausted_days": 0,
+       "invested_peak_pct": 98.7,
+       "open_position": true
+      },
+      "ma200": {
+       "total_pct": 10.2,
+       "mdd_pct": -20.5,
+       "cycles": 11,
+       "win_rate": 90.9,
+       "max_cycle_days": 117,
+       "exhausted_days": 16,
+       "invested_peak_pct": 99.9,
+       "open_position": true
+      },
+      "reserve": {
+       "total_pct": 10.0,
+       "mdd_pct": -14.2,
+       "cycles": 11,
+       "win_rate": 90.9,
+       "max_cycle_days": 117,
+       "exhausted_days": 0,
+       "invested_peak_pct": 126.2,
+       "open_position": true
+      },
+      "ma_res": {
+       "total_pct": 10.0,
+       "mdd_pct": -14.2,
+       "cycles": 11,
+       "win_rate": 90.9,
+       "max_cycle_days": 117,
+       "exhausted_days": 0,
+       "invested_peak_pct": 126.2,
+       "open_position": true
+      },
+      "bh3x": {
+       "total_pct": -14.9,
+       "mdd_pct": -40.4,
+       "cycles": null,
+       "win_rate": null,
+       "max_cycle_days": null,
+       "exhausted_days": null,
+       "invested_peak_pct": 100.0
+      }
+     },
+     "index_1x_pct": 4.5
+    },
+    {
+     "name": "금리인상 2015-18",
+     "kind": "금리인상",
+     "source": "실물",
+     "period": [
+      "2015-12-16",
+      "2018-12-19"
+     ],
+     "days": 758,
+     "index_move_pct": 89.1,
+     "results": {
+      "base40": {
+       "total_pct": 34.2,
+       "mdd_pct": -19.3,
+       "cycles": 19,
+       "win_rate": 100.0,
+       "max_cycle_days": 87,
+       "exhausted_days": 12,
+       "invested_peak_pct": 98.9,
+       "open_position": true
+      },
+      "v30": {
+       "total_pct": 55.8,
+       "mdd_pct": -20.5,
+       "cycles": 5,
+       "win_rate": 100.0,
+       "max_cycle_days": 222,
+       "exhausted_days": 2,
+       "invested_peak_pct": 101.3,
+       "open_position": true
+      },
+      "div80": {
+       "total_pct": 30.2,
+       "mdd_pct": -8.3,
+       "cycles": 15,
+       "win_rate": 100.0,
+       "max_cycle_days": 117,
+       "exhausted_days": 0,
+       "invested_peak_pct": 54.0,
+       "open_position": true
+      },
+      "ma200": {
+       "total_pct": 34.2,
+       "mdd_pct": -19.3,
+       "cycles": 19,
+       "win_rate": 100.0,
+       "max_cycle_days": 87,
+       "exhausted_days": 12,
+       "invested_peak_pct": 98.9,
+       "open_position": true
+      },
+      "reserve": {
+       "total_pct": 20.8,
+       "mdd_pct": -16.2,
+       "cycles": 19,
+       "win_rate": 100.0,
+       "max_cycle_days": 87,
+       "exhausted_days": 0,
+       "invested_peak_pct": 141.7,
+       "open_position": true
+      },
+      "ma_res": {
+       "total_pct": 20.8,
+       "mdd_pct": -16.2,
+       "cycles": 19,
+       "win_rate": 100.0,
+       "max_cycle_days": 87,
+       "exhausted_days": 0,
+       "invested_peak_pct": 141.7,
+       "open_position": true
+      },
+      "bh3x": {
+       "total_pct": 89.1,
+       "mdd_pct": -47.8,
+       "cycles": null,
+       "win_rate": null,
+       "max_cycle_days": null,
+       "exhausted_days": null,
+       "invested_peak_pct": 100.0
+      }
+     },
+     "index_1x_pct": 36.0
+    },
+    {
+     "name": "금리인상 2022-23",
+     "kind": "금리인상",
+     "source": "실물",
+     "period": [
+      "2022-03-16",
+      "2023-07-26"
+     ],
+     "days": 342,
+     "index_move_pct": -10.7,
+     "results": {
+      "base40": {
+       "total_pct": 4.0,
+       "mdd_pct": -53.9,
+       "cycles": 4,
+       "win_rate": 75.0,
+       "max_cycle_days": 297,
+       "exhausted_days": 220,
+       "invested_peak_pct": 97.9,
+       "open_position": true
+      },
+      "v30": {
+       "total_pct": 7.1,
+       "mdd_pct": -49.2,
+       "cycles": 7,
+       "win_rate": 71.4,
+       "max_cycle_days": 157,
+       "exhausted_days": 2,
+       "invested_peak_pct": 98.1,
+       "open_position": true
+      },
+      "div80": {
+       "total_pct": 15.0,
+       "mdd_pct": -26.4,
+       "cycles": 10,
+       "win_rate": 100.0,
+       "max_cycle_days": 120,
+       "exhausted_days": 0,
+       "invested_peak_pct": 95.4,
+       "open_position": true
+      },
+      "ma200": {
+       "total_pct": 4.0,
+       "mdd_pct": -53.9,
+       "cycles": 4,
+       "win_rate": 75.0,
+       "max_cycle_days": 297,
+       "exhausted_days": 220,
+       "invested_peak_pct": 97.9,
+       "open_position": true
+      },
+      "reserve": {
+       "total_pct": 12.7,
+       "mdd_pct": -35.6,
+       "cycles": 10,
+       "win_rate": 100.0,
+       "max_cycle_days": 113,
+       "exhausted_days": 28,
+       "invested_peak_pct": 147.9,
+       "open_position": true
+      },
+      "ma_res": {
+       "total_pct": 12.1,
+       "mdd_pct": -35.6,
+       "cycles": 9,
+       "win_rate": 100.0,
+       "max_cycle_days": 113,
+       "exhausted_days": 28,
+       "invested_peak_pct": 147.9,
+       "open_position": true
+      },
+      "bh3x": {
+       "total_pct": -10.7,
+       "mdd_pct": -74.2,
+       "cycles": null,
+       "win_rate": null,
+       "max_cycle_days": null,
+       "exhausted_days": null,
+       "invested_peak_pct": 100.0
+      }
+     },
+     "index_1x_pct": 11.1
+    },
+    {
+     "name": "고금리 유지 23-24",
+     "kind": "고금리",
+     "source": "실물",
+     "period": [
+      "2023-07-27",
+      "2024-09-17"
+     ],
+     "days": 288,
+     "index_move_pct": 55.0,
+     "results": {
+      "base40": {
+       "total_pct": 28.6,
+       "mdd_pct": -8.6,
+       "cycles": 9,
+       "win_rate": 100.0,
+       "max_cycle_days": 71,
+       "exhausted_days": 0,
+       "invested_peak_pct": 62.4,
+       "open_position": true
+      },
+      "v30": {
+       "total_pct": 30.9,
+       "mdd_pct": -13.5,
+       "cycles": 5,
+       "win_rate": 100.0,
+       "max_cycle_days": 80,
+       "exhausted_days": 0,
+       "invested_peak_pct": 84.9,
+       "open_position": true
+      },
+      "div80": {
+       "total_pct": 18.2,
+       "mdd_pct": -8.7,
+       "cycles": 7,
+       "win_rate": 100.0,
+       "max_cycle_days": 76,
+       "exhausted_days": 0,
+       "invested_peak_pct": 57.1,
+       "open_position": true
+      },
+      "ma200": {
+       "total_pct": 28.6,
+       "mdd_pct": -8.6,
+       "cycles": 9,
+       "win_rate": 100.0,
+       "max_cycle_days": 71,
+       "exhausted_days": 0,
+       "invested_peak_pct": 62.4,
+       "open_position": true
+      },
+      "reserve": {
+       "total_pct": 19.0,
+       "mdd_pct": -5.8,
+       "cycles": 9,
+       "win_rate": 100.0,
+       "max_cycle_days": 71,
+       "exhausted_days": 0,
+       "invested_peak_pct": 62.4,
+       "open_position": true
+      },
+      "ma_res": {
+       "total_pct": 19.0,
+       "mdd_pct": -5.8,
+       "cycles": 9,
+       "win_rate": 100.0,
+       "max_cycle_days": 71,
+       "exhausted_days": 0,
+       "invested_peak_pct": 62.4,
+       "open_position": true
+      },
+      "bh3x": {
+       "total_pct": 55.0,
+       "mdd_pct": -37.4,
+       "cycles": null,
+       "win_rate": null,
+       "max_cycle_days": null,
+       "exhausted_days": null,
+       "invested_peak_pct": 100.0
+      }
+     },
+     "index_1x_pct": 25.7
     },
     {
      "name": "전체 기간",
@@ -772,10 +1187,10 @@
      "source": "실물",
      "period": [
       "2010-02-11",
-      "2026-08-06"
+      "2026-08-07"
      ],
-     "days": 4146,
-     "index_move_pct": 33201.0,
+     "days": 4147,
+     "index_move_pct": 34329.0,
      "results": {
       "base40": {
        "total_pct": 72.7,
@@ -838,7 +1253,7 @@
        "open_position": false
       },
       "bh3x": {
-       "total_pct": 33201.0,
+       "total_pct": 34329.0,
        "mdd_pct": -81.8,
        "cycles": null,
        "win_rate": null,
@@ -847,7 +1262,7 @@
        "invested_peak_pct": 100.0
       }
      },
-     "index_1x_pct": 1554.1
+     "index_1x_pct": 1573.8
     }
    ]
   },
@@ -1524,10 +1939,10 @@
      "source": "실물",
      "period": [
       "2023-01-09",
-      "2026-08-06"
+      "2026-08-07"
      ],
-     "days": 897,
-     "index_move_pct": 1047.7,
+     "days": 898,
+     "index_move_pct": 1116.4,
      "results": {
       "base40": {
        "total_pct": 118.4,
@@ -1540,7 +1955,7 @@
        "open_position": false
       },
       "v30": {
-       "total_pct": 160.9,
+       "total_pct": 162.2,
        "mdd_pct": -28.2,
        "cycles": 31,
        "win_rate": 96.8,
@@ -1590,7 +2005,7 @@
        "open_position": false
       },
       "bh3x": {
-       "total_pct": 1047.7,
+       "total_pct": 1116.4,
        "mdd_pct": -88.0,
        "cycles": null,
        "win_rate": null,
@@ -1599,7 +2014,422 @@
        "invested_peak_pct": 100.0
       }
      },
-     "index_1x_pct": 348.4
+     "index_1x_pct": 359.9
+    },
+    {
+     "name": "금리인상 1999-00",
+     "kind": "금리인상",
+     "source": "합성",
+     "period": [
+      "1999-06-30",
+      "2000-05-16"
+     ],
+     "days": 223,
+     "index_move_pct": 307.6,
+     "results": {
+      "base40": {
+       "total_pct": 33.6,
+       "mdd_pct": -12.0,
+       "cycles": 21,
+       "win_rate": 100.0,
+       "max_cycle_days": 38,
+       "exhausted_days": 0,
+       "invested_peak_pct": 62.7,
+       "open_position": false
+      },
+      "v30": {
+       "total_pct": 96.9,
+       "mdd_pct": -17.0,
+       "cycles": 16,
+       "win_rate": 100.0,
+       "max_cycle_days": 38,
+       "exhausted_days": 0,
+       "invested_peak_pct": 90.9,
+       "open_position": true
+      },
+      "div80": {
+       "total_pct": 17.8,
+       "mdd_pct": -3.4,
+       "cycles": 19,
+       "win_rate": 100.0,
+       "max_cycle_days": 19,
+       "exhausted_days": 0,
+       "invested_peak_pct": 27.9,
+       "open_position": false
+      },
+      "ma200": {
+       "total_pct": 33.6,
+       "mdd_pct": -12.0,
+       "cycles": 21,
+       "win_rate": 100.0,
+       "max_cycle_days": 38,
+       "exhausted_days": 0,
+       "invested_peak_pct": 62.7,
+       "open_position": false
+      },
+      "reserve": {
+       "total_pct": 22.4,
+       "mdd_pct": -8.3,
+       "cycles": 21,
+       "win_rate": 100.0,
+       "max_cycle_days": 38,
+       "exhausted_days": 0,
+       "invested_peak_pct": 62.7,
+       "open_position": false
+      },
+      "ma_res": {
+       "total_pct": 22.4,
+       "mdd_pct": -8.3,
+       "cycles": 21,
+       "win_rate": 100.0,
+       "max_cycle_days": 38,
+       "exhausted_days": 0,
+       "invested_peak_pct": 62.7,
+       "open_position": false
+      },
+      "bh3x": {
+       "total_pct": 307.6,
+       "mdd_pct": -78.2,
+       "cycles": null,
+       "win_rate": null,
+       "max_cycle_days": null,
+       "exhausted_days": null,
+       "invested_peak_pct": 100.0
+      }
+     },
+     "index_1x_pct": 116.1
+    },
+    {
+     "name": "금리인상 2004-06",
+     "kind": "금리인상",
+     "source": "합성",
+     "period": [
+      "2004-06-30",
+      "2006-06-29"
+     ],
+     "days": 505,
+     "index_move_pct": -55.0,
+     "results": {
+      "base40": {
+       "total_pct": 31.6,
+       "mdd_pct": -36.0,
+       "cycles": 17,
+       "win_rate": 100.0,
+       "max_cycle_days": 83,
+       "exhausted_days": 29,
+       "invested_peak_pct": 99.1,
+       "open_position": true
+      },
+      "v30": {
+       "total_pct": 23.7,
+       "mdd_pct": -40.4,
+       "cycles": 8,
+       "win_rate": 87.5,
+       "max_cycle_days": 106,
+       "exhausted_days": 3,
+       "invested_peak_pct": 104.0,
+       "open_position": true
+      },
+      "div80": {
+       "total_pct": 16.6,
+       "mdd_pct": -18.3,
+       "cycles": 16,
+       "win_rate": 100.0,
+       "max_cycle_days": 106,
+       "exhausted_days": 0,
+       "invested_peak_pct": 71.6,
+       "open_position": true
+      },
+      "ma200": {
+       "total_pct": 31.6,
+       "mdd_pct": -36.0,
+       "cycles": 17,
+       "win_rate": 100.0,
+       "max_cycle_days": 83,
+       "exhausted_days": 29,
+       "invested_peak_pct": 99.1,
+       "open_position": true
+      },
+      "reserve": {
+       "total_pct": 27.0,
+       "mdd_pct": -25.6,
+       "cycles": 19,
+       "win_rate": 100.0,
+       "max_cycle_days": 65,
+       "exhausted_days": 0,
+       "invested_peak_pct": 124.2,
+       "open_position": true
+      },
+      "ma_res": {
+       "total_pct": 24.9,
+       "mdd_pct": -25.6,
+       "cycles": 18,
+       "win_rate": 100.0,
+       "max_cycle_days": 65,
+       "exhausted_days": 0,
+       "invested_peak_pct": 124.2,
+       "open_position": true
+      },
+      "bh3x": {
+       "total_pct": -55.0,
+       "mdd_pct": -65.0,
+       "cycles": null,
+       "win_rate": null,
+       "max_cycle_days": null,
+       "exhausted_days": null,
+       "invested_peak_pct": 100.0
+      }
+     },
+     "index_1x_pct": -8.0
+    },
+    {
+     "name": "금리인상 2015-18",
+     "kind": "금리인상",
+     "source": "실물",
+     "period": [
+      "2015-12-16",
+      "2018-12-19"
+     ],
+     "days": 758,
+     "index_move_pct": 183.3,
+     "results": {
+      "base40": {
+       "total_pct": 57.7,
+       "mdd_pct": -14.9,
+       "cycles": 23,
+       "win_rate": 100.0,
+       "max_cycle_days": 184,
+       "exhausted_days": 0,
+       "invested_peak_pct": 70.5,
+       "open_position": true
+      },
+      "v30": {
+       "total_pct": 64.9,
+       "mdd_pct": -21.8,
+       "cycles": 11,
+       "win_rate": 100.0,
+       "max_cycle_days": 197,
+       "exhausted_days": 3,
+       "invested_peak_pct": 100.0,
+       "open_position": true
+      },
+      "div80": {
+       "total_pct": 23.7,
+       "mdd_pct": -9.7,
+       "cycles": 19,
+       "win_rate": 100.0,
+       "max_cycle_days": 73,
+       "exhausted_days": 0,
+       "invested_peak_pct": 49.7,
+       "open_position": true
+      },
+      "ma200": {
+       "total_pct": 62.3,
+       "mdd_pct": -14.9,
+       "cycles": 23,
+       "win_rate": 100.0,
+       "max_cycle_days": 184,
+       "exhausted_days": 0,
+       "invested_peak_pct": 70.5,
+       "open_position": false
+      },
+      "reserve": {
+       "total_pct": 38.5,
+       "mdd_pct": -10.0,
+       "cycles": 23,
+       "win_rate": 100.0,
+       "max_cycle_days": 184,
+       "exhausted_days": 0,
+       "invested_peak_pct": 70.5,
+       "open_position": true
+      },
+      "ma_res": {
+       "total_pct": 41.5,
+       "mdd_pct": -10.0,
+       "cycles": 23,
+       "win_rate": 100.0,
+       "max_cycle_days": 184,
+       "exhausted_days": 0,
+       "invested_peak_pct": 70.5,
+       "open_position": false
+      },
+      "bh3x": {
+       "total_pct": 183.3,
+       "mdd_pct": -60.7,
+       "cycles": null,
+       "win_rate": null,
+       "max_cycle_days": null,
+       "exhausted_days": null,
+       "invested_peak_pct": 100.0
+      }
+     },
+     "index_1x_pct": 67.8
+    },
+    {
+     "name": "금리인상 2022-23",
+     "kind": "금리인상",
+     "source": "실물",
+     "period": [
+      "2022-03-16",
+      "2023-07-26"
+     ],
+     "days": 342,
+     "index_move_pct": -31.0,
+     "results": {
+      "base40": {
+       "total_pct": 41.6,
+       "mdd_pct": -39.5,
+       "cycles": 15,
+       "win_rate": 100.0,
+       "max_cycle_days": 86,
+       "exhausted_days": 27,
+       "invested_peak_pct": 100.2,
+       "open_position": true
+      },
+      "v30": {
+       "total_pct": 52.0,
+       "mdd_pct": -48.2,
+       "cycles": 11,
+       "win_rate": 90.9,
+       "max_cycle_days": 91,
+       "exhausted_days": 3,
+       "invested_peak_pct": 95.5,
+       "open_position": true
+      },
+      "div80": {
+       "total_pct": 29.5,
+       "mdd_pct": -27.3,
+       "cycles": 14,
+       "win_rate": 100.0,
+       "max_cycle_days": 87,
+       "exhausted_days": 0,
+       "invested_peak_pct": 85.0,
+       "open_position": true
+      },
+      "ma200": {
+       "total_pct": 21.9,
+       "mdd_pct": -35.3,
+       "cycles": 8,
+       "win_rate": 100.0,
+       "max_cycle_days": 86,
+       "exhausted_days": 7,
+       "invested_peak_pct": 98.3,
+       "open_position": true
+      },
+      "reserve": {
+       "total_pct": 31.2,
+       "mdd_pct": -29.4,
+       "cycles": 15,
+       "win_rate": 100.0,
+       "max_cycle_days": 84,
+       "exhausted_days": 2,
+       "invested_peak_pct": 148.2,
+       "open_position": true
+      },
+      "ma_res": {
+       "total_pct": 17.1,
+       "mdd_pct": -23.8,
+       "cycles": 8,
+       "win_rate": 100.0,
+       "max_cycle_days": 84,
+       "exhausted_days": 0,
+       "invested_peak_pct": 113.6,
+       "open_position": true
+      },
+      "bh3x": {
+       "total_pct": -31.0,
+       "mdd_pct": -84.8,
+       "cycles": null,
+       "win_rate": null,
+       "max_cycle_days": null,
+       "exhausted_days": null,
+       "invested_peak_pct": 100.0
+      }
+     },
+     "index_1x_pct": 10.8
+    },
+    {
+     "name": "고금리 유지 23-24",
+     "kind": "고금리",
+     "source": "실물",
+     "period": [
+      "2023-07-27",
+      "2024-09-17"
+     ],
+     "days": 288,
+     "index_move_pct": 21.5,
+     "results": {
+      "base40": {
+       "total_pct": 25.9,
+       "mdd_pct": -14.5,
+       "cycles": 15,
+       "win_rate": 100.0,
+       "max_cycle_days": 74,
+       "exhausted_days": 0,
+       "invested_peak_pct": 73.4,
+       "open_position": true
+      },
+      "v30": {
+       "total_pct": 43.4,
+       "mdd_pct": -21.6,
+       "cycles": 8,
+       "win_rate": 100.0,
+       "max_cycle_days": 76,
+       "exhausted_days": 1,
+       "invested_peak_pct": 100.3,
+       "open_position": true
+      },
+      "div80": {
+       "total_pct": 23.5,
+       "mdd_pct": -19.3,
+       "cycles": 16,
+       "win_rate": 100.0,
+       "max_cycle_days": 76,
+       "exhausted_days": 0,
+       "invested_peak_pct": 75.6,
+       "open_position": true
+      },
+      "ma200": {
+       "total_pct": 25.9,
+       "mdd_pct": -14.5,
+       "cycles": 15,
+       "win_rate": 100.0,
+       "max_cycle_days": 74,
+       "exhausted_days": 0,
+       "invested_peak_pct": 73.4,
+       "open_position": true
+      },
+      "reserve": {
+       "total_pct": 17.2,
+       "mdd_pct": -10.3,
+       "cycles": 15,
+       "win_rate": 100.0,
+       "max_cycle_days": 74,
+       "exhausted_days": 0,
+       "invested_peak_pct": 73.4,
+       "open_position": true
+      },
+      "ma_res": {
+       "total_pct": 17.2,
+       "mdd_pct": -10.3,
+       "cycles": 15,
+       "win_rate": 100.0,
+       "max_cycle_days": 74,
+       "exhausted_days": 0,
+       "invested_peak_pct": 73.4,
+       "open_position": true
+      },
+      "bh3x": {
+       "total_pct": 21.5,
+       "mdd_pct": -62.2,
+       "cycles": null,
+       "win_rate": null,
+       "max_cycle_days": null,
+       "exhausted_days": null,
+       "invested_peak_pct": 100.0
+      }
+     },
+     "index_1x_pct": 30.4
     },
     {
      "name": "전체 기간",
@@ -1607,10 +2437,10 @@
      "source": "실물",
      "period": [
       "2010-03-11",
-      "2026-08-06"
+      "2026-08-07"
      ],
-     "days": 4127,
-     "index_move_pct": 19934.8,
+     "days": 4128,
+     "index_move_pct": 21133.9,
      "results": {
       "base40": {
        "total_pct": 122.9,
@@ -1673,7 +2503,7 @@
        "open_position": false
       },
       "bh3x": {
-       "total_pct": 19934.8,
+       "total_pct": 21133.9,
        "mdd_pct": -90.5,
        "cycles": null,
        "win_rate": null,
@@ -1682,7 +2512,7 @@
        "invested_peak_pct": 100.0
       }
      },
-     "index_1x_pct": 3273.5
+     "index_1x_pct": 3359.7
     }
    ]
   }
