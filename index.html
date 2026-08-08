@@ -768,7 +768,11 @@ async function loadRegime() {
       const vals = keys.map(k => r.results[k]?.total_pct)
                        .filter(v => v !== undefined && v !== null);
       const best = Math.max(...vals);
-      html += `<tr><td><b>${r.name}</b><br><span class="memo">${r.period[0].slice(0,7)}~${r.period[1].slice(0,7)}
+      const kindColor = {'폭락':'var(--sell)','하락':'var(--sell)','급락':'var(--sell)',
+        '금리인상':'var(--accent)','고금리':'var(--accent)','횡보':'var(--sub)'}[r.kind] || 'var(--ok)';
+      html += `<tr><td><b>${r.name}</b>
+        <span style="color:${kindColor};font-size:.7rem"> ●${r.kind}</span>
+        <br><span class="memo">${r.period[0].slice(0,7)}~${r.period[1].slice(0,7)}
         · ${r.source === '합성' ? '합성' : '실물'}</span></td>
         <td class="${r.index_move_pct>=0?'buy':'sell'}">${r.index_move_pct}%</td>`;
       for (const k of keys) {
@@ -785,8 +789,10 @@ async function loadRegime() {
   }
   html += `<p class="memo" style="margin-top:10px">⚠️ '합성'은 지수로 만든 3배 ETF 근사치이며
     ETF 상장 이전 국면에만 사용됩니다. 각 국면은 시작가를 $60으로 재기준화해
-    비교합니다. 전략 선택은 수익률뿐 아니라 <b>MDD와 최장 사이클(버티는 기간)</b>을
-    함께 보고 판단하세요.</p>
+    비교하고, <b>수익금 재투자(복리)는 반영하지 않습니다</b>(실제 운용 시 수익률은
+    더 높아질 수 있음). 전략 선택은 수익률뿐 아니라
+    <b>MDD와 최장 사이클(버티는 기간)</b>을 함께 보고 판단하세요.
+    금리 국면은 FOMC 인상 시작~마지막 인상일 기준이며 다른 국면과 기간이 겹칩니다.</p>
     ${(d.notes||[]).length ? `<details><summary class="memo">데이터 출처/경고 (${d.notes.length})</summary>
       <p class="memo">${d.notes.join('<br>')}</p></details>` : ''}
     ${runBtn}</div>`;
