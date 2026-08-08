@@ -1,0 +1,870 @@
+{
+ "generated": "2026-08-08T07:13:11+00:00",
+ "step": 10,
+ "seed": 10000,
+ "strategies": {
+  "base40": "v2.2 원본(40분할)",
+  "v30": "v3.0(20분할)",
+  "div80": "80분할(저속)",
+  "ma200": "v2.2+200일선 필터",
+  "reserve": "v2.2+예비시드50%",
+  "ma_res": "200일선+예비시드",
+  "bh3x": "3배 ETF 보유"
+ },
+ "results": [
+  {
+   "ticker": "TQQQ",
+   "period": [
+    "1985-10-02",
+    "2026-08-07"
+   ],
+   "horizons": {
+    "1년": {
+     "days": 250,
+     "starts": 985,
+     "strategies": {
+      "base40": {
+       "n": 985,
+       "win_rate": 85.0,
+       "median": 18.0,
+       "mean": 10.7,
+       "p05": -59.9,
+       "p25": 8.6,
+       "p75": 24.2,
+       "worst": -96.9,
+       "best": 47.3,
+       "mdd_median": -15.8,
+       "mdd_worst": -97.0,
+       "exhausted_rate": 38.8,
+       "open_rate": 96.6,
+       "above_ma": {
+        "n": 652,
+        "win_rate": 89.3,
+        "median": 18.2,
+        "p05": -20.8,
+        "worst": -80.5
+       },
+       "below_ma": {
+        "n": 333,
+        "win_rate": 76.6,
+        "median": 17.7,
+        "p05": -74.1,
+        "worst": -96.9
+       }
+      },
+      "v30": {
+       "n": 985,
+       "win_rate": 83.4,
+       "median": 21.2,
+       "mean": 14.2,
+       "p05": -73.2,
+       "p25": 6.9,
+       "p75": 32.5,
+       "worst": -97.8,
+       "best": 83.9,
+       "mdd_median": -19.1,
+       "mdd_worst": -97.9,
+       "exhausted_rate": 51.5,
+       "open_rate": 98.1,
+       "above_ma": {
+        "n": 652,
+        "win_rate": 88.5,
+        "median": 21.5,
+        "p05": -36.6,
+        "worst": -94.6
+       },
+       "below_ma": {
+        "n": 333,
+        "win_rate": 73.3,
+        "median": 20.0,
+        "p05": -85.2,
+        "worst": -97.8
+       }
+      },
+      "div80": {
+       "n": 985,
+       "win_rate": 87.3,
+       "median": 13.4,
+       "mean": 8.0,
+       "p05": -33.0,
+       "p25": 7.1,
+       "p75": 17.1,
+       "worst": -94.9,
+       "best": 27.5,
+       "mdd_median": -12.8,
+       "mdd_worst": -94.9,
+       "exhausted_rate": 2.8,
+       "open_rate": 95.6,
+       "above_ma": {
+        "n": 652,
+        "win_rate": 89.6,
+        "median": 13.5,
+        "p05": -10.9,
+        "worst": -80.7
+       },
+       "below_ma": {
+        "n": 333,
+        "win_rate": 82.9,
+        "median": 13.0,
+        "p05": -66.8,
+        "worst": -94.9
+       }
+      },
+      "ma200": {
+       "n": 985,
+       "win_rate": 87.8,
+       "median": 17.7,
+       "mean": 11.9,
+       "p05": -54.4,
+       "p25": 9.4,
+       "p75": 23.6,
+       "worst": -96.9,
+       "best": 47.3,
+       "mdd_median": -15.7,
+       "mdd_worst": -97.0,
+       "exhausted_rate": 37.9,
+       "open_rate": 89.5,
+       "above_ma": {
+        "n": 652,
+        "win_rate": 91.3,
+        "median": 17.7,
+        "p05": -9.2,
+        "worst": -82.8
+       },
+       "below_ma": {
+        "n": 333,
+        "win_rate": 81.1,
+        "median": 17.7,
+        "p05": -74.1,
+        "worst": -96.9
+       }
+      },
+      "reserve": {
+       "n": 985,
+       "win_rate": 88.7,
+       "median": 12.7,
+       "mean": 7.8,
+       "p05": -45.3,
+       "p25": 7.5,
+       "p75": 16.4,
+       "worst": -95.9,
+       "best": 31.5,
+       "mdd_median": -11.1,
+       "mdd_worst": -95.9,
+       "exhausted_rate": 11.2,
+       "open_rate": 96.5,
+       "above_ma": {
+        "n": 652,
+        "win_rate": 91.6,
+        "median": 12.7,
+        "p05": -5.6,
+        "worst": -81.1
+       },
+       "below_ma": {
+        "n": 333,
+        "win_rate": 83.2,
+        "median": 12.6,
+        "p05": -73.0,
+        "worst": -95.9
+       }
+      },
+      "ma_res": {
+       "n": 985,
+       "win_rate": 92.6,
+       "median": 12.2,
+       "mean": 9.0,
+       "p05": -11.1,
+       "p25": 7.9,
+       "p75": 16.1,
+       "worst": -95.9,
+       "best": 31.5,
+       "mdd_median": -11.0,
+       "mdd_worst": -95.9,
+       "exhausted_rate": 9.1,
+       "open_rate": 85.9,
+       "above_ma": {
+        "n": 652,
+        "win_rate": 95.4,
+        "median": 12.3,
+        "p05": 0.7,
+        "worst": -82.6
+       },
+       "below_ma": {
+        "n": 333,
+        "win_rate": 87.1,
+        "median": 12.1,
+        "p05": -73.0,
+        "worst": -95.9
+       }
+      },
+      "bh3x": {
+       "n": 985,
+       "win_rate": 72.7,
+       "median": 37.7,
+       "mean": 49.5,
+       "p05": -84.7,
+       "p25": -3.5,
+       "p75": 93.3,
+       "worst": -99.0,
+       "best": 570.0,
+       "mdd_median": -43.1,
+       "mdd_worst": -99.0,
+       "exhausted_rate": 0.0,
+       "open_rate": 0.0,
+       "above_ma": {
+        "n": 652,
+        "win_rate": 73.5,
+        "median": 33.3,
+        "p05": -59.2,
+        "worst": -98.7
+       },
+       "below_ma": {
+        "n": 333,
+        "win_rate": 71.2,
+        "median": 48.7,
+        "p05": -92.7,
+        "worst": -99.0
+       }
+      }
+     }
+    },
+    "2년": {
+     "days": 500,
+     "starts": 960,
+     "strategies": {
+      "base40": {
+       "n": 960,
+       "win_rate": 83.8,
+       "median": 33.8,
+       "mean": 24.3,
+       "p05": -49.0,
+       "p25": 20.5,
+       "p75": 44.3,
+       "worst": -98.5,
+       "best": 71.8,
+       "mdd_median": -23.3,
+       "mdd_worst": -98.5,
+       "exhausted_rate": 66.5,
+       "open_rate": 95.9,
+       "above_ma": {
+        "n": 635,
+        "win_rate": 86.1,
+        "median": 33.6,
+        "p05": -45.1,
+        "worst": -84.5
+       },
+       "below_ma": {
+        "n": 325,
+        "win_rate": 79.1,
+        "median": 34.3,
+        "p05": -87.4,
+        "worst": -98.5
+       }
+      },
+      "v30": {
+       "n": 960,
+       "win_rate": 82.8,
+       "median": 38.6,
+       "mean": 30.2,
+       "p05": -80.8,
+       "p25": 13.4,
+       "p75": 59.2,
+       "worst": -99.5,
+       "best": 158.3,
+       "mdd_median": -23.6,
+       "mdd_worst": -99.6,
+       "exhausted_rate": 82.0,
+       "open_rate": 98.1,
+       "above_ma": {
+        "n": 635,
+        "win_rate": 85.7,
+        "median": 37.4,
+        "p05": -70.2,
+        "worst": -99.0
+       },
+       "below_ma": {
+        "n": 325,
+        "win_rate": 77.2,
+        "median": 41.5,
+        "p05": -97.6,
+        "worst": -99.5
+       }
+      },
+      "div80": {
+       "n": 960,
+       "win_rate": 89.3,
+       "median": 23.1,
+       "mean": 16.1,
+       "p05": -47.0,
+       "p25": 16.6,
+       "p75": 28.0,
+       "worst": -98.2,
+       "best": 42.9,
+       "mdd_median": -17.9,
+       "mdd_worst": -98.3,
+       "exhausted_rate": 5.7,
+       "open_rate": 88.2,
+       "above_ma": {
+        "n": 635,
+        "win_rate": 92.0,
+        "median": 24.0,
+        "p05": -32.4,
+        "worst": -87.0
+       },
+       "below_ma": {
+        "n": 325,
+        "win_rate": 84.0,
+        "median": 21.2,
+        "p05": -53.4,
+        "worst": -98.2
+       }
+      },
+      "ma200": {
+       "n": 960,
+       "win_rate": 91.0,
+       "median": 32.9,
+       "mean": 28.9,
+       "p05": -27.1,
+       "p25": 23.9,
+       "p75": 44.3,
+       "worst": -98.5,
+       "best": 71.1,
+       "mdd_median": -22.5,
+       "mdd_worst": -98.5,
+       "exhausted_rate": 64.1,
+       "open_rate": 86.0,
+       "above_ma": {
+        "n": 635,
+        "win_rate": 95.3,
+        "median": 32.3,
+        "p05": 2.5,
+        "worst": -86.8
+       },
+       "below_ma": {
+        "n": 325,
+        "win_rate": 82.8,
+        "median": 33.7,
+        "p05": -87.4,
+        "worst": -98.5
+       }
+      },
+      "reserve": {
+       "n": 960,
+       "win_rate": 87.9,
+       "median": 24.9,
+       "mean": 17.4,
+       "p05": -49.6,
+       "p25": 17.6,
+       "p75": 30.7,
+       "worst": -98.0,
+       "best": 47.9,
+       "mdd_median": -17.1,
+       "mdd_worst": -98.1,
+       "exhausted_rate": 23.1,
+       "open_rate": 95.8,
+       "above_ma": {
+        "n": 635,
+        "win_rate": 90.6,
+        "median": 24.8,
+        "p05": -40.0,
+        "worst": -86.1
+       },
+       "below_ma": {
+        "n": 325,
+        "win_rate": 82.8,
+        "median": 25.3,
+        "p05": -53.9,
+        "worst": -98.0
+       }
+      },
+      "ma_res": {
+       "n": 960,
+       "win_rate": 96.5,
+       "median": 23.5,
+       "mean": 22.2,
+       "p05": 7.1,
+       "p25": 18.7,
+       "p75": 30.6,
+       "worst": -98.0,
+       "best": 47.4,
+       "mdd_median": -16.6,
+       "mdd_worst": -98.1,
+       "exhausted_rate": 14.6,
+       "open_rate": 83.3,
+       "above_ma": {
+        "n": 635,
+        "win_rate": 99.5,
+        "median": 23.4,
+        "p05": 11.1,
+        "worst": -87.7
+       },
+       "below_ma": {
+        "n": 325,
+        "win_rate": 90.5,
+        "median": 23.8,
+        "p05": -30.0,
+        "worst": -98.0
+       }
+      },
+      "bh3x": {
+       "n": 960,
+       "win_rate": 76.0,
+       "median": 69.9,
+       "mean": 122.4,
+       "p05": -92.8,
+       "p25": 7.8,
+       "p75": 195.7,
+       "worst": -99.8,
+       "best": 2206.2,
+       "mdd_median": -51.3,
+       "mdd_worst": -99.8,
+       "exhausted_rate": 0.0,
+       "open_rate": 0.0,
+       "above_ma": {
+        "n": 635,
+        "win_rate": 77.5,
+        "median": 67.8,
+        "p05": -86.4,
+        "worst": -99.6
+       },
+       "below_ma": {
+        "n": 325,
+        "win_rate": 73.2,
+        "median": 90.7,
+        "p05": -98.8,
+        "worst": -99.8
+       }
+      }
+     }
+    }
+   }
+  },
+  {
+   "ticker": "SOXL",
+   "period": [
+    "1994-05-05",
+    "2026-08-07"
+   ],
+   "horizons": {
+    "1년": {
+     "days": 250,
+     "starts": 767,
+     "strategies": {
+      "base40": {
+       "n": 767,
+       "win_rate": 74.3,
+       "median": 23.5,
+       "mean": 10.3,
+       "p05": -66.9,
+       "p25": -0.6,
+       "p75": 31.5,
+       "worst": -96.1,
+       "best": 53.5,
+       "mdd_median": -28.1,
+       "mdd_worst": -96.1,
+       "exhausted_rate": 50.8,
+       "open_rate": 94.1,
+       "above_ma": {
+        "n": 408,
+        "win_rate": 70.8,
+        "median": 18.8,
+        "p05": -61.9,
+        "worst": -83.4
+       },
+       "below_ma": {
+        "n": 359,
+        "win_rate": 78.3,
+        "median": 27.3,
+        "p05": -71.1,
+        "worst": -96.1
+       }
+      },
+      "v30": {
+       "n": 767,
+       "win_rate": 79.3,
+       "median": 29.0,
+       "mean": 21.9,
+       "p05": -78.6,
+       "p25": 4.9,
+       "p75": 45.6,
+       "worst": -97.4,
+       "best": 127.2,
+       "mdd_median": -29.0,
+       "mdd_worst": -97.4,
+       "exhausted_rate": 74.8,
+       "open_rate": 97.7,
+       "above_ma": {
+        "n": 408,
+        "win_rate": 76.5,
+        "median": 22.9,
+        "p05": -69.8,
+        "worst": -94.0
+       },
+       "below_ma": {
+        "n": 359,
+        "win_rate": 82.5,
+        "median": 35.2,
+        "p05": -85.5,
+        "worst": -97.4
+       }
+      },
+      "div80": {
+       "n": 767,
+       "win_rate": 79.5,
+       "median": 16.1,
+       "mean": 6.4,
+       "p05": -56.3,
+       "p25": 4.7,
+       "p75": 20.5,
+       "worst": -82.9,
+       "best": 27.8,
+       "mdd_median": -16.9,
+       "mdd_worst": -85.8,
+       "exhausted_rate": 2.6,
+       "open_rate": 91.9,
+       "above_ma": {
+        "n": 408,
+        "win_rate": 77.9,
+        "median": 14.7,
+        "p05": -55.1,
+        "worst": -78.6
+       },
+       "below_ma": {
+        "n": 359,
+        "win_rate": 81.3,
+        "median": 17.5,
+        "p05": -58.3,
+        "worst": -82.9
+       }
+      },
+      "ma200": {
+       "n": 767,
+       "win_rate": 78.4,
+       "median": 21.4,
+       "mean": 10.8,
+       "p05": -62.0,
+       "p25": 3.9,
+       "p75": 29.1,
+       "worst": -96.1,
+       "best": 52.1,
+       "mdd_median": -19.4,
+       "mdd_worst": -96.1,
+       "exhausted_rate": 46.0,
+       "open_rate": 83.2,
+       "above_ma": {
+        "n": 408,
+        "win_rate": 76.2,
+        "median": 18.4,
+        "p05": -60.9,
+        "worst": -83.4
+       },
+       "below_ma": {
+        "n": 359,
+        "win_rate": 80.8,
+        "median": 24.2,
+        "p05": -73.2,
+        "worst": -96.1
+       }
+      },
+      "reserve": {
+       "n": 767,
+       "win_rate": 82.0,
+       "median": 16.9,
+       "mean": 8.0,
+       "p05": -59.4,
+       "p25": 7.8,
+       "p75": 22.1,
+       "worst": -94.0,
+       "best": 35.7,
+       "mdd_median": -19.9,
+       "mdd_worst": -94.0,
+       "exhausted_rate": 16.0,
+       "open_rate": 93.9,
+       "above_ma": {
+        "n": 408,
+        "win_rate": 81.4,
+        "median": 14.6,
+        "p05": -56.1,
+        "worst": -79.6
+       },
+       "below_ma": {
+        "n": 359,
+        "win_rate": 82.7,
+        "median": 20.0,
+        "p05": -67.7,
+        "worst": -94.0
+       }
+      },
+      "ma_res": {
+       "n": 767,
+       "win_rate": 86.4,
+       "median": 15.6,
+       "mean": 8.5,
+       "p05": -56.1,
+       "p25": 7.8,
+       "p75": 20.4,
+       "worst": -94.0,
+       "best": 34.7,
+       "mdd_median": -13.5,
+       "mdd_worst": -94.0,
+       "exhausted_rate": 14.7,
+       "open_rate": 76.9,
+       "above_ma": {
+        "n": 408,
+        "win_rate": 87.0,
+        "median": 13.8,
+        "p05": -49.8,
+        "worst": -79.6
+       },
+       "below_ma": {
+        "n": 359,
+        "win_rate": 85.8,
+        "median": 18.0,
+        "p05": -66.4,
+        "worst": -94.0
+       }
+      },
+      "bh3x": {
+       "n": 767,
+       "win_rate": 54.5,
+       "median": 12.7,
+       "mean": 59.3,
+       "p05": -91.8,
+       "p25": -47.8,
+       "p75": 110.2,
+       "worst": -99.0,
+       "best": 1597.7,
+       "mdd_median": -62.9,
+       "mdd_worst": -99.0,
+       "exhausted_rate": 0.0,
+       "open_rate": 0.0,
+       "above_ma": {
+        "n": 408,
+        "win_rate": 49.5,
+        "median": -3.7,
+        "p05": -86.2,
+        "worst": -98.5
+       },
+       "below_ma": {
+        "n": 359,
+        "win_rate": 60.2,
+        "median": 25.8,
+        "p05": -94.6,
+        "worst": -99.0
+       }
+      }
+     }
+    },
+    "2년": {
+     "days": 500,
+     "starts": 742,
+     "strategies": {
+      "base40": {
+       "n": 742,
+       "win_rate": 74.7,
+       "median": 32.7,
+       "mean": 21.9,
+       "p05": -63.8,
+       "p25": -0.8,
+       "p75": 53.9,
+       "worst": -99.1,
+       "best": 84.8,
+       "mdd_median": -37.7,
+       "mdd_worst": -99.1,
+       "exhausted_rate": 81.9,
+       "open_rate": 94.6,
+       "above_ma": {
+        "n": 406,
+        "win_rate": 74.1,
+        "median": 28.9,
+        "p05": -59.3,
+        "worst": -90.7
+       },
+       "below_ma": {
+        "n": 336,
+        "win_rate": 75.3,
+        "median": 37.6,
+        "p05": -68.8,
+        "worst": -99.1
+       }
+      },
+      "v30": {
+       "n": 742,
+       "win_rate": 85.8,
+       "median": 49.2,
+       "mean": 43.8,
+       "p05": -76.7,
+       "p25": 30.7,
+       "p75": 75.6,
+       "worst": -99.6,
+       "best": 195.1,
+       "mdd_median": -41.1,
+       "mdd_worst": -99.7,
+       "exhausted_rate": 94.6,
+       "open_rate": 97.3,
+       "above_ma": {
+        "n": 406,
+        "win_rate": 92.4,
+        "median": 46.9,
+        "p05": -54.7,
+        "worst": -99.4
+       },
+       "below_ma": {
+        "n": 336,
+        "win_rate": 78.0,
+        "median": 57.7,
+        "p05": -79.5,
+        "worst": -99.6
+       }
+      },
+      "div80": {
+       "n": 742,
+       "win_rate": 80.7,
+       "median": 25.5,
+       "mean": 14.0,
+       "p05": -69.9,
+       "p25": 9.4,
+       "p75": 34.1,
+       "worst": -96.7,
+       "best": 51.9,
+       "mdd_median": -27.0,
+       "mdd_worst": -97.1,
+       "exhausted_rate": 5.5,
+       "open_rate": 87.5,
+       "above_ma": {
+        "n": 406,
+        "win_rate": 81.8,
+        "median": 26.5,
+        "p05": -71.5,
+        "worst": -93.2
+       },
+       "below_ma": {
+        "n": 336,
+        "win_rate": 79.5,
+        "median": 24.5,
+        "p05": -69.4,
+        "worst": -96.7
+       }
+      },
+      "ma200": {
+       "n": 742,
+       "win_rate": 83.2,
+       "median": 34.3,
+       "mean": 25.3,
+       "p05": -56.0,
+       "p25": 14.1,
+       "p75": 50.4,
+       "worst": -99.1,
+       "best": 83.0,
+       "mdd_median": -34.6,
+       "mdd_worst": -99.1,
+       "exhausted_rate": 67.3,
+       "open_rate": 79.8,
+       "above_ma": {
+        "n": 406,
+        "win_rate": 83.0,
+        "median": 32.7,
+        "p05": -39.5,
+        "worst": -90.7
+       },
+       "below_ma": {
+        "n": 336,
+        "win_rate": 83.3,
+        "median": 38.7,
+        "p05": -68.3,
+        "worst": -99.1
+       }
+      },
+      "reserve": {
+       "n": 742,
+       "win_rate": 79.6,
+       "median": 29.6,
+       "mean": 17.4,
+       "p05": -68.5,
+       "p25": 14.1,
+       "p75": 40.8,
+       "worst": -98.3,
+       "best": 59.5,
+       "mdd_median": -29.8,
+       "mdd_worst": -98.3,
+       "exhausted_rate": 34.8,
+       "open_rate": 94.2,
+       "above_ma": {
+        "n": 406,
+        "win_rate": 81.8,
+        "median": 28.1,
+        "p05": -68.0,
+        "worst": -92.9
+       },
+       "below_ma": {
+        "n": 336,
+        "win_rate": 77.1,
+        "median": 32.4,
+        "p05": -69.3,
+        "worst": -98.3
+       }
+      },
+      "ma_res": {
+       "n": 742,
+       "win_rate": 88.3,
+       "median": 26.8,
+       "mean": 19.7,
+       "p05": -45.9,
+       "p25": 16.8,
+       "p75": 35.0,
+       "worst": -98.3,
+       "best": 55.3,
+       "mdd_median": -24.6,
+       "mdd_worst": -98.3,
+       "exhausted_rate": 28.0,
+       "open_rate": 76.3,
+       "above_ma": {
+        "n": 406,
+        "win_rate": 90.6,
+        "median": 25.4,
+        "p05": -35.6,
+        "worst": -92.9
+       },
+       "below_ma": {
+        "n": 336,
+        "win_rate": 85.4,
+        "median": 30.2,
+        "p05": -68.9,
+        "worst": -98.3
+       }
+      },
+      "bh3x": {
+       "n": 742,
+       "win_rate": 53.2,
+       "median": 8.7,
+       "mean": 85.1,
+       "p05": -97.8,
+       "p25": -46.6,
+       "p75": 120.4,
+       "worst": -99.9,
+       "best": 2328.0,
+       "mdd_median": -80.4,
+       "mdd_worst": -99.9,
+       "exhausted_rate": 0.0,
+       "open_rate": 0.0,
+       "above_ma": {
+        "n": 406,
+        "win_rate": 50.5,
+        "median": 1.1,
+        "p05": -92.3,
+        "worst": -99.8
+       },
+       "below_ma": {
+        "n": 336,
+        "win_rate": 56.5,
+        "median": 22.2,
+        "p05": -99.0,
+        "worst": -99.9
+       }
+      }
+     }
+    }
+   }
+  }
+ ]
+}
