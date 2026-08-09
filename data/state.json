@@ -1,5 +1,5 @@
 {
-  "last_run": "2026-08-08T06:16:29+00:00",
+  "last_run": "2026-08-09T09:58:01+00:00",
   "tg_offset": 541703691,
   "accounts": [
     {
@@ -36,7 +36,8 @@
               "end": "2026-08-04",
               "profit": 41.97
             }
-          ]
+          ],
+          "ma200": null
         },
         "SOXL": {
           "enabled": true,
@@ -90,7 +91,8 @@
               "end": "2026-08-04",
               "profit": 225.31
             }
-          ]
+          ],
+          "ma200": null
         }
       }
     },
@@ -105,9 +107,9 @@
           "seed": 5000.0,
           "divisions": 40,
           "active": true,
-          "shares": 5,
-          "total_bought": 364.21,
-          "avg_price": 72.842,
+          "shares": 0,
+          "total_bought": 0.0,
+          "avg_price": 0.0,
           "realized_profit": 0.0,
           "cycle_no": 2,
           "cycle_start": "2026-08-05",
@@ -117,27 +119,9 @@
           "pending_orders": [
             {
               "type": "LOC_BUY",
-              "price": 72.84,
-              "qty": 1,
-              "memo": "전반전: 평단가 LOC"
-            },
-            {
-              "type": "LOC_BUY",
-              "price": 79.03,
-              "qty": 1,
-              "memo": "전반전: 평단+8.5% LOC"
-            },
-            {
-              "type": "LOC_SELL",
-              "price": 79.03,
-              "qty": 1,
-              "memo": "1/4 매도: 평단+8.5% LOC"
-            },
-            {
-              "type": "LIMIT_SELL",
-              "price": 80.13,
-              "qty": 4,
-              "memo": "3/4 매도: 평단+10% 지정가"
+              "price": 85.64,
+              "qty": 2,
+              "memo": "사이클 시작: 1회분 매수"
             }
           ],
           "history": [
@@ -146,7 +130,8 @@
               "end": "2026-08-04",
               "profit": 105.96
             }
-          ]
+          ],
+          "ma200": null
         },
         "SOXL": {
           "enabled": true,
@@ -164,7 +149,8 @@
           "last_close": 140.25,
           "last_date": "2026-08-07",
           "pending_orders": [],
-          "history": []
+          "history": [],
+          "ma200": null
         }
       }
     }
