@@ -87,6 +87,7 @@ Branch: main / (root) → Save**
 /seed TQQQ 4000         ← 시드 변경
 /fix TQQQ 12 45.67      ← 실제 잔고로 보정 (수량, 평단)
 /filter TQQQ on         ← 200일선 진입 필터 (하락 추세에선 신규 진입 안 함)
+/div TQQQ 80            ← 분할 수 변경 (80분할 = 매수 속도 절반)
 /status                 ← 상태 확인
 /help                   ← 명령 목록
 ```

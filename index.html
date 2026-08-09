@@ -76,6 +76,7 @@
         <option value="stop">stop — 일시정지</option>
         <option value="resume">resume — 재개</option>
         <option value="seed">seed — 시드 변경</option>
+        <option value="div">div — 분할 수 변경 (매수 속도)</option>
         <option value="fix">fix — 잔고 보정</option>
         <option value="filter">filter — 200일선 필터 (1=on, 0=off)</option>
         <option value="status">status — 상태 확인</option>
@@ -234,9 +235,14 @@ async function load() {
             <div class="row2">
               <div><label>시드 ($)</label><input id="st_${acc.id}_${ticker}"
                    type="number" placeholder="3350"></div>
-              <div><button style="margin-top:22px"
-                   onclick="startTicker('${acc.id}','${ticker}')">▶ 시작</button></div>
+              <div><label>분할 수</label>
+                <select id="sd_${acc.id}_${ticker}">
+                  <option value="40">40분할 (라오어 원본)</option>
+                  <option value="60">60분할</option>
+                  <option value="80">80분할 (하락장 방어)</option>
+                </select></div>
             </div>
+            <button onclick="startTicker('${acc.id}','${ticker}')">▶ 시작</button>
             <div id="fx_st_${acc.id}_${ticker}" class="memo"></div>`;
           dash.appendChild(mini);
           shown++;
@@ -321,6 +327,21 @@ function card(ticker, t, accId) {
           <input id="fx_sd_${key}" type="number" value="${t.seed}"></div>
         <div><button style="margin-top:22px" onclick="changeSeed('${accId}','${ticker}')">시드 변경</button></div>
       </div>
+      <div class="row2" style="margin-top:8px">
+        <div><label>분할 수 (매수 속도)</label>
+          <select id="fx_dv_${key}">
+            ${[20,40,60,80,100].map(d => `<option value="${d}"
+              ${d===t.divisions?'selected':''}>${d}분할 · 1회 $${(t.seed/d).toFixed(2)}</option>`).join('')}
+          </select></div>
+        <div><button style="margin-top:22px" onclick="changeDiv('${accId}','${ticker}')">분할 변경</button></div>
+      </div>
+      <p class="memo">분할을 늘리면 1회 매수금이 줄어 <b>하락장 체력이 늘어납니다</b>
+        (백테스트: 80분할 시 원금소진 경험 38.8%→2.8%, 2022년 −57%→−4.8%).
+        대신 상승장 수익은 줄어듭니다. 사이클 중간에 바꿔도 진행률(T)은 유지됩니다.
+        ${t.last_close ? (t.seed/t.divisions/2 < t.last_close*0.5
+          ? `<br><span class="neg">⚠️ 현재가 $${t.last_close.toFixed(2)} 기준 전반전 반쪽 주문이
+             0주가 됩니다 — 분할을 낮추거나 시드를 $${(t.last_close*2*t.divisions).toLocaleString()} 이상으로</span>`
+          : '') : ''}</p>
       <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--line)">
         <label>🛡 200일선 진입 필터 —
           현재 <b class="${t.ma200_filter ? 'pos' : ''}">${t.ma200_filter ? 'ON' : 'OFF'}</b></label>
@@ -386,6 +407,16 @@ async function changeSeed(accId, ticker) {
                          value1: String(sd), value2: '', version: 'v2.2' }, el);
 }
 
+async function changeDiv(accId, ticker) {
+  const key = `${accId}_${ticker}`;
+  const dv = document.getElementById(`fx_dv_${key}`).value;
+  const el = document.getElementById(`fx_st_${key}`);
+  if (!confirm(`[${accId}] ${ticker}를 ${dv}분할로 변경합니다. ` +
+               `앞으로의 1회 매수금이 바뀝니다.`)) return;
+  await dispatchManage({ action: 'div', account: accId, ticker,
+                         value1: String(dv), value2: '', version: 'v2.2' }, el);
+}
+
 async function setFilter(accId, ticker, onoff) {
   const el = document.getElementById(`fx_st_${accId}_${ticker}`);
   if (!confirm(`[${accId}] ${ticker} 200일선 진입 필터를 ${onoff.toUpperCase()} 합니다.`)) return;
@@ -395,11 +426,14 @@ async function setFilter(accId, ticker, onoff) {
 
 async function startTicker(accId, ticker) {
   const sd = document.getElementById(`st_${accId}_${ticker}`).value;
+  const dvEl = document.getElementById(`sd_${accId}_${ticker}`);
+  const dv = dvEl ? dvEl.value : '40';
   const el = document.getElementById(`fx_st_${accId}_${ticker}`);
   if (!sd || +sd < 100) { el.textContent = '⚠️ 시드는 $100 이상'; return; }
-  if (!confirm(`[${accId}] ${ticker}를 시드 $${sd}로 시작합니다 (v2.2).`)) return;
+  if (!confirm(`[${accId}] ${ticker}를 시드 $${sd}, ${dv}분할로 시작합니다 (v2.2).\n` +
+               `1회 매수금 $${(+sd/+dv).toFixed(2)}`)) return;
   await dispatchManage({ action: 'start', account: accId, ticker,
-                         value1: String(sd), value2: '', version: 'v2.2' }, el);
+                         value1: String(sd), value2: String(dv), version: 'v2.2' }, el);
 }
 
 async function addAccount() {
@@ -607,8 +641,9 @@ function cmdHint() {
   const l1 = document.getElementById('cV1Label'), l2 = document.getElementById('cV2Label');
   const ver = document.getElementById('cVerRow');
   const cfg = {
-    start:  ['시드 ($)', true,  '—', false, true],
+    start:  ['시드 ($)', true,  '분할 수 (기본 40)', true, true],
     seed:   ['시드 ($)', true,  '—', false, false],
+    div:    ['분할 수 (10~200)', true, '—', false, false],
     fix:    ['보유수량 (주)', true, '평단가 ($)', true, false],
     filter: ['1=켜기 / 0=끄기', true, '—', false, false],
     stop:   ['—', false, '—', false, false],
@@ -631,6 +666,9 @@ async function runCommand() {
   const v2 = document.getElementById('cV2').value;
   if ((action === 'start' || action === 'seed') && !v1) {
     el.textContent = '⚠️ 시드 금액을 입력하세요'; return;
+  }
+  if (action === 'div' && (!v1 || +v1 < 10 || +v1 > 200)) {
+    el.textContent = '⚠️ 분할 수는 10~200'; return;
   }
   if (action === 'filter' && v1 !== '1' && v1 !== '0') {
     el.textContent = '⚠️ 1(켜기) 또는 0(끄기)을 입력하세요'; return;

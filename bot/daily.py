@@ -205,19 +205,23 @@ def build_orders(t, ticker, ma200=None):
         return orders, T
 
     # ---------- 매수 ----------
+    # 분할 수를 바꿔도(예: 80분할) 원본 공식을 그대로 쓰기 위해
+    # 진행률을 기준 분할(v2.2=40, v3.0=20)로 환산한다.
+    #   T_eff = T × 기준분할 / 실제분할  → 사이클 중간에 분할을 바꿔도 진행률 유지
+    base_div = 40 if ver == "v2.2" else 20
+    T_eff = T * base_div / max(t.get("divisions", base_div), 1)
+
     if ver == "v2.2":
-        pct = (10 - T / 2) / 100
-        max_T = 39.1
-        half_line = 20
-    else:  # v3.0 (20분할)
-        pct = (15 - 1.5 * T) / 100
-        max_T = 19.1
-        half_line = 10
+        pct = (10 - T_eff / 2) / 100
+    else:  # v3.0
+        pct = (15 - 1.5 * T_eff) / 100
+    max_T = base_div - 0.9
+    half_line = base_div / 2
 
     buy_star = round(avg * (1 + pct), 2)  # '별가격'
-    if T < max_T:
+    if T_eff < max_T:
         half_amt = one_buy / 2
-        if T < half_line:  # 전반전
+        if T_eff < half_line:  # 전반전
             orders.append({"type": "LOC_BUY", "price": round(avg, 2),
                            "qty": qty_for(half_amt, close), "memo": "전반전: 평단가 LOC"})
             orders.append({"type": "LOC_BUY", "price": buy_star,
@@ -242,7 +246,7 @@ def build_orders(t, ticker, ma200=None):
     else:  # v3.0
         up = 1.15 if ticker == "TQQQ" else 1.20
         sell_limit = round(avg * up, 2)
-        if T <= 19:
+        if T_eff <= base_div - 1:
             orders.append({"type": "LOC_SELL", "price": buy_star, "qty": q_quarter,
                            "memo": f"1/4 매도: 평단{pct*100:+.1f}% LOC"})
         else:

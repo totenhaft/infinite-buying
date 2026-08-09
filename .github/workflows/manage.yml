@@ -7,7 +7,7 @@ on:
         description: "작업"
         type: choice
         required: true
-        options: [start, stop, resume, seed, fix, filter, status, addaccount, delaccount, chatid]
+        options: [start, stop, resume, seed, div, fix, filter, status, addaccount, delaccount, chatid]
       account:
         description: "계좌 (기본: main / addaccount일 땐 새 계좌 이름)"
         required: false
@@ -22,7 +22,7 @@ on:
         required: false
         default: ""
       value2:
-        description: "평단가$ (fix 전용)"
+        description: "평단가$ (fix) · 분할수 (start, 비우면 기본값)"
         required: false
         default: ""
       version:
@@ -47,7 +47,8 @@ jobs:
       - name: 명령 적용
         run: |
           case "${{ inputs.action }}" in
-            start)      CMD="start ${{ inputs.account }} ${{ inputs.ticker }} ${{ inputs.value1 }} ${{ inputs.version }}";;
+            start)      CMD="start ${{ inputs.account }} ${{ inputs.ticker }} ${{ inputs.value1 }} ${{ inputs.version }} ${{ inputs.value2 }}";;
+            div)        CMD="div ${{ inputs.account }} ${{ inputs.ticker }} ${{ inputs.value1 }}";;
             stop)       CMD="stop ${{ inputs.account }} ${{ inputs.ticker }}";;
             resume)     CMD="resume ${{ inputs.account }} ${{ inputs.ticker }}";;
             seed)       CMD="seed ${{ inputs.account }} ${{ inputs.ticker }} ${{ inputs.value1 }}";;

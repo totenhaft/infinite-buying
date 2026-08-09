@@ -79,12 +79,13 @@ def apply_command(state, text, default_account="main"):
     if cmd in ("help", "도움말"):
         return True, (
             "사용 가능한 명령 (계좌 생략 시 main):\n"
-            "/start [계좌] TQQQ 3350 v2.2 — 시작\n"
+            "/start [계좌] TQQQ 3350 v2.2 [분할수] — 시작\n"
             "/stop [계좌] TQQQ — 일시정지\n"
             "/resume [계좌] TQQQ — 재개\n"
             "/seed [계좌] TQQQ 4000 — 시드 변경\n"
             "/fix [계좌] TQQQ 12 45.67 — 잔고 보정\n"
             "/filter [계좌] TQQQ on|off — 200일선 진입 필터\n"
+            "/div [계좌] TQQQ 80 — 분할 수 변경(매수 속도)\n"
             "/addaccount sub1 [chat_id] — 계좌 추가\n"
             "/delaccount sub1 — 계좌 삭제\n"
             "/chatid sub1 123456 — 계좌별 텔레그램 지정 (clear로 해제)\n"
@@ -167,19 +168,32 @@ def apply_command(state, text, default_account="main"):
             return False, f"시드가 숫자가 아닙니다: {rest[1]}"
         if seed < 100:
             return False, "시드는 $100 이상이어야 합니다"
-        version = rest[2] if len(rest) > 2 else "v2.2"
+        version = rest[2] if len(rest) > 2 and rest[2].startswith("v") else "v2.2"
         if version not in ("v2.2", "v3.0"):
             return False, f"버전은 v2.2 또는 v3.0: {version}"
+        div = 40 if version == "v2.2" else 20
+        if len(rest) > 3:                      # 분할 수 직접 지정 (예: 80)
+            try:
+                div = int(rest[3])
+            except ValueError:
+                return False, f"분할 수가 숫자가 아닙니다: {rest[3]}"
+            if not 10 <= div <= 200:
+                return False, "분할 수는 10~200 사이여야 합니다"
         if t["shares"] > 0:
             return False, f"{tag}는 이미 {t['shares']}주 보유 중. /seed 또는 /fix 사용."
         t.update({"enabled": True, "active": True, "version": version,
-                  "divisions": 40 if version == "v2.2" else 20,
+                  "divisions": div,
                   "seed": seed, "shares": 0, "total_bought": 0.0,
                   "avg_price": 0.0, "realized_profit": 0.0,
                   "one_buy_override": None, "cycle_start": None,
                   "pending_orders": []})
-        return True, (f"✅ {tag} 시작: 시드 ${seed:.0f}, {version} "
-                      f"{t['divisions']}분할 (1회 ${seed/t['divisions']:.2f})")
+        msg = (f"✅ {tag} 시작: 시드 ${seed:.0f}, {version} "
+               f"{div}분할 (1회 ${seed/div:.2f})")
+        px = t.get("last_close")
+        if px and round((seed / div / 2) / px) < 1:
+            msg += (f"\n⚠️ 경고: 현재가 ${px:.2f}에서 전반전 반쪽 주문이 0주가 됩니다. "
+                    f"분할을 낮추거나 시드를 ${px*2*div:,.0f} 이상으로 올리세요.")
+        return True, msg
 
     if cmd == "stop":
         t["active"] = False
@@ -201,6 +215,34 @@ def apply_command(state, text, default_account="main"):
         t["seed"] = seed
         t["one_buy_override"] = None
         return True, f"✅ {tag} 시드 ${seed:.0f} (1회 ${seed/t['divisions']:.2f})"
+
+    if cmd == "div":
+        if len(rest) < 2:
+            return False, (f"현재 {tag} {t['divisions']}분할 "
+                           f"(1회 ${t['seed']/t['divisions']:.2f})\n"
+                           f"예: /div {acc['id']} {ticker} 80")
+        try:
+            div = int(rest[1])
+        except ValueError:
+            return False, f"숫자가 아닙니다: {rest[1]}"
+        if not 10 <= div <= 200:
+            return False, "분할 수는 10~200 사이여야 합니다"
+        old = t["divisions"]
+        t["divisions"] = div
+        t["one_buy_override"] = None
+        one = t["seed"] / div
+        msg = (f"✅ {tag} {old}분할 → <b>{div}분할</b> "
+               f"(1회 매수금 ${one:.2f})")
+        if t["shares"] > 0:
+            msg += "\n진행률(T)은 그대로 유지되며, 앞으로의 매수 속도만 바뀝니다."
+        # 0주 주문 경고: 전반전은 1회분을 반으로 나눠 주문한다
+        px = t.get("last_close")
+        if px and round((one / 2) / px) < 1:
+            need = px * 2 * div
+            msg += (f"\n⚠️ 경고: 현재가 ${px:.2f} 기준 전반전 반쪽 주문이 "
+                    f"${one/2:.2f}라 <b>0주</b>가 됩니다. 매수가 걸리지 않습니다.\n"
+                    f"→ 분할을 낮추거나 시드를 ${need:,.0f} 이상으로 올리세요.")
+        return True, msg
 
     if cmd == "filter":
         if len(rest) < 2 or rest[1].lower() not in ("on", "off"):
