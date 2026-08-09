@@ -2,7 +2,7 @@
  "summary": {
   "ticker": "TQQQ",
   "version": "v2.2",
-  "seed": 10000.0,
+  "seed": 20000.0,
   "period": [
    "2010-02-11",
    "2026-08-07"
@@ -11,11 +11,11 @@
   "n_cycles": 112,
   "win_cycles": 108,
   "win_rate": 96.4,
-  "total_profit": 30499.26,
-  "total_profit_pct": 305.0,
+  "total_profit": 61171.82,
+  "total_profit_pct": 305.9,
   "avg_cycle_days": 35.6,
   "max_cycle_days": 154,
-  "worst_cycle_profit": -279.65,
+  "worst_cycle_profit": -532.25,
   "mdd_pct": -17.7,
   "open_cycle": true,
   "recent_cycles": [
@@ -23,72 +23,72 @@
     "start": "2024-12-09",
     "end": "2025-02-19",
     "days": 47,
-    "profit": 422.93
+    "profit": 864.05
    },
    {
     "start": "2025-02-20",
     "end": "2025-05-12",
     "days": 56,
-    "profit": 155.34
+    "profit": 322.0
    },
    {
     "start": "2025-05-13",
     "end": "2025-06-25",
     "days": 29,
-    "profit": 285.77
+    "profit": 607.38
    },
    {
     "start": "2025-06-26",
     "end": "2025-08-12",
     "days": 32,
-    "profit": 284.92
+    "profit": 574.03
    },
    {
     "start": "2025-08-13",
-    "end": "2025-09-18",
-    "days": 25,
-    "profit": 290.2
+    "end": "2025-09-16",
+    "days": 23,
+    "profit": 549.51
    },
    {
-    "start": "2025-09-19",
+    "start": "2025-09-17",
     "end": "2025-10-27",
-    "days": 26,
-    "profit": 295.07
+    "days": 28,
+    "profit": 659.81
    },
    {
     "start": "2025-10-28",
     "end": "2026-04-14",
     "days": 114,
-    "profit": 565.61
+    "profit": 1196.56
    },
    {
     "start": "2026-04-15",
     "end": "2026-05-01",
     "days": 12,
-    "profit": 116.31
+    "profit": 254.29
    },
    {
     "start": "2026-05-04",
     "end": "2026-05-08",
     "days": 4,
-    "profit": 70.96
+    "profit": 135.43
    },
    {
     "start": "2026-05-11",
     "end": "2026-05-28",
     "days": 12,
-    "profit": 203.57
+    "profit": 321.16
    }
   ]
  },
- "generated": "2026-08-09T09:58:00+00:00",
+ "generated": "2026-08-09T10:22:39+00:00",
  "signal": null,
  "entry": {
   "available": true,
   "n": 102,
   "regime": "200일선 위",
   "win_rate": 98.0,
-  "avg_pnl_pct": 2.87,
+  "avg_pnl_pct": 2.88,
   "above_ma": true
  }
 }
