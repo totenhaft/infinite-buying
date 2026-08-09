@@ -24,6 +24,7 @@ STATE_PATH = os.path.join(os.path.dirname(__file__), "..", "data", "state.json")
 
 TICKER_TEMPLATE = {
     "enabled": True, "version": "v2.2", "seed": 0, "divisions": 40,
+    "ma200_filter": False,
     "active": False, "shares": 0, "total_bought": 0.0, "avg_price": 0.0,
     "realized_profit": 0.0, "cycle_no": 1, "cycle_start": None,
     "one_buy_override": None, "last_close": None, "last_date": None,
@@ -83,6 +84,7 @@ def apply_command(state, text, default_account="main"):
             "/resume [계좌] TQQQ — 재개\n"
             "/seed [계좌] TQQQ 4000 — 시드 변경\n"
             "/fix [계좌] TQQQ 12 45.67 — 잔고 보정\n"
+            "/filter [계좌] TQQQ on|off — 200일선 진입 필터\n"
             "/addaccount sub1 [chat_id] — 계좌 추가\n"
             "/delaccount sub1 — 계좌 삭제\n"
             "/chatid sub1 123456 — 계좌별 텔레그램 지정 (clear로 해제)\n"
@@ -96,7 +98,8 @@ def apply_command(state, text, default_account="main"):
             for k, t in a["tickers"].items():
                 lines.append(
                     f"  {k}: {'▶️' if t['active'] else '⏸'} {t['version']} "
-                    f"시드${t['seed']:.0f} | {t['shares']}주 평단${t['avg_price']:.2f}")
+                    f"시드${t['seed']:.0f} | {t['shares']}주 평단${t['avg_price']:.2f}"
+                    + (" | 200일선필터 ON" if t.get("ma200_filter") else ""))
         return True, "\n".join(lines)
 
     if cmd == "addaccount":
@@ -198,6 +201,17 @@ def apply_command(state, text, default_account="main"):
         t["seed"] = seed
         t["one_buy_override"] = None
         return True, f"✅ {tag} 시드 ${seed:.0f} (1회 ${seed/t['divisions']:.2f})"
+
+    if cmd == "filter":
+        if len(rest) < 2 or rest[1].lower() not in ("on", "off"):
+            cur = "ON" if t.get("ma200_filter") else "OFF"
+            return False, f"현재 {tag} 200일선 필터: {cur}\n예: /filter {acc['id']} {ticker} on"
+        on = rest[1].lower() == "on"
+        t["ma200_filter"] = on
+        return True, (f"✅ {tag} 200일선 필터 {'ON' if on else 'OFF'}\n" +
+                      ("종가가 200일선 아래면 신규 사이클을 시작하지 않습니다. "
+                       "(이미 보유 중인 포지션은 규칙대로 계속 진행)"
+                       if on else "필터 없이 항상 사이클을 시작합니다."))
 
     if cmd == "fix":
         if len(rest) < 3:

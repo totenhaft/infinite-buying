@@ -7,7 +7,7 @@ on:
         description: "작업"
         type: choice
         required: true
-        options: [start, stop, resume, seed, fix, status, addaccount, delaccount, chatid]
+        options: [start, stop, resume, seed, fix, filter, status, addaccount, delaccount, chatid]
       account:
         description: "계좌 (기본: main / addaccount일 땐 새 계좌 이름)"
         required: false
@@ -18,7 +18,7 @@ on:
         required: false
         options: [TQQQ, SOXL]
       value1:
-        description: "시드$(start/seed) · 수량(fix) · chat_id(addaccount/chatid)"
+        description: "시드$(start/seed) · 수량(fix) · chat_id(addaccount/chatid) · on|off(filter)"
         required: false
         default: ""
       value2:
@@ -52,6 +52,7 @@ jobs:
             resume)     CMD="resume ${{ inputs.account }} ${{ inputs.ticker }}";;
             seed)       CMD="seed ${{ inputs.account }} ${{ inputs.ticker }} ${{ inputs.value1 }}";;
             fix)        CMD="fix ${{ inputs.account }} ${{ inputs.ticker }} ${{ inputs.value1 }} ${{ inputs.value2 }}";;
+            filter)     CMD="filter ${{ inputs.account }} ${{ inputs.ticker }} ${{ inputs.value1 }}";;
             addaccount) CMD="addaccount ${{ inputs.account }} ${{ inputs.value1 }}";;
             delaccount) CMD="delaccount ${{ inputs.account }}";;
             chatid)     CMD="chatid ${{ inputs.account }} ${{ inputs.value1 }}";;

@@ -77,6 +77,7 @@
         <option value="resume">resume — 재개</option>
         <option value="seed">seed — 시드 변경</option>
         <option value="fix">fix — 잔고 보정</option>
+        <option value="filter">filter — 200일선 필터 (1=on, 0=off)</option>
         <option value="status">status — 상태 확인</option>
       </select></div>
     <div><label>종목</label>
@@ -277,7 +278,7 @@ function card(ticker, t, accId) {
   }
   div.innerHTML = `
     <h2>${ticker} <span class="badge">${t.version} · ${t.divisions}분할 ·
-      ${t.active ? '진행중 사이클#'+t.cycle_no : '⏸ 비활성'}</span></h2>
+      ${t.active ? '진행중 사이클#'+t.cycle_no : '⏸ 비활성'}${t.ma200_filter ? ' · 🛡200일선' : ''}</span></h2>
     <div class="grid">
       <div class="stat"><div class="k">종가(${t.last_date??'-'})</div>
         <div class="v">$${(t.last_close??0).toFixed(2)}</div></div>
@@ -319,6 +320,15 @@ function card(ticker, t, accId) {
         <div><label>시드 ($)</label>
           <input id="fx_sd_${key}" type="number" value="${t.seed}"></div>
         <div><button style="margin-top:22px" onclick="changeSeed('${accId}','${ticker}')">시드 변경</button></div>
+      </div>
+      <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--line)">
+        <label>🛡 200일선 진입 필터 —
+          현재 <b class="${t.ma200_filter ? 'pos' : ''}">${t.ma200_filter ? 'ON' : 'OFF'}</b></label>
+        <button onclick="setFilter('${accId}','${ticker}','${t.ma200_filter ? 'off' : 'on'}')">
+          ${t.ma200_filter ? '필터 끄기' : '필터 켜기'}</button>
+        <p class="memo">ON이면 종가가 200일선 아래일 때 <b>신규 사이클을 시작하지 않습니다</b>.
+          이미 보유 중인 포지션은 규칙대로 계속 진행됩니다.
+          (백테스트에서 닷컴 −85%→+7.5%, 금융위기 −70%→+12.5%)</p>
       </div>
       <div id="fx_st_${key}" class="memo" style="margin-top:6px"></div>
       <p class="memo" style="margin-top:6px">보정하면 봇이 즉시 재실행되어
@@ -374,6 +384,13 @@ async function changeSeed(accId, ticker) {
   if (!confirm(`[${accId}] ${ticker} 시드를 $${sd}로 변경합니다.`)) return;
   await dispatchManage({ action: 'seed', account: accId, ticker,
                          value1: String(sd), value2: '', version: 'v2.2' }, el);
+}
+
+async function setFilter(accId, ticker, onoff) {
+  const el = document.getElementById(`fx_st_${accId}_${ticker}`);
+  if (!confirm(`[${accId}] ${ticker} 200일선 진입 필터를 ${onoff.toUpperCase()} 합니다.`)) return;
+  await dispatchManage({ action: 'filter', account: accId, ticker,
+                         value1: onoff, value2: '', version: 'v2.2' }, el);
 }
 
 async function startTicker(accId, ticker) {
@@ -593,6 +610,7 @@ function cmdHint() {
     start:  ['시드 ($)', true,  '—', false, true],
     seed:   ['시드 ($)', true,  '—', false, false],
     fix:    ['보유수량 (주)', true, '평단가 ($)', true, false],
+    filter: ['1=켜기 / 0=끄기', true, '—', false, false],
     stop:   ['—', false, '—', false, false],
     resume: ['—', false, '—', false, false],
     status: ['—', false, '—', false, false],
@@ -613,6 +631,9 @@ async function runCommand() {
   const v2 = document.getElementById('cV2').value;
   if ((action === 'start' || action === 'seed') && !v1) {
     el.textContent = '⚠️ 시드 금액을 입력하세요'; return;
+  }
+  if (action === 'filter' && v1 !== '1' && v1 !== '0') {
+    el.textContent = '⚠️ 1(켜기) 또는 0(끄기)을 입력하세요'; return;
   }
   if (action === 'fix' && (!v1 || !v2)) {
     el.textContent = '⚠️ 수량과 평단가를 입력하세요'; return;
@@ -636,7 +657,7 @@ async function runCommand() {
             action,
             account: document.getElementById('cAccount').value,
             ticker: document.getElementById('cTicker').value,
-            value1: v1 || '',
+            value1: action === 'filter' ? (v1 === '1' ? 'on' : 'off') : (v1 || ''),
             value2: v2 || '',
             version: document.getElementById('cVer').value,
           },

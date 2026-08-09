@@ -141,6 +141,20 @@ def _apply_sell(t, qty, price):
         t["total_bought"] = round(t["avg_price"] * t["shares"], 2)
 
 
+def compute_ma200(ticker, latest_ohlc=None):
+    """200일 이동평균. 히스토리 수집 실패 시 None(=필터 미적용)."""
+    try:
+        import backtest
+        hist = backtest.fetch_history(ticker, latest_ohlc)
+        closes = [p["close"] for p in hist[-200:]]
+        if len(closes) < 100:
+            return None
+        return sum(closes) / len(closes)
+    except Exception as e:
+        print(f"[warn] {ticker} 200일선 계산 실패(필터 미적용): {e}")
+        return None
+
+
 # ---------------------------------------------------------------
 # T값과 오늘의 주문 계산
 # ---------------------------------------------------------------
@@ -165,8 +179,10 @@ def qty_for(amount, price):
     return max(q, 1) if amount > price * 0.5 else q
 
 
-def build_orders(t, ticker):
-    """내일(오늘 밤) 걸 주문 목록 생성"""
+def build_orders(t, ticker, ma200=None):
+    """내일(오늘 밤) 걸 주문 목록 생성.
+    ma200이 주어지고 200일선 필터가 켜져 있으면, 종가가 200일선 아래일 때
+    '신규 사이클 시작'을 보류한다 (이미 보유 중이면 규칙대로 계속 진행)."""
     orders = []
     close = t["last_close"]
     one_buy = one_buy_amount(t)
@@ -179,6 +195,8 @@ def build_orders(t, ticker):
 
     # ---------- 사이클 첫 매수 ----------
     if t["shares"] == 0:
+        if ma200 is not None and close < ma200:
+            return [], T   # 하락 추세 — 신규 진입 보류
         # 첫날: 종가 대비 +15% LOC → 사실상 종가에 1회분 체결
         price = round(close * 1.15, 2)
         orders.append({"type": "LOC_BUY", "price": price,
@@ -286,12 +304,19 @@ def format_message(account, report):
                 lines.append(f"  ✅ {name} {qty}주 @ ${price:.2f}")
         else:
             lines.append("<i>어젯밤 체결 없음(추정)</i>")
+        if r.get("ma200"):
+            mark = "위 ✅" if r["close"] >= r["ma200"] else "아래 ⚠️"
+            lines.append(f"200일선 ${r['ma200']:.2f} · 종가는 {mark} (필터 ON)")
         if r["orders"]:
             lines.append("<b>오늘 밤 걸어둘 주문:</b>")
             for od in r["orders"]:
                 p = f" @ ${od['price']:.2f}" if od.get("price") else ""
                 lines.append(f"  {ORDER_LABEL[od['type']]} {od['qty']}주{p}")
                 lines.append(f"     └ {od['memo']}")
+        elif t["active"] and t["shares"] == 0 and r.get("ma200") \
+                and r["close"] < r["ma200"]:
+            lines.append("⏸ <b>신규 진입 보류</b> — 종가가 200일선 아래입니다.")
+            lines.append("   (200일선 위로 회복하면 자동으로 사이클을 시작합니다)")
         else:
             lines.append("오늘 주문 없음 (비활성 상태)")
         bt = r.get("backtest")
@@ -372,6 +397,7 @@ def main():
     poll_telegram_commands(state)
 
     ohlc_cache = {}  # 종목별 시세는 한 번만 조회
+    ma_cache = {}    # 종목별 200일선
 
     for account in state["accounts"]:
         report = {"date": None, "tickers": {}}
@@ -392,7 +418,14 @@ def main():
             if t["active"] and t["shares"] > 0 and not t.get("cycle_start"):
                 t["cycle_start"] = ohlc["date"]
 
-            orders, T = build_orders(t, ticker)
+            # 200일선 (필터 사용 시에만 계산)
+            ma200 = None
+            if t.get("ma200_filter"):
+                if ticker not in ma_cache:
+                    ma_cache[ticker] = compute_ma200(ticker, ohlc)
+                ma200 = ma_cache[ticker]
+
+            orders, T = build_orders(t, ticker, ma200)
             t["pending_orders"] = orders
 
             # 백테스트 + 유지/중단 신호 (실패해도 데일리 가이드는 계속)
@@ -406,10 +439,11 @@ def main():
                 print(f"[warn] {account['id']}/{ticker} 백테스트 실패:")
                 traceback.print_exc()
 
+            t["ma200"] = round(ma200, 2) if ma200 else None
             report["date"] = ohlc["date"]
             report["tickers"][ticker] = {
                 "close": ohlc["close"], "T": T, "fills": fills,
-                "orders": orders, "backtest": bt,
+                "orders": orders, "backtest": bt, "ma200": ma200,
             }
 
         # 활성/보유 종목이 하나라도 있으면 계좌별 메시지 전송

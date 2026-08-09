@@ -189,18 +189,30 @@ def run_backtest(ticker, prices, version="v2.2", seed=4000):
             cycle_days = 0
             cycle_start_idx = None
 
-        orders, T = daily.build_orders(t, ticker)
-        t["pending_orders"] = orders
+        # 200일 이동평균 (최소 50일)
+        w = closes[max(0, i - 199):i + 1]
+        ma200 = sum(w) / len(w)
+        above_ma = ohlc["close"] >= ma200
+
+        orders, T = daily.build_orders(t, ticker, ma200 if t.get("ma200_filter") else None)
+
+        # 현금 제약: 가진 돈 이상은 살 수 없다 (국면·롤링 엔진과 동일 기준)
+        cash = seed + cum_realized + t["realized_profit"] - t["total_bought"]
+        capped = []
+        for od in orders:
+            if od["type"] == "LOC_BUY":
+                afford = int(max(cash, 0) // max(od["price"], .01))
+                od = {**od, "qty": min(od["qty"], afford)}
+                cash -= od["qty"] * od["price"]
+                if od["qty"] <= 0:
+                    continue
+            capped.append(od)
+        t["pending_orders"] = capped
 
         if t["shares"] > 0:
             if cycle_start_idx is None:
                 cycle_start_idx = i
             cycle_days += 1
-
-        # 200일 이동평균 (최소 50일)
-        w = closes[max(0, i - 199):i + 1]
-        ma200 = sum(w) / len(w)
-        above_ma = ohlc["close"] >= ma200
 
         mtm = t["shares"] * ohlc["close"] - t["total_bought"] + t["realized_profit"]
         equity_curve.append(seed + cum_realized + (mtm if t["shares"] > 0 else 0))
