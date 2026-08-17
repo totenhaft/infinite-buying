@@ -5,26 +5,20 @@
   "seed": 11000.0,
   "period": [
    "2010-03-11",
-   "2026-08-14"
+   "2026-08-17"
   ],
-  "n_days": 4133,
-  "n_cycles": 159,
-  "win_cycles": 156,
+  "n_days": 4134,
+  "n_cycles": 160,
+  "win_cycles": 157,
   "win_rate": 98.1,
-  "total_profit": 37913.36,
-  "total_profit_pct": 344.7,
+  "total_profit": 38430.89,
+  "total_profit_pct": 349.4,
   "avg_cycle_days": 24.8,
   "max_cycle_days": 517,
   "worst_cycle_profit": -513.28,
   "mdd_pct": -32.5,
-  "open_cycle": true,
+  "open_cycle": false,
   "recent_cycles": [
-   {
-    "start": "2026-04-22",
-    "end": "2026-04-24",
-    "days": 2,
-    "profit": 49.2
-   },
    {
     "start": "2026-04-27",
     "end": "2026-05-01",
@@ -78,20 +72,26 @@
     "end": "2026-06-30",
     "days": 6,
     "profit": 220.1
+   },
+   {
+    "start": "2026-07-01",
+    "end": "2026-08-17",
+    "days": 32,
+    "profit": 517.53
    }
   ]
  },
- "generated": "2026-08-14T22:34:58+00:00",
+ "generated": "2026-08-17T22:35:33+00:00",
  "signal": {
   "available": true,
-  "n": 646,
+  "n": 309,
   "criteria": "T±3, 괴리±5%p, 200일선 동일",
-  "prob_hold_better": 97.8,
-  "avg_extra_pct": 2.15,
-  "p10_extra_pct": 0.5,
-  "p90_extra_pct": 4.31,
-  "cur_T": 1.6,
-  "cur_gap": 3.4,
+  "prob_hold_better": 99.4,
+  "avg_extra_pct": 1.86,
+  "p10_extra_pct": 0.28,
+  "p90_extra_pct": 3.92,
+  "cur_T": 1.1,
+  "cur_gap": 6.0,
   "above_ma": true
  },
  "entry": null
