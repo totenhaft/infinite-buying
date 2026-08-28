@@ -1,5 +1,5 @@
 {
-  "last_run": "2026-08-27T03:05:54+00:00",
+  "last_run": "2026-08-28T06:04:30+00:00",
   "tg_offset": 541703691,
   "accounts": [
     {
@@ -13,38 +13,38 @@
           "seed": 20000.0,
           "divisions": 80,
           "active": true,
-          "shares": 39,
-          "total_bought": 2825.45,
-          "avg_price": 72.4474,
+          "shares": 41,
+          "total_bought": 2972.05,
+          "avg_price": 72.489,
           "realized_profit": 0.0,
           "cycle_no": 2,
           "cycle_start": "2026-08-05",
           "one_buy_override": null,
-          "last_close": 70.47,
-          "last_date": "2026-08-26",
+          "last_close": 73.3,
+          "last_date": "2026-08-27",
           "pending_orders": [
             {
               "type": "LOC_BUY",
-              "price": 72.45,
+              "price": 72.49,
               "qty": 2,
               "memo": "전반전: 평단가 LOC"
             },
             {
               "type": "LOC_BUY",
-              "price": 77.63,
+              "price": 77.58,
               "qty": 2,
-              "memo": "전반전: 평단+7.2% LOC"
+              "memo": "전반전: 평단+7.0% LOC"
             },
             {
               "type": "LOC_SELL",
-              "price": 77.63,
-              "qty": 9,
-              "memo": "1/4 매도: 평단+7.2% LOC"
+              "price": 77.58,
+              "qty": 10,
+              "memo": "1/4 매도: 평단+7.0% LOC"
             },
             {
               "type": "LIMIT_SELL",
-              "price": 79.69,
-              "qty": 30,
+              "price": 79.74,
+              "qty": 31,
               "memo": "3/4 매도: 평단+10% 지정가"
             }
           ],
@@ -63,38 +63,38 @@
           "seed": 11000.0,
           "divisions": 40,
           "active": true,
-          "shares": 16,
-          "total_bought": 1958.17,
-          "avg_price": 122.3856,
+          "shares": 17,
+          "total_bought": 2081.22,
+          "avg_price": 122.4247,
           "realized_profit": 104.64,
           "cycle_no": 3,
           "cycle_start": "2026-08-05",
           "one_buy_override": null,
-          "last_close": 116.6,
-          "last_date": "2026-08-26",
+          "last_close": 123.05,
+          "last_date": "2026-08-27",
           "pending_orders": [
             {
               "type": "LOC_BUY",
-              "price": 122.39,
+              "price": 122.42,
               "qty": 1,
               "memo": "전반전: 평단가 LOC"
             },
             {
               "type": "LOC_BUY",
-              "price": 130.22,
+              "price": 130.02,
               "qty": 1,
-              "memo": "전반전: 평단+6.4% LOC"
+              "memo": "전반전: 평단+6.2% LOC"
             },
             {
               "type": "LOC_SELL",
-              "price": 130.22,
+              "price": 130.02,
               "qty": 4,
-              "memo": "1/4 매도: 평단+6.4% LOC"
+              "memo": "1/4 매도: 평단+6.2% LOC"
             },
             {
               "type": "LIMIT_SELL",
-              "price": 134.62,
-              "qty": 12,
+              "price": 134.67,
+              "qty": 13,
               "memo": "3/4 매도: 평단+10% 지정가"
             }
           ],
@@ -125,38 +125,38 @@
           "seed": 5000.0,
           "divisions": 40,
           "active": true,
-          "shares": 22,
-          "total_bought": 1590.64,
-          "avg_price": 72.3018,
+          "shares": 23,
+          "total_bought": 1663.94,
+          "avg_price": 72.3452,
           "realized_profit": 0.0,
           "cycle_no": 2,
           "cycle_start": "2026-08-05",
           "one_buy_override": null,
-          "last_close": 70.47,
-          "last_date": "2026-08-26",
+          "last_close": 73.3,
+          "last_date": "2026-08-27",
           "pending_orders": [
             {
               "type": "LOC_BUY",
-              "price": 72.3,
+              "price": 72.35,
               "qty": 1,
               "memo": "전반전: 평단가 LOC"
             },
             {
               "type": "LOC_BUY",
-              "price": 74.9,
+              "price": 74.73,
               "qty": 1,
-              "memo": "전반전: 평단+3.6% LOC"
+              "memo": "전반전: 평단+3.3% LOC"
             },
             {
               "type": "LOC_SELL",
-              "price": 74.9,
+              "price": 74.73,
               "qty": 5,
-              "memo": "1/4 매도: 평단+3.6% LOC"
+              "memo": "1/4 매도: 평단+3.3% LOC"
             },
             {
               "type": "LIMIT_SELL",
-              "price": 79.53,
-              "qty": 17,
+              "price": 79.58,
+              "qty": 18,
               "memo": "3/4 매도: 평단+10% 지정가"
             }
           ],
@@ -182,8 +182,8 @@
           "cycle_no": 1,
           "cycle_start": null,
           "one_buy_override": null,
-          "last_close": 116.6,
-          "last_date": "2026-08-26",
+          "last_close": 123.05,
+          "last_date": "2026-08-27",
           "pending_orders": [],
           "history": [],
           "ma200": null
