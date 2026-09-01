@@ -1,5 +1,5 @@
 {
- "generated": "2026-08-09T09:58:24+00:00",
+ "generated": "2026-09-01T08:30:05+00:00",
  "strategies": {
   "base40": "v2.2 원본(40분할)",
   "v30": "v3.0(20분할)",
@@ -10,10 +10,10 @@
   "bh3x": "3배 ETF 보유"
  },
  "notes": [
-  "TQQQ 실물: 2010-02-11~2026-08-07 (4147일)",
-  "TQQQ 합성 기준지수: ^NDX (1985-10-01~2026-08-07, 10292일)",
-  "SOXL 실물: 2010-03-11~2026-08-07 (4128일)",
-  "SOXL 합성 기준지수: ^SOX (1994-05-04~2026-08-07, 8120일)"
+  "TQQQ 실물: 2010-02-11~2026-08-31 (4163일)",
+  "TQQQ 합성 기준지수: ^NDX (1985-10-01~2026-08-31, 10307일)",
+  "SOXL 실물: 2010-03-11~2026-08-31 (4144일)",
+  "SOXL 합성 기준지수: ^SOX (1994-05-04~2026-08-31, 8136일)"
  ],
  "results": [
   {
@@ -689,13 +689,13 @@
      "source": "실물",
      "period": [
       "2023-01-09",
-      "2026-08-07"
+      "2026-08-31"
      ],
-     "days": 898,
-     "index_move_pct": 727.0,
+     "days": 914,
+     "index_move_pct": 698.7,
      "results": {
       "base40": {
-       "total_pct": 63.9,
+       "total_pct": 63.7,
        "mdd_pct": -14.7,
        "cycles": 31,
        "win_rate": 100.0,
@@ -725,7 +725,7 @@
        "open_position": false
       },
       "ma200": {
-       "total_pct": 64.7,
+       "total_pct": 64.5,
        "mdd_pct": -14.7,
        "cycles": 31,
        "win_rate": 100.0,
@@ -735,7 +735,7 @@
        "open_position": true
       },
       "reserve": {
-       "total_pct": 42.6,
+       "total_pct": 42.5,
        "mdd_pct": -11.1,
        "cycles": 31,
        "win_rate": 100.0,
@@ -745,7 +745,7 @@
        "open_position": true
       },
       "ma_res": {
-       "total_pct": 43.1,
+       "total_pct": 43.0,
        "mdd_pct": -11.1,
        "cycles": 31,
        "win_rate": 100.0,
@@ -755,7 +755,7 @@
        "open_position": true
       },
       "bh3x": {
-       "total_pct": 727.0,
+       "total_pct": 698.7,
        "mdd_pct": -58.3,
        "cycles": null,
        "win_rate": null,
@@ -764,7 +764,7 @@
        "invested_peak_pct": 100.0
       }
      },
-     "index_1x_pct": 167.6
+     "index_1x_pct": 165.2
     },
     {
      "name": "금리인상 1999-00",
@@ -1187,10 +1187,10 @@
      "source": "실물",
      "period": [
       "2010-02-11",
-      "2026-08-07"
+      "2026-08-31"
      ],
-     "days": 4147,
-     "index_move_pct": 34329.0,
+     "days": 4163,
+     "index_move_pct": 33150.1,
      "results": {
       "base40": {
        "total_pct": 72.7,
@@ -1253,7 +1253,7 @@
        "open_position": false
       },
       "bh3x": {
-       "total_pct": 34329.0,
+       "total_pct": 33150.1,
        "mdd_pct": -81.8,
        "cycles": null,
        "win_rate": null,
@@ -1262,7 +1262,7 @@
        "invested_peak_pct": 100.0
       }
      },
-     "index_1x_pct": 1573.8
+     "index_1x_pct": 1558.9
     }
    ]
   },
@@ -1939,10 +1939,10 @@
      "source": "실물",
      "period": [
       "2023-01-09",
-      "2026-08-07"
+      "2026-08-31"
      ],
-     "days": 898,
-     "index_move_pct": 1116.4,
+     "days": 914,
+     "index_move_pct": 878.2,
      "results": {
       "base40": {
        "total_pct": 118.4,
@@ -1955,7 +1955,7 @@
        "open_position": false
       },
       "v30": {
-       "total_pct": 162.2,
+       "total_pct": 157.9,
        "mdd_pct": -28.2,
        "cycles": 31,
        "win_rate": 96.8,
@@ -2005,7 +2005,7 @@
        "open_position": false
       },
       "bh3x": {
-       "total_pct": 1116.4,
+       "total_pct": 878.2,
        "mdd_pct": -88.0,
        "cycles": null,
        "win_rate": null,
@@ -2014,7 +2014,7 @@
        "invested_peak_pct": 100.0
       }
      },
-     "index_1x_pct": 359.9
+     "index_1x_pct": 329.3
     },
     {
      "name": "금리인상 1999-00",
@@ -2437,10 +2437,10 @@
      "source": "실물",
      "period": [
       "2010-03-11",
-      "2026-08-07"
+      "2026-08-31"
      ],
-     "days": 4128,
-     "index_move_pct": 21133.9,
+     "days": 4144,
+     "index_move_pct": 16976.5,
      "results": {
       "base40": {
        "total_pct": 122.9,
@@ -2503,7 +2503,7 @@
        "open_position": false
       },
       "bh3x": {
-       "total_pct": 21133.9,
+       "total_pct": 16976.5,
        "mdd_pct": -90.5,
        "cycles": null,
        "win_rate": null,
@@ -2512,7 +2512,7 @@
        "invested_peak_pct": 100.0
       }
      },
-     "index_1x_pct": 3359.7
+     "index_1x_pct": 3129.7
     }
    ]
   }
