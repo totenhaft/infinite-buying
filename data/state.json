@@ -1,5 +1,5 @@
 {
-  "last_run": "2026-09-22T05:03:16+00:00",
+  "last_run": "2026-09-22T05:46:34+00:00",
   "tg_offset": 541703691,
   "accounts": [
     {
@@ -37,7 +37,8 @@
               "profit": 41.97
             }
           ],
-          "ma200": null
+          "ma200": 62.49,
+          "ma200_filter": true
         },
         "SOXL": {
           "enabled": true,
