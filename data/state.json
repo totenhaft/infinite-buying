@@ -1,5 +1,5 @@
 {
-  "last_run": "2026-09-22T05:46:34+00:00",
+  "last_run": "2026-09-22T05:46:53+00:00",
   "tg_offset": 541703691,
   "accounts": [
     {
@@ -80,69 +80,6 @@
               "profit": 539.64
             }
           ],
-          "ma200": null
-        }
-      }
-    },
-    {
-      "id": "acc2",
-      "name": "지안시안",
-      "chat_id": "",
-      "tickers": {
-        "TQQQ": {
-          "enabled": true,
-          "version": "v2.2",
-          "seed": 5000.0,
-          "divisions": 40,
-          "active": true,
-          "shares": 0,
-          "total_bought": 0.0,
-          "avg_price": 0.0,
-          "realized_profit": 0.0,
-          "cycle_no": 3,
-          "cycle_start": null,
-          "one_buy_override": null,
-          "last_close": 78.91,
-          "last_date": "2026-09-21",
-          "pending_orders": [
-            {
-              "type": "LOC_BUY",
-              "price": 90.75,
-              "qty": 2,
-              "memo": "사이클 시작: 1회분 매수"
-            }
-          ],
-          "history": [
-            {
-              "cycle": 1,
-              "end": "2026-08-04",
-              "profit": 105.96
-            },
-            {
-              "cycle": 2,
-              "end": "2026-09-22",
-              "profit": 198.11
-            }
-          ],
-          "ma200": null
-        },
-        "SOXL": {
-          "enabled": true,
-          "version": "v2.2",
-          "seed": 0,
-          "divisions": 40,
-          "active": false,
-          "shares": 0,
-          "total_bought": 0.0,
-          "avg_price": 0.0,
-          "realized_profit": 0.0,
-          "cycle_no": 1,
-          "cycle_start": null,
-          "one_buy_override": null,
-          "last_close": 141.93,
-          "last_date": "2026-09-21",
-          "pending_orders": [],
-          "history": [],
           "ma200": null
         }
       }
