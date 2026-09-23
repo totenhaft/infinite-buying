@@ -81,14 +81,18 @@
    }
   ]
  },
- "generated": "2026-09-23T00:23:07+00:00",
- "signal": null,
- "entry": {
+ "generated": "2026-09-23T11:38:10+00:00",
+ "signal": {
   "available": true,
-  "n": 103,
-  "regime": "200일선 위",
-  "win_rate": 98.1,
-  "avg_pnl_pct": 2.9,
+  "n": 482,
+  "criteria": "T±3, 괴리±5%p, 200일선 동일",
+  "prob_hold_better": 98.3,
+  "avg_extra_pct": 2.93,
+  "p10_extra_pct": 1.32,
+  "p90_extra_pct": 5.04,
+  "cur_T": 1.0,
+  "cur_gap": -1.8,
   "above_ma": true
- }
+ },
+ "entry": null
 }
