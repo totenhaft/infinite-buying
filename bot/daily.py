@@ -29,19 +29,28 @@ TELEGRAM_CHAT_ID = os.environ.get("TELEGRAM_CHAT_ID", "")
 # 시세 조회
 # ---------------------------------------------------------------
 def fetch_ohlc(ticker):
-    """야후 파이낸스에서 가장 최근 '완료된' 거래일의 OHLC를 가져온다.
-    실패하면 stooq.com CSV로 폴백."""
+    """가장 최근 '완료된' 거래일 1건 (호환용)."""
+    return fetch_recent(ticker)[-1]
+
+
+def fetch_recent(ticker, days=20):
+    """최근 거래일들의 OHLC 목록(오래된 → 최신).
+    하루라도 실행이 누락되면 그날 체결이 영영 반영되지 않으므로,
+    한 건이 아니라 '최근 여러 날'을 받아 미정산분을 모두 따라잡는다."""
     try:
-        return _fetch_yahoo(ticker)
+        rows = _fetch_yahoo(ticker)
     except Exception as e:
         print(f"[warn] yahoo 실패({ticker}): {e} -> stooq 폴백")
-        return _fetch_stooq(ticker)
+        rows = _fetch_stooq(ticker)
+    if not rows:
+        raise RuntimeError(f"{ticker}: 시세 없음")
+    return rows[-days:]
 
 
 def _fetch_yahoo(ticker):
     url = (
         "https://query1.finance.yahoo.com/v8/finance/chart/"
-        f"{ticker}?range=10d&interval=1d"
+        f"{ticker}?range=1mo&interval=1d"
     )
     req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
     with urllib.request.urlopen(req, timeout=30) as r:
@@ -49,33 +58,36 @@ def _fetch_yahoo(ticker):
     result = data["chart"]["result"][0]
     ts = result["timestamp"]
     q = result["indicators"]["quote"][0]
-    # 뒤에서부터 값이 온전한(장이 끝난) 날을 찾는다
-    for i in range(len(ts) - 1, -1, -1):
-        if all(q[k][i] is not None for k in ("open", "high", "low", "close")):
-            d = datetime.fromtimestamp(ts[i], tz=timezone.utc).strftime("%Y-%m-%d")
-            return {
-                "date": d,
-                "open": round(q["open"][i], 4),
-                "high": round(q["high"][i], 4),
-                "low": round(q["low"][i], 4),
-                "close": round(q["close"][i], 4),
-            }
-    raise RuntimeError("yahoo: 유효한 캔들 없음")
+    out = []
+    for i in range(len(ts)):
+        if any(q[k][i] is None for k in ("open", "high", "low", "close")):
+            continue  # 장중 미완성 캔들 등은 제외
+        out.append({
+            "date": datetime.fromtimestamp(ts[i], tz=timezone.utc).strftime("%Y-%m-%d"),
+            "open": round(q["open"][i], 4),
+            "high": round(q["high"][i], 4),
+            "low": round(q["low"][i], 4),
+            "close": round(q["close"][i], 4),
+        })
+    if not out:
+        raise RuntimeError("yahoo: 유효한 캔들 없음")
+    return out
 
 
 def _fetch_stooq(ticker):
     url = f"https://stooq.com/q/d/l/?s={ticker.lower()}.us&i=d"
     req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
     with urllib.request.urlopen(req, timeout=30) as r:
-        lines = r.read().decode().strip().splitlines()
-    last = lines[-1].split(",")  # Date,Open,High,Low,Close,Volume
-    return {
-        "date": last[0],
-        "open": float(last[1]),
-        "high": float(last[2]),
-        "low": float(last[3]),
-        "close": float(last[4]),
-    }
+        lines = r.read().decode().strip().splitlines()[1:]
+    out = []
+    for ln in lines[-40:]:
+        p = ln.split(",")  # Date,Open,High,Low,Close,Volume
+        try:
+            out.append({"date": p[0], "open": float(p[1]), "high": float(p[2]),
+                        "low": float(p[3]), "close": float(p[4])})
+        except (ValueError, IndexError):
+            continue
+    return out
 
 
 # ---------------------------------------------------------------
@@ -302,12 +314,18 @@ def format_message(account, report):
         lines.append(f"<b>━━ {ticker} ({t['version']}) ━━</b>")
         lines.append(f"종가 ${r['close']:.2f} | 평단 ${t['avg_price']:.2f} | "
                      f"보유 {t['shares']}주 | T={r['T']}")
+        sd = r.get("settled_days") or []
+        if len(sd) > 1:
+            lines.append(f"<i>⏳ 미정산 {len(sd)}일치를 한 번에 반영: "
+                         f"{sd[0]} ~ {sd[-1]}</i>")
         if r["fills"]:
-            lines.append("<i>어젯밤 체결(추정):</i>")
-            for name, qty, price in r["fills"]:
-                lines.append(f"  ✅ {name} {qty}주 @ ${price:.2f}")
+            lines.append("<i>체결(추정):</i>")
+            for f in r["fills"]:
+                name, qty, price = f[0], f[1], f[2]
+                when = f" [{f[3]}]" if len(f) > 3 and len(sd) > 1 else ""
+                lines.append(f"  ✅{when} {name} {qty}주 @ ${price:.2f}")
         else:
-            lines.append("<i>어젯밤 체결 없음(추정)</i>")
+            lines.append("<i>체결 없음(추정)</i>")
         if r.get("ma200"):
             mark = "위 ✅" if r["close"] >= r["ma200"] else "아래 ⚠️"
             lines.append(f"200일선 ${r['ma200']:.2f} · 종가는 {mark} (필터 ON)")
@@ -337,6 +355,9 @@ def format_message(account, report):
             lines.append(f"📊 <b>진입 참고</b>: {e['regime']} 시작 사이클 과거 승률 "
                          f"{e['win_rate']}% (표본 {e['n']}개)")
         lines.append("")
+    if report.get("stale_days", 0) >= 4:
+        lines.append(f"🚨 <b>시세 데이터가 {report['stale_days']}일 지연</b>되고 있습니다. "
+                     "Actions 탭에서 워크플로 실패 여부를 확인하세요.")
     lines.append("⚠️ 실제 체결 내역을 증권사 앱에서 꼭 확인하세요.")
     lines.append("체결이 다르면 data/state.json을 수정 후 다시 실행하세요.")
     return "\n".join(lines)
@@ -410,17 +431,9 @@ def main():
             if not t.get("enabled"):
                 continue
             if ticker not in ohlc_cache:
-                ohlc_cache[ticker] = fetch_ohlc(ticker)
-            ohlc = ohlc_cache[ticker]
-
-            fills = []
-            if t.get("last_date") != ohlc["date"]:
-                fills = simulate_fills(t, ohlc)
-
-            t["last_close"] = ohlc["close"]
-            t["last_date"] = ohlc["date"]
-            if t["active"] and t["shares"] > 0 and not t.get("cycle_start"):
-                t["cycle_start"] = ohlc["date"]
+                ohlc_cache[ticker] = fetch_recent(ticker)
+            rows = ohlc_cache[ticker]
+            ohlc = rows[-1]
 
             # 200일선 (필터 사용 시에만 계산)
             ma200 = None
@@ -429,8 +442,26 @@ def main():
                     ma_cache[ticker] = compute_ma200(ticker, ohlc)
                 ma200 = ma_cache[ticker]
 
-            orders, T = build_orders(t, ticker, ma200)
-            t["pending_orders"] = orders
+            # ── 미정산 거래일을 날짜순으로 모두 따라잡는다 ──
+            # (실행이 하루 걸러뛰거나 시세가 하루 늦게 들어와도 체결이 누락되지 않음)
+            last = t.get("last_date")
+            pending_days = [r for r in rows if not last or r["date"] > last]
+            fills = []
+            for day in pending_days:
+                for f in simulate_fills(t, day):
+                    fills.append((*f, day["date"]))
+                t["last_close"] = day["close"]
+                t["last_date"] = day["date"]
+                if t["active"] and t["shares"] > 0 and not t.get("cycle_start"):
+                    t["cycle_start"] = day["date"]
+                orders, T = build_orders(t, ticker, ma200)
+                t["pending_orders"] = orders
+
+            if not pending_days:      # 새 거래일 없음 → 주문만 최신화
+                t["last_close"] = ohlc["close"]
+                orders, T = build_orders(t, ticker, ma200)
+                t["pending_orders"] = orders
+            ohlc = {"date": t["last_date"], "close": t["last_close"]}
 
             # 백테스트 + 유지/중단 신호 (실패해도 데일리 가이드는 계속)
             bt = None
@@ -448,10 +479,16 @@ def main():
             report["tickers"][ticker] = {
                 "close": ohlc["close"], "T": T, "fills": fills,
                 "orders": orders, "backtest": bt, "ma200": ma200,
+                "settled_days": [d["date"] for d in pending_days],
             }
 
         # 활성/보유 종목이 하나라도 있으면 계좌별 메시지 전송
         # (chat_id가 비어있으면 메인 계좌의 텔레그램으로)
+        if report["date"]:
+            from datetime import date as _date
+            y, m, d = map(int, report["date"].split("-"))
+            report["stale_days"] = (datetime.now(timezone.utc).date()
+                                    - _date(y, m, d)).days
         if any(t["active"] or t["shares"] > 0
                for t in account["tickers"].values()):
             msg = format_message(account, report)

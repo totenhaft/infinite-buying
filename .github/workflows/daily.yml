@@ -4,6 +4,9 @@ on:
   schedule:
     # 매주 화~토 07:10 KST (= 월~금 22:10 UTC, 미국장 마감 후)
     - cron: "10 22 * * 1-5"
+    # GitHub 예약 실행은 지연·누락될 수 있어 백업 실행을 둔다 (정산은 멱등)
+    - cron: "40 2 * * 2-6"
+    - cron: "30 10 * * 2-6"
   workflow_dispatch: {}   # 수동 실행 버튼
 
 permissions:
@@ -29,7 +32,11 @@ jobs:
         run: |
           git config user.name "infinite-buying-bot"
           git config user.email "bot@users.noreply.github.com"
-          git pull --rebase origin main || true
           git add data/
-          git diff --cached --quiet || git commit -m "chore: daily state update"
-          git push
+          git commit -m "chore: daily state update" || echo "변경 없음"
+          # 다른 워크플로가 먼저 푸시했을 수 있으므로 재시도 (실패 시 상태 유실 방지)
+          for i in 1 2 3 4 5; do
+            git pull --rebase origin main && git push && exit 0
+            echo "push 재시도 $i..."; sleep $((5 * i))
+          done
+          echo "::error::상태 저장 실패 — 다음 실행에서 재시도됩니다"; exit 1
