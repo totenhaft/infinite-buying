@@ -1,5 +1,5 @@
 {
-  "last_run": "2026-09-25T00:29:58+00:00",
+  "last_run": "2026-09-25T08:10:17+00:00",
   "tg_offset": 541703691,
   "accounts": [
     {
@@ -20,7 +20,7 @@
           "cycle_no": 2,
           "cycle_start": "2026-08-05",
           "one_buy_override": null,
-          "last_close": 78.66,
+          "last_close": 78.58,
           "last_date": "2026-09-24",
           "pending_orders": [
             {
@@ -55,7 +55,7 @@
               "profit": 41.97
             }
           ],
-          "ma200": 62.73,
+          "ma200": 62.85,
           "ma200_filter": true
         },
         "SOXL": {
@@ -71,7 +71,7 @@
           "cycle_no": 4,
           "cycle_start": "2026-09-22",
           "one_buy_override": null,
-          "last_close": 146.25,
+          "last_close": 146.33,
           "last_date": "2026-09-24",
           "pending_orders": [
             {
