@@ -5,9 +5,9 @@
   "seed": 30000.0,
   "period": [
    "2010-02-11",
-   "2026-09-28"
+   "2026-09-29"
   ],
-  "n_days": 4182,
+  "n_days": 4183,
   "n_cycles": 113,
   "win_cycles": 109,
   "win_rate": 96.5,
@@ -81,17 +81,17 @@
    }
   ]
  },
- "generated": "2026-09-29T09:01:01+00:00",
+ "generated": "2026-09-29T16:36:11+00:00",
  "signal": {
   "available": true,
-  "n": 824,
+  "n": 769,
   "criteria": "T±3, 괴리±5%p, 200일선 동일",
-  "prob_hold_better": 98.5,
-  "avg_extra_pct": 2.99,
+  "prob_hold_better": 98.8,
+  "avg_extra_pct": 2.94,
   "p10_extra_pct": 1.43,
-  "p90_extra_pct": 5.05,
-  "cur_T": 4.0,
-  "cur_gap": -1.8,
+  "p90_extra_pct": 4.97,
+  "cur_T": 4.8,
+  "cur_gap": -1.4,
   "above_ma": true
  },
  "entry": null
