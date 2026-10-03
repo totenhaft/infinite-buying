@@ -1,5 +1,5 @@
 {
-  "last_run": "2026-10-02T16:20:31+00:00",
+  "last_run": "2026-10-03T01:06:31+00:00",
   "tg_offset": 541703691,
   "accounts": [
     {
@@ -20,7 +20,7 @@
           "cycle_no": 2,
           "cycle_start": "2026-08-05",
           "one_buy_override": null,
-          "last_close": 81.34,
+          "last_close": 78.73,
           "last_date": "2026-10-02",
           "pending_orders": [
             {
@@ -55,7 +55,7 @@
               "profit": 41.97
             }
           ],
-          "ma200": 63.56,
+          "ma200": 63.41,
           "ma200_filter": true
         },
         "SOXL": {
@@ -71,12 +71,12 @@
           "cycle_no": 5,
           "cycle_start": null,
           "one_buy_override": null,
-          "last_close": 167.39,
+          "last_close": 153.69,
           "last_date": "2026-10-02",
           "pending_orders": [
             {
               "type": "LOC_BUY",
-              "price": 192.5,
+              "price": 176.74,
               "qty": 2,
               "memo": "사이클 시작: 1회분 매수"
             }
