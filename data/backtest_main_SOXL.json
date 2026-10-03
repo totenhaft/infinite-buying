@@ -5,26 +5,20 @@
   "seed": 11000.0,
   "period": [
    "2010-03-11",
-   "2026-10-01"
+   "2026-10-02"
   ],
-  "n_days": 4166,
-  "n_cycles": 162,
-  "win_cycles": 159,
-  "win_rate": 98.1,
-  "total_profit": 38846.59,
-  "total_profit_pct": 353.2,
-  "avg_cycle_days": 24.6,
+  "n_days": 4167,
+  "n_cycles": 163,
+  "win_cycles": 160,
+  "win_rate": 98.2,
+  "total_profit": 39012.74,
+  "total_profit_pct": 354.7,
+  "avg_cycle_days": 24.5,
   "max_cycle_days": 517,
   "worst_cycle_profit": -513.28,
   "mdd_pct": -32.5,
-  "open_cycle": true,
+  "open_cycle": false,
   "recent_cycles": [
-   {
-    "start": "2026-05-07",
-    "end": "2026-05-08",
-    "days": 1,
-    "profit": 40.05
-   },
    {
     "start": "2026-05-11",
     "end": "2026-05-22",
@@ -78,14 +72,20 @@
     "end": "2026-09-18",
     "days": 7,
     "profit": 137.43
+   },
+   {
+    "start": "2026-09-21",
+    "end": "2026-10-02",
+    "days": 9,
+    "profit": 166.15
    }
   ]
  },
- "generated": "2026-10-03T01:06:31+00:00",
+ "generated": "2026-10-03T08:33:12+00:00",
  "signal": null,
  "entry": {
   "available": true,
-  "n": 137,
+  "n": 138,
   "regime": "200일선 위",
   "win_rate": 97.8,
   "avg_pnl_pct": 2.2,
