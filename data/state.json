@@ -1,5 +1,5 @@
 {
-  "last_run": "2026-10-08T17:32:40+00:00",
+  "last_run": "2026-10-09T02:03:20+00:00",
   "tg_offset": 541703691,
   "accounts": [
     {
@@ -20,7 +20,7 @@
           "cycle_no": 2,
           "cycle_start": "2026-08-05",
           "one_buy_override": null,
-          "last_close": 79.54,
+          "last_close": 80.23,
           "last_date": "2026-10-08",
           "pending_orders": [
             {
@@ -71,7 +71,7 @@
           "cycle_no": 5,
           "cycle_start": "2026-10-05",
           "one_buy_override": null,
-          "last_close": 139.63,
+          "last_close": 142.52,
           "last_date": "2026-10-08",
           "pending_orders": [
             {
