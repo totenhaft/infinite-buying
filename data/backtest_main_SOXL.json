@@ -5,9 +5,9 @@
   "seed": 11000.0,
   "period": [
    "2010-03-11",
-   "2026-10-22"
+   "2026-10-23"
   ],
-  "n_days": 4181,
+  "n_days": 4182,
   "n_cycles": 163,
   "win_cycles": 160,
   "win_rate": 98.2,
@@ -81,17 +81,17 @@
    }
   ]
  },
- "generated": "2026-10-23T07:55:27+00:00",
+ "generated": "2026-10-23T15:23:33+00:00",
  "signal": {
   "available": true,
-  "n": 74,
-  "criteria": "T±8, 괴리±15%p",
+  "n": 53,
+  "criteria": "T±5, 괴리±10%p",
   "prob_hold_better": 100.0,
-  "avg_extra_pct": 11.75,
-  "p10_extra_pct": 7.56,
-  "p90_extra_pct": 16.69,
-  "cur_T": 12.0,
-  "cur_gap": -32.6,
+  "avg_extra_pct": 11.01,
+  "p10_extra_pct": 8.03,
+  "p90_extra_pct": 14.11,
+  "cur_T": 13.2,
+  "cur_gap": -27.7,
   "above_ma": false
  },
  "entry": null
