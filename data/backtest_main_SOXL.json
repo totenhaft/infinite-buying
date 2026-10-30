@@ -81,17 +81,17 @@
    }
   ]
  },
- "generated": "2026-10-29T17:02:17+00:00",
+ "generated": "2026-10-30T01:53:21+00:00",
  "signal": {
   "available": true,
-  "n": 64,
+  "n": 63,
   "criteria": "T±3, 괴리±5%p, 200일선 동일",
   "prob_hold_better": 100.0,
-  "avg_extra_pct": 6.73,
-  "p10_extra_pct": 2.47,
-  "p90_extra_pct": 9.62,
+  "avg_extra_pct": 6.98,
+  "p10_extra_pct": 2.75,
+  "p90_extra_pct": 9.74,
   "cur_T": 17.5,
-  "cur_gap": -7.9,
+  "cur_gap": -8.3,
   "above_ma": false
  },
  "entry": null
